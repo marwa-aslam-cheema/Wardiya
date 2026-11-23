@@ -1,192 +1,1406 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" dir="ltr">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Wardiya — Staff attendance on your own Google Sheet</title>
-<meta name="description" content="Phone check-in/check-out with GPS geofencing, late tracking and payroll-ready monthly reports. Runs in your own Google account. One-time setup, no per-user fees. English & Arabic.">
-<meta property="og:title" content="Wardiya — Staff attendance on your own Google Sheet">
-<meta property="og:description" content="Phone check-in with GPS, late tracking and payroll-ready reports. One-time setup, no per-user fees.">
-<meta property="og:image" content="assets/dashboard.png">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#0E7C66">
-<link rel="icon" href="assets/logo.svg" type="image/svg+xml">
+<title>Wardiya Attendance</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='16' fill='%230E7C66'/%3E%3Ccircle cx='32' cy='32' r='17' fill='none' stroke='%23fff' stroke-width='5'/%3E%3Cpath d='M24 32l6 6 11-12' fill='none' stroke='%23F4A63A' stroke-width='5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=IBM+Plex+Sans+Arabic:wght@500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<script>window.WARDIYA_CONFIG = window.WARDIYA_CONFIG || {};</script>
+<script src="config.js" onerror="void 0"></script>
 <style>
-:root{--p:#0E7C66;--p2:#0A6352;--pl:#E6F2EF;--acc:#F4A63A;--ink:#0B1F1A;--mut:#56655F;--line:#E3E9E7;--bg:#FBFCFB}
-*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,sans-serif;color:var(--ink);background:var(--bg);line-height:1.55;-webkit-font-smoothing:antialiased}
-a{color:var(--p);text-decoration:none}img{max-width:100%;display:block}
-.wrap{max-width:1160px;margin:0 auto;padding:0 24px}
-.btn{display:inline-flex;align-items:center;gap:8px;padding:13px 20px;border-radius:12px;font-weight:700;border:1px solid var(--line);background:#fff;color:var(--ink);transition:.15s}
-.btn:hover{transform:translateY(-1px);box-shadow:0 6px 18px rgba(11,31,26,.08)}
+:root{--p:#0E7C66;--p2:#0A6352;--pl:#E6F2EF;--acc:#F4A63A;--ink:#0B1F1A;--mut:#5B6B66;--line:#E3E9E7;--bg:#F5F7F6;--card:#fff;--red:#C2410C;--redl:#FDECE4;--amb:#B45309;--ambl:#FEF3C7;--grn:#047857;--grnl:#D1FAE5;--blu:#1D4ED8;--blul:#DBEAFE;--r:14px;--sh:0 1px 2px rgba(11,31,26,.05),0 4px 16px rgba(11,31,26,.06)}
+*{box-sizing:border-box}html,body{margin:0}body{font-family:Inter,"IBM Plex Sans Arabic",system-ui,-apple-system,Segoe UI,Roboto,sans-serif;background:var(--bg);color:var(--ink);font-size:15px;line-height:1.45;-webkit-font-smoothing:antialiased}
+[dir=rtl] body{font-family:"IBM Plex Sans Arabic",Inter,system-ui,sans-serif}
+button,input,select,textarea{font:inherit;color:inherit}
+a{color:var(--p)}
+.hidden{display:none!important}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;border:1px solid var(--line);background:#fff;padding:9px 14px;border-radius:10px;font-weight:600;cursor:pointer;transition:.15s;white-space:nowrap;text-decoration:none;color:var(--ink)}
+.btn:hover{border-color:#c9d4d0;background:#fafcfb}.btn:disabled{opacity:.55;cursor:not-allowed}
 .btn.pri{background:var(--p);border-color:var(--p);color:#fff}.btn.pri:hover{background:var(--p2)}
-header{position:sticky;top:0;z-index:10;background:rgba(251,252,251,.88);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
-.nav{display:flex;align-items:center;justify-content:space-between;height:68px}
-.logo{display:flex;align-items:center;gap:10px;font-weight:800;font-size:20px;letter-spacing:-.02em;color:var(--ink)}
-.links{display:flex;gap:26px;align-items:center;font-weight:500}.links a{color:var(--mut)}.links a:hover{color:var(--ink)}
-.hero{padding:72px 0 40px;display:grid;grid-template-columns:1.05fr 1fr;gap:48px;align-items:center}
-.eyebrow{display:inline-flex;gap:8px;align-items:center;background:var(--pl);color:var(--p2);font-weight:700;font-size:13px;padding:6px 12px;border-radius:99px}
-h1{font-size:54px;line-height:1.04;letter-spacing:-.04em;margin:18px 0}
-h1 em{font-style:normal;color:var(--p)}
-.lead{font-size:19px;color:var(--mut);max-width:540px}
-.ar{font-family:"IBM Plex Sans Arabic",sans-serif;direction:rtl;color:var(--mut);font-size:17px;margin-top:-6px}
-.ctas{display:flex;gap:12px;flex-wrap:wrap;margin:28px 0 14px}
-.trust{display:flex;gap:18px;flex-wrap:wrap;color:var(--mut);font-size:14px}.trust span:before{content:"✓ ";color:var(--p);font-weight:800}
-.shot{position:relative}
-.shot .desk{border-radius:16px;border:1px solid var(--line);box-shadow:0 30px 80px rgba(11,31,26,.16)}
-.shot .mob{position:absolute;width:30%;right:-14px;bottom:-34px;border-radius:22px;border:6px solid #0B1F1A;box-shadow:0 20px 50px rgba(11,31,26,.3)}
-section{padding:80px 0}
-.sec-h{text-align:center;max-width:720px;margin:0 auto 48px}.sec-h h2{font-size:38px;letter-spacing:-.03em;line-height:1.1;margin:0 0 12px}.sec-h p{color:var(--mut);font-size:18px;margin:0}
-.pain{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
-.pcard{background:#fff;border:1px solid var(--line);border-radius:16px;padding:24px}
-.pcard b{display:block;font-size:17px;margin:10px 0 6px}.pcard p{margin:0;color:var(--mut)}
-.ico{width:42px;height:42px;border-radius:12px;background:var(--pl);color:var(--p);display:grid;place-items:center;font-size:20px}
-.feats{display:grid;grid-template-columns:repeat(4,1fr);gap:18px}
-.alt{background:#fff;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
-.steps{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;counter-reset:s}
-.step{position:relative;padding:26px;border-radius:16px;background:var(--bg);border:1px solid var(--line)}
-.step:before{counter-increment:s;content:counter(s);position:absolute;top:-16px;left:24px;width:34px;height:34px;border-radius:50%;background:var(--p);color:#fff;display:grid;place-items:center;font-weight:800}
-.step b{display:block;font-size:18px;margin:8px 0 6px}.step p{margin:0;color:var(--mut)}
-table.cmp{width:100%;border-collapse:collapse;background:#fff;border-radius:16px;overflow:hidden;border:1px solid var(--line)}
-.cmp th,.cmp td{padding:15px 18px;border-bottom:1px solid var(--line);text-align:left}.cmp th{background:#F6F9F8;font-size:14px}
-.cmp td:nth-child(2){background:#F3FAF7;font-weight:600}.cmp tr:last-child td{border-bottom:0}
-.prices{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;align-items:stretch}
-.price{background:#fff;border:1px solid var(--line);border-radius:18px;padding:28px;display:flex;flex-direction:column}
-.price.hot{border:2px solid var(--p);box-shadow:0 20px 50px rgba(14,124,102,.15);position:relative}
-.price.hot:before{content:"Most popular";position:absolute;top:-13px;left:28px;background:var(--p);color:#fff;font-size:12px;font-weight:700;padding:4px 10px;border-radius:99px}
-.price h3{margin:0;font-size:20px}.price .for{color:var(--mut);font-size:14px;margin:4px 0 18px}
-.amt{font-size:44px;font-weight:800;letter-spacing:-.03em}.amt small{font-size:15px;color:var(--mut);font-weight:600}
-.was{color:var(--mut);text-decoration:line-through;font-size:15px;margin-inline-start:6px}
-.price ul{list-style:none;padding:0;margin:18px 0 24px;display:grid;gap:9px;flex:1}.price li:before{content:"✓";color:var(--p);font-weight:800;margin-right:9px}
-.note{text-align:center;color:var(--mut);margin-top:22px;font-size:15px}
-.offer{background:linear-gradient(135deg,#0B3B31,#0E7C66);color:#fff;border-radius:18px;padding:22px 26px;display:flex;justify-content:space-between;align-items:center;gap:18px;flex-wrap:wrap;margin-bottom:28px}
-.offer b{font-size:19px}.offer p{margin:4px 0 0;opacity:.85}
-.who{display:flex;flex-wrap:wrap;gap:12px;justify-content:center}.who span{background:#fff;border:1px solid var(--line);border-radius:99px;padding:10px 18px;font-weight:600}
-.faq{max-width:800px;margin:0 auto}details{background:#fff;border:1px solid var(--line);border-radius:14px;padding:18px 22px;margin-bottom:12px}summary{font-weight:700;cursor:pointer;font-size:16.5px}details p{color:var(--mut);margin:10px 0 0}
-.cta{background:#0B1F1A;color:#fff;border-radius:24px;padding:56px;text-align:center}.cta h2{font-size:36px;letter-spacing:-.03em;margin:0 0 10px}.cta p{opacity:.8;font-size:18px;margin:0 0 26px}
-footer{padding:40px 0;color:var(--mut);font-size:14px;border-top:1px solid var(--line)}
-.fl{display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap}
-@media(max-width:960px){.hero{grid-template-columns:1fr;padding-top:40px}h1{font-size:40px}.feats{grid-template-columns:1fr 1fr}.pain,.steps,.prices{grid-template-columns:1fr}.links a:not(.btn){display:none}.shot .mob{right:6px}.cta{padding:36px 22px}section{padding:56px 0}.sec-h h2{font-size:30px}}
-@media(max-width:520px){.feats{grid-template-columns:1fr}.cmp th,.cmp td{padding:11px 10px;font-size:14px}}
+.btn.dan{color:var(--red);border-color:#f3c7b5}.btn.dan:hover{background:var(--redl)}
+.btn.sm{padding:6px 10px;font-size:13px;border-radius:8px}.btn.ghost{border-color:transparent;background:transparent}
+.field{display:flex;flex-direction:column;gap:6px;margin-bottom:14px}.field label{font-size:13px;font-weight:600;color:var(--mut)}
+.inp{width:100%;padding:10px 12px;border:1px solid var(--line);border-radius:10px;background:#fff;outline:none;transition:.15s}
+.inp:focus{border-color:var(--p);box-shadow:0 0 0 3px rgba(14,124,102,.15)}
+.row{display:flex;gap:12px;flex-wrap:wrap}.row>.field{flex:1;min-width:140px}
+.hint{font-size:12.5px;color:var(--mut)}
+.card{background:var(--card);border:1px solid var(--line);border-radius:var(--r);box-shadow:var(--sh)}
+.pill{display:inline-flex;align-items:center;gap:5px;padding:3px 9px;border-radius:99px;font-size:12px;font-weight:600;background:#EEF2F1;color:var(--mut);white-space:nowrap}
+.pill.g{background:var(--grnl);color:var(--grn)}.pill.r{background:var(--redl);color:var(--red)}.pill.a{background:var(--ambl);color:var(--amb)}.pill.b{background:var(--blul);color:var(--blu)}
+.logo{display:flex;align-items:center;gap:10px;font-weight:800;font-size:18px;letter-spacing:-.02em}
+.logo svg{flex:none}
+/* login */
+#login{min-height:100vh;display:grid;grid-template-columns:1.1fr 1fr}
+.lg-side{background:linear-gradient(150deg,#0B3B31,#0E7C66 70%);color:#fff;padding:48px;display:flex;flex-direction:column;justify-content:space-between;position:relative;overflow:hidden}
+.lg-side:after{content:"";position:absolute;width:420px;height:420px;border-radius:50%;border:60px solid rgba(255,255,255,.05);right:-140px;bottom:-140px}
+.lg-side h1{font-size:38px;line-height:1.1;letter-spacing:-.03em;margin:0 0 14px;max-width:460px}
+.lg-side p{opacity:.85;max-width:440px;margin:0}
+.lg-feats{display:grid;gap:10px;margin-top:28px}.lg-feats div{display:flex;gap:10px;align-items:center;opacity:.92}
+.lg-feats i{width:22px;height:22px;border-radius:7px;background:rgba(255,255,255,.14);display:grid;place-items:center;font-style:normal;font-size:12px}
+.lg-main{display:flex;align-items:center;justify-content:center;padding:32px}
+.lg-box{width:100%;max-width:380px}
+.lg-box h2{margin:0 0 4px;font-size:24px;letter-spacing:-.02em}
+.demo-cards{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:18px 0 6px}
+.demo-card{border:1px dashed #bcd6ce;background:var(--pl);border-radius:12px;padding:12px;cursor:pointer;text-align:start}
+.demo-card b{display:block;font-size:14px}.demo-card span{font-size:12px;color:var(--mut)}
+.demo-card:hover{border-style:solid;border-color:var(--p)}
+.err{background:var(--redl);color:var(--red);border-radius:10px;padding:10px 12px;font-size:14px;margin-bottom:12px}
+/* shell */
+#shell{min-height:100vh;display:grid;grid-template-columns:240px 1fr}
+.side{background:#0B1F1A;color:#cfe0db;padding:18px 12px;position:sticky;top:0;height:100vh;display:flex;flex-direction:column}
+.side .logo{color:#fff;padding:4px 10px 18px}
+.nav{display:flex;flex-direction:column;gap:2px}
+.nav button{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:10px;border:0;background:transparent;color:inherit;cursor:pointer;font-weight:500;text-align:start}
+.nav button:hover{background:rgba(255,255,255,.06)}.nav button.on{background:rgba(14,124,102,.35);color:#fff}
+.nav svg{width:18px;height:18px;flex:none;opacity:.9}
+.side-foot{margin-top:auto;padding:10px;font-size:12px;opacity:.6}
+.main{min-width:0;display:flex;flex-direction:column}
+.top{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:14px 28px;background:rgba(245,247,246,.9);backdrop-filter:blur(8px);position:sticky;top:0;z-index:5;border-bottom:1px solid var(--line)}
+.top h1{font-size:20px;margin:0;letter-spacing:-.02em}
+.top .who{display:flex;align-items:center;gap:8px}
+.avatar{width:34px;height:34px;border-radius:50%;background:var(--p);color:#fff;display:grid;place-items:center;font-weight:700;font-size:13px}
+.content{padding:24px 28px 80px;max-width:1240px;width:100%}
+.banner{background:#FFF7E6;border-bottom:1px solid #F7DFAE;color:#7A4A00;font-size:13.5px;padding:8px 28px;display:flex;gap:10px;align-items:center;justify-content:space-between;flex-wrap:wrap}
+.mob-nav{display:none}
+/* dashboard */
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:14px;margin-bottom:18px}
+.kpi{padding:16px 18px}.kpi .l{font-size:13px;color:var(--mut);font-weight:600}.kpi .v{font-size:30px;font-weight:800;letter-spacing:-.03em;margin-top:4px}.kpi .s{font-size:12.5px;color:var(--mut)}
+.grid2{display:grid;grid-template-columns:1.6fr 1fr;gap:16px}
+.sec{padding:18px}.sec h3{margin:0 0 14px;font-size:15px;display:flex;justify-content:space-between;align-items:center;gap:8px}
+.bars{display:flex;align-items:flex-end;gap:6px;height:170px;padding-top:10px}
+.bar{flex:1;display:flex;flex-direction:column;align-items:center;gap:6px;min-width:0}
+.bar .stack{width:100%;max-width:28px;display:flex;flex-direction:column-reverse;border-radius:6px 6px 2px 2px;overflow:hidden;background:#EEF2F1}
+.bar .stack i{display:block;background:var(--p)}.bar .stack i.late{background:var(--acc)}
+.bar small{font-size:10.5px;color:var(--mut)}.bar.off .stack{opacity:.35}
+.legend{display:flex;gap:14px;font-size:12px;color:var(--mut)}.legend i{display:inline-block;width:10px;height:10px;border-radius:3px;margin-inline-end:5px;vertical-align:-1px}
+.list{display:flex;flex-direction:column}.li{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:9px 0;border-bottom:1px solid var(--line)}.li:last-child{border-bottom:0}
+.li .n{font-weight:600}.li .m{font-size:12.5px;color:var(--mut)}
+.empty{color:var(--mut);text-align:center;padding:26px 10px;font-size:14px}
+/* tables */
+.toolbar{display:flex;gap:10px;flex-wrap:wrap;align-items:flex-end;margin-bottom:14px}
+.toolbar .field{margin:0;min-width:130px}
+.tbl-wrap{overflow:auto;border-radius:var(--r)}
+table{width:100%;border-collapse:collapse;font-size:14px}
+th{text-align:start;font-size:12px;text-transform:uppercase;letter-spacing:.04em;color:var(--mut);font-weight:700;padding:11px 12px;background:#FAFBFB;border-bottom:1px solid var(--line);white-space:nowrap}
+td{padding:11px 12px;border-bottom:1px solid var(--line);vertical-align:middle}
+tr:last-child td{border-bottom:0}tbody tr:hover{background:#FAFCFB}
+td.num,th.num{text-align:end;font-variant-numeric:tabular-nums}
+.muted{color:var(--mut)}.small{font-size:12.5px}
+/* clock */
+.clock{max-width:560px;margin:0 auto;text-align:center;padding:30px 24px}
+.clock .date{color:var(--mut);font-weight:600}
+.clock .time{font-size:64px;font-weight:800;letter-spacing:-.04em;font-variant-numeric:tabular-nums;margin:2px 0 8px}
+.big-btn{width:210px;height:210px;border-radius:50%;border:0;cursor:pointer;color:#fff;font-size:22px;font-weight:800;margin:18px auto;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;transition:transform .12s,box-shadow .2s}
+.big-btn small{font-size:13px;font-weight:600;opacity:.85}
+.big-btn.in{background:radial-gradient(circle at 30% 25%,#18a386,#0E7C66);box-shadow:0 12px 40px rgba(14,124,102,.35),0 0 0 12px rgba(14,124,102,.08)}
+.big-btn.out{background:radial-gradient(circle at 30% 25%,#f2b25a,#E08A12);box-shadow:0 12px 40px rgba(224,138,18,.35),0 0 0 12px rgba(224,138,18,.1)}
+.big-btn:active{transform:scale(.97)}.big-btn:disabled{opacity:.6}
+.loc{font-size:13px;color:var(--mut);display:flex;justify-content:center;gap:6px;align-items:center;flex-wrap:wrap}
+.sessions{margin-top:20px;text-align:start}
+/* modal & toast */
+.overlay{position:fixed;inset:0;background:rgba(11,31,26,.45);display:flex;align-items:center;justify-content:center;padding:16px;z-index:50}
+.modal{width:100%;max-width:520px;max-height:92vh;overflow:auto;padding:22px}
+.modal h3{margin:0 0 16px;font-size:18px}
+.modal .acts{display:flex;justify-content:flex-end;gap:10px;margin-top:8px}
+#toasts{position:fixed;bottom:18px;inset-inline-end:18px;display:flex;flex-direction:column;gap:8px;z-index:60}
+.toast{background:#0B1F1A;color:#fff;padding:11px 16px;border-radius:10px;box-shadow:var(--sh);font-size:14px;max-width:340px;animation:tin .2s}
+.toast.bad{background:var(--red)}
+@keyframes tin{from{opacity:0;transform:translateY(8px)}}
+.spin{width:16px;height:16px;border:2px solid rgba(255,255,255,.4);border-top-color:#fff;border-radius:50%;animation:sp .7s linear infinite}
+.btn:not(.pri) .spin{border-color:#ccd;border-top-color:var(--p)}
+@keyframes sp{to{transform:rotate(360deg)}}
+.days{display:flex;gap:6px;flex-wrap:wrap}.days label{display:flex;align-items:center;gap:5px;border:1px solid var(--line);border-radius:8px;padding:6px 10px;cursor:pointer;font-size:13.5px;background:#fff}
+.days input{accent-color:var(--p)}
+.branch-cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:14px}
+.loading{padding:60px;text-align:center;color:var(--mut)}
+@media (max-width:900px){
+ #login{grid-template-columns:1fr}.lg-side{padding:28px 24px}.lg-side h1{font-size:28px}.lg-feats{display:none}
+ #shell{grid-template-columns:1fr}.side{display:none}
+ .mob-nav{display:flex;overflow-x:auto;gap:4px;padding:8px 12px;background:#0B1F1A;position:sticky;top:0;z-index:6;scrollbar-width:none}
+ .mob-nav button{flex:none;border:0;background:transparent;color:#cfe0db;padding:8px 12px;border-radius:9px;font-weight:600;font-size:13.5px}
+ .mob-nav button.on{background:rgba(14,124,102,.45);color:#fff}
+ .top{padding:12px 16px;top:50px}.content{padding:16px 14px 60px}.banner{padding:8px 16px}
+ .grid2{grid-template-columns:1fr}.top .avatar{display:none}.top h1{font-size:17px}.top .btn.sm{padding:6px 8px}.clock .time{font-size:52px}.big-btn{width:180px;height:180px}
+ .hide-m{display:none}
+}
+@media print{.side,.mob-nav,.top .who,.banner,.toolbar .btn,.no-print{display:none!important}#shell{display:block}.content{padding:0}.card{box-shadow:none}}
 </style>
 </head>
 <body>
-<header><div class="wrap nav">
-  <a class="logo" href="#"><img src="assets/logo.svg" width="34" height="34" alt="">Wardiya</a>
-  <nav class="links"><a href="#features">Features</a><a href="#how">How it works</a><a href="#pricing">Pricing</a><a href="#faq">FAQ</a><a class="btn pri" href="app/index.html">Live demo</a></nav>
-</div></header>
+<div id="app"><div class="loading">Loading…</div></div>
+<div id="toasts"></div>
+<script>
+/*
+ * Wardiya Attendance — shared business logic.
+ * The SAME file runs in the browser (demo mode) and in Google Apps Script (live mode, as Core.gs).
+ * It never touches storage directly: an "env" object provides storage, clock and random IDs.
+ */
+var WardiyaCore = (function () {
+  'use strict';
 
-<main>
-<div class="wrap hero">
-  <div>
-    <span class="eyebrow">● For teams of 5–100 · English &amp; Arabic</span>
-    <h1>Staff attendance on <em>your own</em> Google Sheet.</h1>
-    <p class="lead">Employees check in and out from their phone, with GPS checks for each branch. You get a live dashboard, late and overtime tracking, and payroll-ready monthly reports. One setup fee and no per-user charges.</p>
-    <p class="ar">نظام حضور وانصراف للموظفين يعمل على جدول Google الخاص بك</p>
-    <div class="ctas"><a class="btn pri" href="app/index.html">Try the live demo →</a><a class="btn" href="#contact">Book a 15-minute walkthrough</a></div>
-    <div class="trust"><span>No app to install</span><span>Data stays in your Google account</span><span>Set up in 48 hours</span></div>
-  </div>
-  <div class="shot"><img class="desk" src="assets/dashboard.png" alt="Wardiya admin dashboard showing today's attendance"><img class="mob" src="assets/mobile.png" alt="Employee check-in screen on a phone"></div>
-</div>
+  var VERSION = '1.0.0';
+  var SESSION_TTL_SEC = 12 * 3600;
+  var MAX_FAILS = 5;
+  var LOCK_SEC = 15 * 60;
+  var OPEN_RECORD_MAX_HOURS = 20;
 
-<section>
-  <div class="wrap">
-    <div class="sec-h"><h2>Paper registers and WhatsApp messages cost you money</h2><p>Small teams lose hours every month on attendance. Disputes over pay happen because nobody has a reliable record.</p></div>
-    <div class="pain">
-      <div class="pcard"><div class="ico">📝</div><b>Paper sheets and Excel files</b><p>Someone types the register into Excel every month, then fixes mistakes before payroll.</p></div>
-      <div class="pcard"><div class="ico">🕘</div><b>"I was only 5 minutes late"</b><p>Without timestamps, lateness and overtime come down to memory. That leads to arguments and unfair pay.</p></div>
-      <div class="pcard"><div class="ico">📍</div><b>Checking in for a friend</b><p>Shared sign-in sheets make it easy to sign for someone else. Every check-in on Wardiya carries the time and the employee's location.</p></div>
-    </div>
-  </div>
-</section>
+  // ---------- SHA-256 (pure JS, synchronous, public-domain algorithm) ----------
+  function sha256(str) {
+    var ascii = unescape(encodeURIComponent(String(str)));
+    function rr(v, a) { return (v >>> a) | (v << (32 - a)); }
+    var maxWord = Math.pow(2, 32), i, j, result = '';
+    var words = [], bitLen = ascii.length * 8;
+    var hash = [], k = [], primeCounter = 0, isComposite = {};
+    for (var c = 2; primeCounter < 64; c++) {
+      if (!isComposite[c]) {
+        for (i = 0; i < 313; i += c) isComposite[i] = c;
+        hash[primeCounter] = (Math.pow(c, 0.5) * maxWord) | 0;
+        k[primeCounter++] = (Math.pow(c, 1 / 3) * maxWord) | 0;
+      }
+    }
+    hash = hash.slice(0, 8);
+    ascii += '\x80';
+    while (ascii.length % 64 - 56) ascii += '\x00';
+    for (i = 0; i < ascii.length; i++) {
+      j = ascii.charCodeAt(i);
+      words[i >> 2] |= j << ((3 - i) % 4) * 8;
+    }
+    words[words.length] = ((bitLen / maxWord) | 0);
+    words[words.length] = bitLen;
+    for (j = 0; j < words.length;) {
+      var w = words.slice(j, j += 16), old = hash;
+      hash = hash.slice(0, 8);
+      for (i = 0; i < 64; i++) {
+        var w15 = w[i - 15], w2 = w[i - 2], a = hash[0], e = hash[4];
+        var t1 = hash[7] + (rr(e, 6) ^ rr(e, 11) ^ rr(e, 25)) + ((e & hash[5]) ^ ((~e) & hash[6])) + k[i] +
+          (w[i] = (i < 16) ? w[i] : (w[i - 16] + (rr(w15, 7) ^ rr(w15, 18) ^ (w15 >>> 3)) + w[i - 7] +
+            (rr(w2, 17) ^ rr(w2, 19) ^ (w2 >>> 10))) | 0);
+        var t2 = (rr(a, 2) ^ rr(a, 13) ^ rr(a, 22)) + ((a & hash[1]) ^ (a & hash[2]) ^ (hash[1] & hash[2]));
+        hash = [(t1 + t2) | 0].concat(hash);
+        hash[4] = (hash[4] + t1) | 0;
+      }
+      for (i = 0; i < 8; i++) hash[i] = (hash[i] + old[i]) | 0;
+    }
+    for (i = 0; i < 8; i++) for (j = 3; j + 1; j--) {
+      var b = (hash[i] >> (j * 8)) & 255;
+      result += ((b < 16) ? '0' : '') + b.toString(16);
+    }
+    return result;
+  }
 
-<section id="features" class="alt">
-  <div class="wrap">
-    <div class="sec-h"><h2>Everything a growing team needs. Nothing it doesn't.</h2><p>Every feature below works in the live demo today.</p></div>
-    <div class="feats">
-      <div class="pcard"><div class="ico">📱</div><b>One-tap phone check-in</b><p>Works in any phone browser. Employees sign in with a code and PIN, with no app store download.</p></div>
-      <div class="pcard"><div class="ico">🛰️</div><b>GPS geofencing</b><p>Set a radius for each branch. Choose whether check-ins outside it are flagged or blocked.</p></div>
-      <div class="pcard"><div class="ico">⏱️</div><b>Late &amp; overtime rules</b><p>Your hours, grace period and working days (Sun–Thu or Mon–Fri) are applied automatically.</p></div>
-      <div class="pcard"><div class="ico">📊</div><b>Live dashboard</b><p>See who's in, who's late and who hasn't arrived. A 14-day trend and a 30-day on-time rate are included.</p></div>
-      <div class="pcard"><div class="ico">🧾</div><b>Payroll-ready reports</b><p>Monthly totals for each employee: days present, absences, leave, late minutes, hours and overtime. Export to Excel.</p></div>
-      <div class="pcard"><div class="ico">🏢</div><b>Multiple branches</b><p>Filter any report by branch, employee, lateness, missing check-outs or location flags.</p></div>
-      <div class="pcard"><div class="ico">🛡️</div><b>Audit trail</b><p>Every correction needs a reason and is logged with who made it and when, so records hold up in a dispute.</p></div>
-      <div class="pcard"><div class="ico">🌐</div><b>English &amp; العربية</b><p>The whole interface switches between English and Arabic, with full right-to-left layout.</p></div>
-    </div>
-  </div>
-</section>
+  function hashPin(pin, salt) {
+    var h = sha256(salt + ':' + pin);
+    for (var i = 0; i < 300; i++) h = sha256(h + salt);
+    return h;
+  }
 
-<section id="how">
-  <div class="wrap">
-    <div class="sec-h"><h2>Live in 48 hours</h2><p>We do the setup. You don't need an IT department.</p></div>
-    <div class="steps">
-      <div class="step"><b>15-minute call</b><p>We agree your working hours, branches and staff list, and the report format your accountant needs.</p></div>
-      <div class="step"><b>We set it up in your Google account</b><p>The system runs in a Google Sheet that you own. We add your branches, employees and geofences.</p></div>
-      <div class="step"><b>Your team starts checking in</b><p>Staff get a link and a PIN. You get a short training session and a one-page guide.</p></div>
-    </div>
-  </div>
-</section>
+  // ---------- helpers ----------
+  function AppError(code, message, extra) { this.code = code; this.message = message || code; this.extra = extra || null; }
+  function fail(code, message, extra) { throw new AppError(code, message, extra); }
+  function str(v) { return v === null || v === undefined ? '' : String(v).trim(); }
+  function num(v) { var n = Number(v); return isFinite(n) ? n : NaN; }
+  function bool(v) { return v === true || v === 'true' || v === 1 || v === '1' || v === 'TRUE'; }
+  function pad(n) { return (n < 10 ? '0' : '') + n; }
+  function isTime(s) { return /^([01]\d|2[0-3]):[0-5]\d$/.test(s); }
+  function isDate(s) {
+    if (!/^\d{4}-\d{2}-\d{2}$/.test(s)) return false;
+    var p = s.split('-').map(Number), d = new Date(Date.UTC(p[0], p[1] - 1, p[2]));
+    return d.getUTCFullYear() === p[0] && d.getUTCMonth() === p[1] - 1 && d.getUTCDate() === p[2];
+  }
+  function toMin(t) { if (!t) return null; var p = String(t).split(':'); return Number(p[0]) * 60 + Number(p[1]); }
+  function fromMin(m) { m = ((Math.round(m) % 1440) + 1440) % 1440; return pad(Math.floor(m / 60)) + ':' + pad(m % 60); }
+  function addDays(date, n) {
+    var p = date.split('-').map(Number), d = new Date(Date.UTC(p[0], p[1] - 1, p[2] + n));
+    return d.getUTCFullYear() + '-' + pad(d.getUTCMonth() + 1) + '-' + pad(d.getUTCDate());
+  }
+  function weekday(date) { var p = date.split('-').map(Number); return new Date(Date.UTC(p[0], p[1] - 1, p[2])).getUTCDay(); }
+  function haversine(lat1, lng1, lat2, lng2) {
+    var R = 6371000, toR = Math.PI / 180;
+    var dLat = (lat2 - lat1) * toR, dLng = (lng2 - lng1) * toR;
+    var a = Math.sin(dLat / 2) * Math.sin(dLat / 2) + Math.cos(lat1 * toR) * Math.cos(lat2 * toR) * Math.sin(dLng / 2) * Math.sin(dLng / 2);
+    return Math.round(2 * R * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a)));
+  }
+  function clean(text, max) { return str(text).replace(/[\u0000-\u001f<>]/g, '').slice(0, max || 200); }
+  // Prevent spreadsheet formula injection when values are written to Google Sheets.
+  function safeCell(v) { v = clean(v, 200); return /^[=+\-@]/.test(v) ? "'" + v : v; }
 
-<section class="alt">
-  <div class="wrap">
-    <div class="sec-h"><h2>Why own it instead of renting it?</h2><p>Most attendance apps charge every month for every employee. Wardiya is a one-time setup.</p></div>
-    <table class="cmp">
-      <tr><th></th><th>Wardiya</th><th>Typical per-user attendance apps</th></tr>
-      <tr><td>Pricing</td><td>One-time setup, optional low monthly care plan</td><td>Monthly fee per user, rising as you hire</td></tr>
-      <tr><td>Where your data lives</td><td>Your own Google Sheet</td><td>The vendor's servers</td></tr>
-      <tr><td>Reports</td><td>Built to match your payroll sheet</td><td>Standard export</td></tr>
-      <tr><td>Arabic &amp; Gulf work week</td><td>Built in</td><td>Varies</td></tr>
-      <tr><td>Support</td><td>Direct WhatsApp/email with the person who set it up</td><td>Ticket queue</td></tr>
-    </table>
-  </div>
-</section>
+  var DEFAULT_SETTINGS = {
+    companyName: 'My Company',
+    timezone: 'Asia/Dubai',
+    workStart: '09:00',
+    workEnd: '17:00',
+    graceMinutes: 10,
+    workDays: [1, 2, 3, 4, 5],
+    geofenceMode: 'flag', // off | flag | block
+    currencyNote: ''
+  };
 
-<section id="pricing">
-  <div class="wrap">
-    <div class="sec-h"><h2>Simple pricing</h2><p>Pay once for setup. Add the care plan if you want ongoing changes and support.</p></div>
-    <div class="offer"><div><b>Founding-client offer: 40% off setup</b><p>For our first 5 clients, in exchange for honest feedback and a short testimonial if you're happy.</p></div><a class="btn" href="#contact">Claim a spot</a></div>
-    <div class="prices">
-      <div class="price"><h3>Starter</h3><div class="for">One location, up to 25 staff</div><div><span class="amt">$149</span><span class="was">$249</span><small> one-time</small></div>
-        <ul><li>Phone check-in / check-out</li><li>Dashboard, attendance log, monthly report</li><li>Late &amp; overtime rules</li><li>Excel/CSV export</li><li>Setup in your Google account</li><li>30 days of support</li></ul><a class="btn" href="#contact">Get started</a></div>
-      <div class="price hot"><h3>Professional</h3><div class="for">Up to 3 branches, up to 75 staff</div><div><span class="amt">$299</span><span class="was">$499</span><small> one-time</small></div>
-        <ul><li>Everything in Starter</li><li>GPS geofence for each branch</li><li>Your logo, colours and company name</li><li>Report columns matched to your payroll sheet</li><li>Staff import and live training session</li><li>60 days of support</li></ul><a class="btn pri" href="#contact">Get started</a></div>
-      <div class="price"><h3>Premium</h3><div class="for">Unlimited branches, 75–100+ staff</div><div><span class="amt">$599</span><span class="was">$999</span><small> from, one-time</small></div>
-        <ul><li>Everything in Professional</li><li>Custom rules (shifts, overtime, deductions)</li><li>Custom reports and dashboards</li><li>Payroll-file formatting (e.g. for your WPS provider)</li><li>Priority support</li><li>3 months of care plan included</li></ul><a class="btn" href="#contact">Talk to us</a></div>
-    </div>
-    <p class="note"><b>Care plan: $19/month</b> (or $190/year): fixes, updates, small changes and WhatsApp support. Not required. <b>Free 14-day pilot</b> available: try it with your real team before you pay.</p>
-  </div>
-</section>
+  function recordMinutes(r) {
+    if (r.type === 'leave' || !r.inTime || !r.outTime) return 0;
+    var d = toMin(r.outTime) - toMin(r.inTime);
+    if (d < 0) d += 1440; // overnight shift
+    return d;
+  }
 
-<section class="alt">
-  <div class="wrap">
-    <div class="sec-h"><h2>Built for teams that work on-site</h2></div>
-    <div class="who"><span>🏥 Clinics &amp; dental practices</span><span>🏗️ Construction &amp; contracting</span><span>🧑‍💼 Recruitment &amp; staffing agencies</span><span>🛍️ Retail shops</span><span>🍽️ Restaurants &amp; cafés</span><span>🧹 Cleaning &amp; facilities</span><span>🏢 Offices &amp; agencies</span><span>🎓 Training centres</span></div>
-  </div>
-</section>
+  function publicEmployee(e) {
+    return {
+      id: e.id, code: e.code, name: e.name, email: e.email || '', phone: e.phone || '',
+      department: e.department || '', branchId: e.branchId || '', role: e.role, active: bool(e.active),
+      mustChangePin: bool(e.mustChangePin), createdAt: e.createdAt || ''
+    };
+  }
 
-<section id="faq">
-  <div class="wrap faq">
-    <div class="sec-h"><h2>Questions</h2></div>
-    <details><summary>Where is our data stored?</summary><p>In a Google Sheet inside your own Google account. You can open it, back it up or export it any time. We don't keep a copy on our servers.</p></details>
-    <details><summary>Do employees need to install an app?</summary><p>No. They open a link in their phone browser, and they can add it to their home screen to use like an app. It works on iPhone and Android.</p></details>
-    <details><summary>Can staff check in from home?</summary><p>You decide. With geofencing on, check-ins outside the branch radius are either flagged for you to review or blocked completely.</p></details>
-    <details><summary>Is it secure?</summary><p>Each employee has a personal PIN, which is stored as a salted hash, never as plain text. Accounts lock after repeated wrong PINs. Admin pages are protected on the server. Every correction is recorded in an audit log with a reason.</p></details>
-    <details><summary>Are there usage limits?</summary><p>It runs on Google's free Apps Script service. It comfortably handles teams of up to about 100 staff. Older years can be archived with one click to keep it fast. For larger teams we'll tell you honestly whether a different setup suits you better.</p></details>
-    <details><summary>Does it calculate salaries?</summary><p>It produces the attendance figures payroll needs: days, hours, late minutes, overtime and leave. On Premium we format the export to match your payroll or WPS provider's template. The salary payment itself stays with your bank or payroll provider.</p></details>
-    <details><summary>What happens after the support period?</summary><p>The system keeps working, because it's yours. The optional care plan covers changes and support. Without it, we can quote for one-off changes.</p></details>
-  </div>
-</section>
+  // =====================================================================
+  function createApp(env) {
+    var S = env.store;
 
-<section id="contact">
-  <div class="wrap"><div class="cta">
-    <h2>See it with your own team's data</h2>
-    <p>Book a 15-minute walkthrough, or start a free 14-day pilot.</p>
-    <div class="ctas" style="justify-content:center"><a class="btn pri" id="mail" href="mailto:marwa.aslam911@gmail.com?subject=Wardiya%20demo%20request">Email us</a><a class="btn" id="wa" href="https://wa.me/218922105197?text=Hi%2C%20I%27d%20like%20a%20Wardiya%20demo">WhatsApp</a><a class="btn" href="app/index.html">Open live demo</a></div>
-  </div></div>
-</section>
-</main>
+    function settings() {
+      var s = S.getSettings() || {};
+      var out = {};
+      for (var k in DEFAULT_SETTINGS) out[k] = (s[k] === undefined || s[k] === null || s[k] === '') ? DEFAULT_SETTINGS[k] : s[k];
+      if (typeof out.workDays === 'string') out.workDays = out.workDays.split(',').filter(function (x) { return x !== ''; }).map(Number);
+      out.graceMinutes = Number(out.graceMinutes) || 0;
+      return out;
+    }
+    function nowParts() {
+      var tz = settings().timezone, d = env.now();
+      return { iso: d.toISOString(), ms: d.getTime(), date: env.tzDate(d, tz), time: env.tzTime(d, tz) };
+    }
+    function employees() { return S.list('employees'); }
+    function branches() { return S.list('branches'); }
+    function records() { return S.list('records'); }
+    function findEmp(id) { var l = employees(); for (var i = 0; i < l.length; i++) if (l[i].id === id) return l[i]; return null; }
+    function findBranch(id) { var l = branches(); for (var i = 0; i < l.length; i++) if (l[i].id === id) return l[i]; return null; }
+    function audit(actor, action, detail) {
+      S.insert('audit', { id: env.newId(), ts: env.now().toISOString(), actor: actor ? actor.code : 'system', action: action, detail: clean(detail, 300) });
+    }
 
-<footer><div class="wrap fl"><div><b style="color:var(--ink)">Wardiya</b> — attendance systems for small and medium businesses.</div><div>© <span id="yr"></span> Wardiya · <a href="app/index.html">Demo</a> · <a href="#pricing">Pricing</a></div></div></footer>
-<script>document.getElementById('yr').textContent = new Date().getFullYear();</script>
+    // ----- auth -----
+    function login(p) {
+      var code = str(p.code).toUpperCase(), pin = str(p.pin);
+      if (!code || !pin) fail('VALIDATION', 'Enter your employee code and PIN.');
+      var key = 'fail:' + code;
+      var fails = Number(S.counterGet(key) || 0);
+      if (fails >= MAX_FAILS) fail('LOCKED', 'Too many failed attempts. Try again in 15 minutes.');
+      var emp = null, list = employees();
+      for (var i = 0; i < list.length; i++) if (String(list[i].code).toUpperCase() === code) emp = list[i];
+      if (!emp || !bool(emp.active) || hashPin(pin, emp.salt) !== emp.pinHash) {
+        S.counterSet(key, fails + 1, LOCK_SEC);
+        if (fails + 1 >= MAX_FAILS) audit(null, 'login_locked', 'Account code ' + code + ' locked after failed attempts');
+        fail('BAD_LOGIN', 'Wrong employee code or PIN.');
+      }
+      S.counterSet(key, 0, 1);
+      var token = env.newToken();
+      S.sessionPut(token, { empId: emp.id, exp: env.now().getTime() + SESSION_TTL_SEC * 1000 }, SESSION_TTL_SEC);
+      return { token: token, user: publicEmployee(emp), settings: publicSettings() };
+    }
+    function auth(token) {
+      if (!token) fail('AUTH', 'Please sign in.');
+      var s = S.sessionGet(token);
+      if (!s || s.exp < env.now().getTime()) fail('AUTH', 'Your session has expired. Please sign in again.');
+      var emp = findEmp(s.empId);
+      if (!emp || !bool(emp.active)) { S.sessionDel(token); fail('AUTH', 'Account is not active.'); }
+      return emp;
+    }
+    function publicSettings() {
+      var s = settings();
+      return { companyName: s.companyName, timezone: s.timezone, workStart: s.workStart, workEnd: s.workEnd, graceMinutes: s.graceMinutes, workDays: s.workDays, geofenceMode: s.geofenceMode };
+    }
+
+    function validPin(pin) { return /^\d{4,8}$/.test(pin); }
+    function changePin(user, p) {
+      var oldPin = str(p.oldPin), newPin = str(p.newPin);
+      if (hashPin(oldPin, user.salt) !== user.pinHash) fail('BAD_PIN', 'Current PIN is wrong.');
+      if (!validPin(newPin)) fail('VALIDATION', 'New PIN must be 4–8 digits.');
+      if (/^(\d)\1+$/.test(newPin) || '0123456789'.indexOf(newPin) >= 0) fail('VALIDATION', 'Choose a less obvious PIN.');
+      if (newPin === oldPin) fail('VALIDATION', 'New PIN must be different.');
+      var salt = env.newToken().slice(0, 16);
+      S.update('employees', user.id, { salt: salt, pinHash: hashPin(newPin, salt), mustChangePin: false });
+      audit(user, 'pin_changed', 'Own PIN changed');
+      return { done: true };
+    }
+
+    // ----- clock -----
+    function openRecord(empId) {
+      var now = env.now().getTime(), best = null, list = records();
+      for (var i = 0; i < list.length; i++) {
+        var r = list[i];
+        if (r.empId === empId && r.type !== 'leave' && r.inTime && !r.outTime && r.inAt) {
+          var age = (now - new Date(r.inAt).getTime()) / 3600000;
+          if (age <= OPEN_RECORD_MAX_HOURS && (!best || r.inAt > best.inAt)) best = r;
+        }
+      }
+      return best;
+    }
+    function checkLocation(user, p, s) {
+      var res = { lat: '', lng: '', acc: '', dist: '', flag: '' };
+      var lat = num(p.lat), lng = num(p.lng);
+      var hasLoc = p.lat !== undefined && p.lat !== null && p.lat !== '' && isFinite(lat) && isFinite(lng) && Math.abs(lat) <= 90 && Math.abs(lng) <= 180;
+      if (hasLoc) { res.lat = Math.round(lat * 1e6) / 1e6; res.lng = Math.round(lng * 1e6) / 1e6; res.acc = isFinite(num(p.acc)) ? Math.round(num(p.acc)) : ''; }
+      var br = findBranch(user.branchId);
+      var fenced = s.geofenceMode !== 'off' && br && br.lat !== '' && br.lng !== '' && Number(br.radius) > 0 && isFinite(num(br.lat));
+      if (!fenced) return res;
+      if (!hasLoc) {
+        if (s.geofenceMode === 'block') fail('LOCATION_REQUIRED', 'Location is required to check in at ' + br.name + '. Allow location access and try again.');
+        res.flag = 'no_location';
+        return res;
+      }
+      res.dist = haversine(lat, lng, Number(br.lat), Number(br.lng));
+      var tolerance = Math.min(Number(res.acc) || 0, 100); // allow for GPS inaccuracy, capped
+      if (res.dist > Number(br.radius) + tolerance) {
+        if (s.geofenceMode === 'block') fail('OUTSIDE_GEOFENCE', 'You are ' + res.dist + ' m from ' + br.name + ' (allowed: ' + br.radius + ' m).', { distance: res.dist });
+        res.flag = 'outside';
+      }
+      return res;
+    }
+    function checkIn(user, p) {
+      return env.lock(function () {
+        if (openRecord(user.id)) fail('ALREADY_IN', 'You are already checked in. Check out first.');
+        var s = settings(), n = nowParts(), loc = checkLocation(user, p, s);
+        var firstToday = !records().some(function (r) { return r.empId === user.id && r.date === n.date && r.type !== 'leave'; });
+        var lateBy = 0;
+        if (firstToday && s.workDays.indexOf(weekday(n.date)) >= 0) {
+          lateBy = Math.max(0, toMin(n.time) - toMin(s.workStart) - s.graceMinutes);
+          if (lateBy > 0) lateBy = toMin(n.time) - toMin(s.workStart);
+        }
+        var rec = {
+          id: env.newId(), empId: user.id, branchId: user.branchId || '', date: n.date, type: 'work',
+          inTime: n.time, outTime: '', inAt: n.iso, outAt: '',
+          inLat: loc.lat, inLng: loc.lng, inAcc: loc.acc, inDist: loc.dist,
+          outLat: '', outLng: '', outDist: '',
+          lateMin: lateBy, flags: loc.flag ? 'in_' + loc.flag : '', note: safeCell(p.note), source: 'app', editedBy: '', editedAt: ''
+        };
+        S.insert('records', rec);
+        return { record: rec, late: lateBy > 0 };
+      });
+    }
+    function checkOut(user, p) {
+      return env.lock(function () {
+        var r = openRecord(user.id);
+        if (!r) fail('NOT_IN', 'You are not checked in.');
+        var s = settings(), n = nowParts(), loc = checkLocation(user, p, s);
+        var flags = r.flags ? String(r.flags).split(',') : [];
+        if (loc.flag) flags.push('out_' + loc.flag);
+        var patch = { outTime: n.time, outAt: n.iso, outLat: loc.lat, outLng: loc.lng, outDist: loc.dist, flags: flags.join(',') };
+        if (p.note) patch.note = safeCell((r.note ? r.note + ' | ' : '') + p.note);
+        S.update('records', r.id, patch);
+        var merged = {}; for (var k in r) merged[k] = r[k]; for (k in patch) merged[k] = patch[k];
+        return { record: merged, minutes: recordMinutes(merged) };
+      });
+    }
+    function myStatus(user) {
+      var n = nowParts(), open = openRecord(user.id);
+      var today = records().filter(function (r) { return r.empId === user.id && r.date === n.date; });
+      var mins = 0; today.forEach(function (r) { mins += recordMinutes(r); });
+      if (open) mins += Math.max(0, toMin(n.time) - toMin(open.inTime) + (toMin(n.time) < toMin(open.inTime) ? 1440 : 0));
+      var br = findBranch(user.branchId);
+      return {
+        user: publicEmployee(user), settings: publicSettings(), today: n.date, time: n.time, open: open, todayRecords: today,
+        todayMinutes: mins, branch: br ? { id: br.id, name: br.name, fenced: !!(br.lat !== '' && Number(br.radius) > 0) } : null
+      };
+    }
+    function myRecords(user, p) {
+      var r = range(p);
+      return decorate(records().filter(function (x) { return x.empId === user.id && x.date >= r.from && x.date <= r.to; }));
+    }
+
+    // ----- admin -----
+    function requireAdmin(user) { if (user.role !== 'admin') fail('FORBIDDEN', 'Admins only.'); }
+    function range(p) {
+      var n = nowParts();
+      var to = isDate(str(p.to)) ? str(p.to) : n.date;
+      var from = isDate(str(p.from)) ? str(p.from) : addDays(to, -30);
+      if (from > to) { var t = from; from = to; to = t; }
+      return { from: from, to: to };
+    }
+    function decorate(list) {
+      var emps = {}, brs = {}, today = nowParts().date;
+      employees().forEach(function (e) { emps[e.id] = e; });
+      branches().forEach(function (b) { brs[b.id] = b; });
+      return list.map(function (r) {
+        var o = {}; for (var k in r) o[k] = r[k];
+        var e = emps[r.empId], b = brs[r.branchId];
+        o.empName = e ? e.name : '(deleted)'; o.empCode = e ? e.code : '';
+        o.branchName = b ? b.name : '';
+        o.minutes = recordMinutes(r);
+        o.missingOut = r.type !== 'leave' && r.inTime && !r.outTime && r.date < today && !(r.inAt && (env.now().getTime() - new Date(r.inAt).getTime()) / 3600000 <= OPEN_RECORD_MAX_HOURS);
+        return o;
+      }).sort(function (a, b) { return (b.date + (b.inTime || '')).localeCompare(a.date + (a.inTime || '')); });
+    }
+    function listRecords(p) {
+      var r = range(p), emp = str(p.empId), br = str(p.branchId), st = str(p.status);
+      var out = decorate(records().filter(function (x) {
+        return x.date >= r.from && x.date <= r.to && (!emp || x.empId === emp) && (!br || x.branchId === br);
+      }));
+      if (st === 'late') out = out.filter(function (x) { return Number(x.lateMin) > 0; });
+      if (st === 'missing') out = out.filter(function (x) { return x.missingOut; });
+      if (st === 'flagged') out = out.filter(function (x) { return !!x.flags; });
+      if (st === 'leave') out = out.filter(function (x) { return x.type === 'leave'; });
+      if (st === 'manual') out = out.filter(function (x) { return x.source !== 'app'; });
+      return { from: r.from, to: r.to, records: out.slice(0, 3000), total: out.length };
+    }
+    function computeLate(empId, date, inTime, excludeId) {
+      var s = settings();
+      if (s.workDays.indexOf(weekday(date)) < 0) return 0;
+      var earlier = records().some(function (r) { return r.id !== excludeId && r.empId === empId && r.date === date && r.type !== 'leave' && r.inTime && r.inTime < inTime; });
+      if (earlier) return 0;
+      var late = toMin(inTime) - toMin(s.workStart);
+      return late > s.graceMinutes ? late : 0;
+    }
+    function saveRecord(admin, p) {
+      return env.lock(function () {
+        var id = str(p.id), type = p.type === 'leave' ? 'leave' : 'work';
+        var date = str(p.date), inTime = str(p.inTime), outTime = str(p.outTime), note = safeCell(p.note);
+        var reason = clean(p.reason, 200);
+        if (!reason) fail('VALIDATION', 'Please give a reason for this change (kept in the audit log).');
+        if (!isDate(date)) fail('VALIDATION', 'Enter a valid date.');
+        if (type === 'work') {
+          if (!isTime(inTime)) fail('VALIDATION', 'Enter a valid check-in time (HH:MM).');
+          if (outTime && !isTime(outTime)) fail('VALIDATION', 'Enter a valid check-out time (HH:MM).');
+          if (outTime && outTime === inTime) fail('VALIDATION', 'Check-out must be different from check-in.');
+        } else { inTime = ''; outTime = ''; }
+        var stamp = env.now().toISOString();
+        if (id) {
+          var cur = null; records().forEach(function (r) { if (r.id === id) cur = r; });
+          if (!cur) fail('NOT_FOUND', 'Record not found.');
+          var patch = { date: date, type: type, inTime: inTime, outTime: outTime, note: note, editedBy: admin.code, editedAt: stamp,
+            lateMin: type === 'work' ? computeLate(cur.empId, date, inTime, id) : 0 };
+          if (outTime && !cur.outAt) patch.outAt = stamp;
+          S.update('records', id, patch);
+          audit(admin, 'record_edited', (findEmp(cur.empId) || {}).code + ' ' + cur.date + ' ' + (cur.inTime || '-') + '→' + (cur.outTime || '-') + ' changed to ' + date + ' ' + (inTime || '-') + '→' + (outTime || '-') + ' (' + type + '). Reason: ' + reason);
+          return { id: id };
+        }
+        var emp = findEmp(str(p.empId));
+        if (!emp) fail('VALIDATION', 'Choose an employee.');
+        var rec = {
+          id: env.newId(), empId: emp.id, branchId: emp.branchId || '', date: date, type: type, inTime: inTime, outTime: outTime,
+          inAt: '', outAt: '', inLat: '', inLng: '', inAcc: '', inDist: '', outLat: '', outLng: '', outDist: '',
+          lateMin: type === 'work' ? computeLate(emp.id, date, inTime, '') : 0, flags: '', note: note, source: 'manual', editedBy: admin.code, editedAt: stamp
+        };
+        S.insert('records', rec);
+        audit(admin, 'record_added', emp.code + ' ' + date + ' ' + type + ' ' + (inTime || '') + (outTime ? '→' + outTime : '') + '. Reason: ' + reason);
+        return { id: rec.id };
+      });
+    }
+    function deleteRecord(admin, p) {
+      return env.lock(function () {
+        var id = str(p.id), reason = clean(p.reason, 200), cur = null;
+        if (!reason) fail('VALIDATION', 'Please give a reason for deleting.');
+        records().forEach(function (r) { if (r.id === id) cur = r; });
+        if (!cur) fail('NOT_FOUND', 'Record not found.');
+        S.remove('records', id);
+        audit(admin, 'record_deleted', (findEmp(cur.empId) || {}).code + ' ' + cur.date + ' ' + (cur.inTime || cur.type) + '. Reason: ' + reason);
+        return { id: id };
+      });
+    }
+
+    function validateEmployee(p, existing, list) {
+      var e = {
+        code: str(p.code).toUpperCase(), name: clean(p.name, 80), email: str(p.email).toLowerCase(), phone: clean(p.phone, 30),
+        department: clean(p.department, 60), branchId: str(p.branchId), role: p.role === 'admin' ? 'admin' : 'employee'
+      };
+      if (!/^[A-Z0-9_-]{2,20}$/.test(e.code)) fail('VALIDATION', 'Code must be 2–20 letters, numbers, - or _.');
+      if (e.name.length < 2) fail('VALIDATION', 'Enter the employee name.');
+      if (e.email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(e.email)) fail('VALIDATION', 'Email address is not valid.');
+      if (e.phone && !/^[+0-9 ()-]{5,30}$/.test(e.phone)) fail('VALIDATION', 'Phone number is not valid.');
+      if (e.branchId && !findBranch(e.branchId)) fail('VALIDATION', 'Branch not found.');
+      for (var i = 0; i < list.length; i++) {
+        if (String(list[i].code).toUpperCase() === e.code && (!existing || list[i].id !== existing.id)) fail('DUPLICATE', 'Employee code ' + e.code + ' is already used.');
+      }
+      e.name = safeCell(e.name); e.department = safeCell(e.department);
+      return e;
+    }
+    function saveEmployee(admin, p) {
+      return env.lock(function () {
+        var list = employees(), id = str(p.id), existing = id ? findEmp(id) : null;
+        if (id && !existing) fail('NOT_FOUND', 'Employee not found.');
+        var e = validateEmployee(p, existing, list), pin = str(p.pin);
+        if (pin && !validPin(pin)) fail('VALIDATION', 'PIN must be 4–8 digits.');
+        if (existing) {
+          if (existing.id === admin.id && e.role !== 'admin') fail('VALIDATION', 'You cannot remove your own admin role.');
+          if (pin) { var salt = env.newToken().slice(0, 16); e.salt = salt; e.pinHash = hashPin(pin, salt); e.mustChangePin = true; }
+          S.update('employees', existing.id, e);
+          audit(admin, 'employee_updated', e.code + (pin ? ' (PIN reset)' : ''));
+          return { id: existing.id };
+        }
+        if (!pin) fail('VALIDATION', 'Set a starting PIN (4–8 digits).');
+        var s2 = env.newToken().slice(0, 16);
+        e.id = env.newId(); e.salt = s2; e.pinHash = hashPin(pin, s2); e.active = true; e.mustChangePin = true; e.createdAt = env.now().toISOString();
+        S.insert('employees', e);
+        audit(admin, 'employee_added', e.code + ' ' + e.name);
+        return { id: e.id };
+      });
+    }
+    function setEmployeeActive(admin, p) {
+      return env.lock(function () {
+        var e = findEmp(str(p.id)); if (!e) fail('NOT_FOUND', 'Employee not found.');
+        if (e.id === admin.id) fail('VALIDATION', 'You cannot deactivate yourself.');
+        var active = bool(p.active);
+        S.update('employees', e.id, { active: active });
+        audit(admin, active ? 'employee_activated' : 'employee_deactivated', e.code);
+        return { id: e.id, active: active };
+      });
+    }
+    function importEmployees(admin, p) {
+      var text = str(p.csv), lines = text.split(/\r?\n/).filter(function (l) { return l.trim(); });
+      if (!lines.length) fail('VALIDATION', 'Paste at least one line.');
+      if (lines.length > 500) fail('VALIDATION', 'Import up to 500 employees at a time.');
+      if (/^\s*code\s*,/i.test(lines[0])) lines.shift();
+      var brByName = {}; branches().forEach(function (b) { brByName[String(b.name).toLowerCase()] = b.id; });
+      var added = 0, errors = [];
+      lines.forEach(function (line, idx) {
+        var c = line.split(',').map(function (x) { return x.trim(); });
+        try {
+          var bId = c[3] ? brByName[c[3].toLowerCase()] : '';
+          if (c[3] && !bId) fail('VALIDATION', 'Branch "' + c[3] + '" not found');
+          saveEmployee(admin, { code: c[0], name: c[1], department: c[2], branchId: bId || '', pin: c[4], email: c[5], phone: c[6], role: 'employee' });
+          added++;
+        } catch (err) { errors.push('Line ' + (idx + 1) + ': ' + (err.message || err)); }
+      });
+      return { added: added, errors: errors };
+    }
+    function saveBranch(admin, p) {
+      return env.lock(function () {
+        var id = str(p.id), b = { name: safeCell(clean(p.name, 60)), address: safeCell(clean(p.address, 150)), lat: '', lng: '', radius: '' };
+        if (b.name.length < 2) fail('VALIDATION', 'Enter the branch name.');
+        var hasLat = str(p.lat) !== '', hasLng = str(p.lng) !== '';
+        if (hasLat || hasLng) {
+          var lat = num(p.lat), lng = num(p.lng), rad = num(p.radius);
+          if (!(Math.abs(lat) <= 90) || !(Math.abs(lng) <= 180)) fail('VALIDATION', 'Latitude/longitude are not valid.');
+          if (!(rad >= 20 && rad <= 50000)) fail('VALIDATION', 'Radius must be between 20 and 50,000 metres.');
+          b.lat = lat; b.lng = lng; b.radius = Math.round(rad);
+        }
+        var dup = branches().some(function (x) { return String(x.name).toLowerCase() === b.name.toLowerCase() && x.id !== id; });
+        if (dup) fail('DUPLICATE', 'A branch with this name already exists.');
+        if (id) {
+          if (!findBranch(id)) fail('NOT_FOUND', 'Branch not found.');
+          S.update('branches', id, b); audit(admin, 'branch_updated', b.name); return { id: id };
+        }
+        b.id = env.newId(); S.insert('branches', b); audit(admin, 'branch_added', b.name); return { id: b.id };
+      });
+    }
+    function deleteBranch(admin, p) {
+      return env.lock(function () {
+        var b = findBranch(str(p.id)); if (!b) fail('NOT_FOUND', 'Branch not found.');
+        var used = employees().some(function (e) { return e.branchId === b.id && bool(e.active); });
+        if (used) fail('IN_USE', 'Move active employees to another branch first.');
+        S.remove('branches', b.id); audit(admin, 'branch_deleted', b.name); return { id: b.id };
+      });
+    }
+    function saveSettings(admin, p) {
+      var s = settings();
+      var next = {
+        companyName: safeCell(clean(p.companyName, 80)) || s.companyName,
+        timezone: str(p.timezone) || s.timezone,
+        workStart: str(p.workStart), workEnd: str(p.workEnd),
+        graceMinutes: Math.round(num(p.graceMinutes)),
+        workDays: (Array.isArray(p.workDays) ? p.workDays : []).map(Number).filter(function (d) { return d >= 0 && d <= 6; }),
+        geofenceMode: ['off', 'flag', 'block'].indexOf(p.geofenceMode) >= 0 ? p.geofenceMode : s.geofenceMode
+      };
+      if (!env.validTz(next.timezone)) fail('VALIDATION', 'Unknown time zone.');
+      if (!isTime(next.workStart) || !isTime(next.workEnd)) fail('VALIDATION', 'Work hours must be HH:MM.');
+      if (!(next.graceMinutes >= 0 && next.graceMinutes <= 180)) fail('VALIDATION', 'Grace period must be 0–180 minutes.');
+      if (!next.workDays.length) fail('VALIDATION', 'Choose at least one working day.');
+      next.workDays.sort();
+      S.saveSettings(next);
+      audit(admin, 'settings_saved', JSON.stringify(next).slice(0, 280));
+      return publicSettings();
+    }
+
+    function dashboard() {
+      var s = settings(), n = nowParts();
+      var all = records(), byDay = {};
+      // Expected attendance: active staff with the employee role, plus admins who actually clock in.
+      var clocking = {}; all.forEach(function (r) { if (r.date >= addDays(n.date, -29)) clocking[r.empId] = 1; });
+      var emps = employees().filter(function (e) { return bool(e.active) && (e.role !== 'admin' || clocking[e.id]); });
+      var from = addDays(n.date, -29);
+      all.forEach(function (r) {
+        if (r.date < from || r.date > n.date) return;
+        (byDay[r.date] = byDay[r.date] || []).push(r);
+      });
+      var today = byDay[n.date] || [];
+      var presentSet = {}, lateSet = {}, inNow = {}, leaveSet = {}, flagged = 0;
+      today.forEach(function (r) {
+        if (r.type === 'leave') { leaveSet[r.empId] = 1; return; }
+        presentSet[r.empId] = 1;
+        if (Number(r.lateMin) > 0) lateSet[r.empId] = 1;
+        if (!r.outTime) inNow[r.empId] = 1;
+        if (r.flags) flagged++;
+      });
+      var isWork = s.workDays.indexOf(weekday(n.date)) >= 0;
+      var present = Object.keys(presentSet).length, onLeave = Object.keys(leaveSet).length;
+      var notIn = emps.filter(function (e) { return !presentSet[e.id] && !leaveSet[e.id]; });
+      var trend = [], onTimeNum = 0, onTimeDen = 0;
+      for (var i = 13; i >= 0; i--) {
+        var d = addDays(n.date, -i), list = byDay[d] || [], p = {}, l = {};
+        list.forEach(function (r) { if (r.type !== 'leave') { p[r.empId] = 1; if (Number(r.lateMin) > 0) l[r.empId] = 1; } });
+        trend.push({ date: d, present: Object.keys(p).length, late: Object.keys(l).length, workday: s.workDays.indexOf(weekday(d)) >= 0 });
+      }
+      Object.keys(byDay).forEach(function (d) {
+        var firsts = {};
+        byDay[d].forEach(function (r) { if (r.type !== 'leave' && (!firsts[r.empId] || r.inTime < firsts[r.empId].inTime)) firsts[r.empId] = r; });
+        Object.keys(firsts).forEach(function (k) { onTimeDen++; if (!(Number(firsts[k].lateMin) > 0)) onTimeNum++; });
+      });
+      var missing = decorate(all.filter(function (r) { return r.date >= from && r.type !== 'leave' && r.inTime && !r.outTime; })).filter(function (r) { return r.missingOut; }).length;
+      var recent = decorate(today.filter(function (r) { return r.type !== 'leave'; })).slice(0, 10);
+      var mins = 0; today.forEach(function (r) { mins += recordMinutes(r); });
+      return {
+        date: n.date, time: n.time, isWorkday: isWork, settings: publicSettings(),
+        kpi: {
+          activeEmployees: emps.length, present: present, late: Object.keys(lateSet).length, inNow: Object.keys(inNow).length,
+          onLeave: onLeave, absent: isWork ? notIn.length : 0, flaggedToday: flagged, missingCheckouts: missing,
+          onTimeRate30: onTimeDen ? Math.round(onTimeNum / onTimeDen * 100) : null, hoursToday: Math.round(mins / 6) / 10
+        },
+        notCheckedIn: isWork ? notIn.map(function (e) { return { id: e.id, code: e.code, name: e.name }; }) : [],
+        trend: trend, recent: recent
+      };
+    }
+
+    function monthlyReport(p) {
+      var s = settings(), n = nowParts(), month = str(p.month);
+      if (!/^\d{4}-\d{2}$/.test(month)) month = n.date.slice(0, 7);
+      var first = month + '-01', last = addDays(addDays(first, 32).slice(0, 7) + '-01', -1);
+      var until = last < n.date ? last : n.date;
+      var workDays = [];
+      for (var d = first; d <= until; d = addDays(d, 1)) if (s.workDays.indexOf(weekday(d)) >= 0) workDays.push(d);
+      var recs = records().filter(function (r) { return r.date >= first && r.date <= last; });
+      var stdDay = toMin(s.workEnd) - toMin(s.workStart); if (stdDay <= 0) stdDay += 1440;
+      var brs = {}; branches().forEach(function (b) { brs[b.id] = b.name; });
+      var rows = employees().filter(function (e) { var has = recs.some(function (r) { return r.empId === e.id; }); return has || (bool(e.active) && e.role !== 'admin'); }).map(function (e) {
+        var mine = recs.filter(function (r) { return r.empId === e.id; });
+        var present = {}, leave = {}, late = {}, minsByDay = {}, firstIn = {}, missing = 0, lateMinutes = 0;
+        mine.forEach(function (r) {
+          if (r.type === 'leave') { leave[r.date] = 1; return; }
+          present[r.date] = 1;
+          if (Number(r.lateMin) > 0) { late[r.date] = 1; lateMinutes += Number(r.lateMin); }
+          minsByDay[r.date] = (minsByDay[r.date] || 0) + recordMinutes(r);
+          if (!firstIn[r.date] || r.inTime < firstIn[r.date]) firstIn[r.date] = r.inTime;
+          if (!r.outTime && r.date < n.date) missing++;
+        });
+        var total = 0, overtime = 0;
+        Object.keys(minsByDay).forEach(function (k) { total += minsByDay[k]; if (minsByDay[k] > stdDay) overtime += minsByDay[k] - stdDay; });
+        var ins = Object.keys(firstIn).map(function (k) { return toMin(firstIn[k]); });
+        var avgIn = ins.length ? fromMin(ins.reduce(function (a, b) { return a + b; }, 0) / ins.length) : '';
+        var absent = workDays.filter(function (wd) { return !present[wd] && !leave[wd]; }).length;
+        return {
+          empId: e.id, code: e.code, name: e.name, department: e.department || '', branch: brs[e.branchId] || '',
+          workingDays: workDays.length, present: Object.keys(present).length, absent: absent, leave: Object.keys(leave).length,
+          lateDays: Object.keys(late).length, lateMinutes: lateMinutes, hours: Math.round(total / 6) / 10,
+          overtimeHours: Math.round(overtime / 6) / 10, avgCheckIn: avgIn, missingCheckouts: missing,
+          attendanceRate: workDays.length ? Math.round(Object.keys(present).filter(function (k) { return workDays.indexOf(k) >= 0; }).length / workDays.length * 100) : null
+        };
+      });
+      rows.sort(function (a, b) { return a.code.localeCompare(b.code); });
+      return { month: month, from: first, to: last, countedUntil: until, workingDays: workDays.length, rows: rows };
+    }
+
+    // ----- router -----
+    var PUBLIC = { ping: 1, login: 1, info: 1 };
+    function handle(action, payload, token) {
+      payload = payload || {};
+      try {
+        if (typeof action !== 'string') fail('VALIDATION', 'Missing action.');
+        if (action === 'ping') return ok({ version: VERSION, time: env.now().toISOString() });
+        if (action === 'info') return ok({ companyName: settings().companyName, version: VERSION });
+        if (action === 'login') return ok(login(payload));
+        var user = auth(token);
+        if (bool(user.mustChangePin) && ['changePin', 'logout', 'me'].indexOf(action) < 0) fail('MUST_CHANGE_PIN', 'Please set a new PIN before continuing.');
+        switch (action) {
+          case 'me': return ok(myStatus(user));
+          case 'logout': S.sessionDel(token); return ok({ done: true });
+          case 'changePin': return ok(changePin(user, payload));
+          case 'checkIn': return ok(checkIn(user, payload));
+          case 'checkOut': return ok(checkOut(user, payload));
+          case 'myRecords': return ok(myRecords(user, payload));
+        }
+        requireAdmin(user);
+        switch (action) {
+          case 'dashboard': return ok(dashboard());
+          case 'listRecords': return ok(listRecords(payload));
+          case 'saveRecord': return ok(saveRecord(user, payload));
+          case 'deleteRecord': return ok(deleteRecord(user, payload));
+          case 'listEmployees': return ok(employees().map(publicEmployee).sort(function (a, b) { return a.code.localeCompare(b.code); }));
+          case 'saveEmployee': return ok(saveEmployee(user, payload));
+          case 'setEmployeeActive': return ok(setEmployeeActive(user, payload));
+          case 'importEmployees': return ok(importEmployees(user, payload));
+          case 'listBranches': return ok(branches());
+          case 'saveBranch': return ok(saveBranch(user, payload));
+          case 'deleteBranch': return ok(deleteBranch(user, payload));
+          case 'getSettings': return ok(settings());
+          case 'saveSettings': return ok(saveSettings(user, payload));
+          case 'monthlyReport': return ok(monthlyReport(payload));
+          case 'listAudit': return ok(S.list('audit').slice().sort(function (a, b) { return String(b.ts).localeCompare(String(a.ts)); }).slice(0, 500));
+        }
+        fail('UNKNOWN_ACTION', 'Unknown action: ' + action);
+      } catch (e) {
+        if (e instanceof AppError) return { ok: false, code: e.code, error: e.message, extra: e.extra };
+        if (env.log) env.log(e);
+        return { ok: false, code: 'SERVER', error: 'Something went wrong. Please try again.' };
+      }
+    }
+    function ok(data) { return { ok: true, data: data }; }
+
+    // First-time setup: creates the first admin account if there are no employees.
+    function bootstrap(opts) {
+      opts = opts || {};
+      if (employees().length) return null;
+      if (opts.settings) S.saveSettings(opts.settings);
+      var salt = env.newToken().slice(0, 16), pin = opts.adminPin;
+      var admin = { id: env.newId(), code: (opts.adminCode || 'ADMIN').toUpperCase(), name: opts.adminName || 'Administrator', email: '', phone: '', department: 'Management', branchId: '', role: 'admin', active: true, mustChangePin: opts.mustChangePin !== false, salt: salt, pinHash: hashPin(pin, salt), createdAt: env.now().toISOString() };
+      S.insert('employees', admin);
+      audit(null, 'setup', 'Initial admin account created');
+      return admin;
+    }
+
+    return { handle: handle, bootstrap: bootstrap, settings: settings };
+  }
+
+  return {
+    VERSION: VERSION, createApp: createApp, sha256: sha256, hashPin: hashPin, haversine: haversine,
+    addDays: addDays, weekday: weekday, recordMinutes: recordMinutes, DEFAULT_SETTINGS: DEFAULT_SETTINGS,
+    TABLES: {
+      employees: ['id', 'code', 'name', 'email', 'phone', 'department', 'branchId', 'role', 'active', 'mustChangePin', 'salt', 'pinHash', 'createdAt'],
+      branches: ['id', 'name', 'address', 'lat', 'lng', 'radius'],
+      records: ['id', 'empId', 'branchId', 'date', 'type', 'inTime', 'outTime', 'inAt', 'outAt', 'inLat', 'inLng', 'inAcc', 'inDist', 'outLat', 'outLng', 'outDist', 'lateMin', 'flags', 'note', 'source', 'editedBy', 'editedAt'],
+      audit: ['id', 'ts', 'actor', 'action', 'detail']
+    }
+  };
+})();
+if (typeof module !== 'undefined' && module.exports) module.exports = WardiyaCore;
+
+</script>
+<script>
+(function () {
+'use strict';
+var CONFIG = Object.assign({ apiUrl: '', appName: 'Wardiya', brandColor: '', logoUrl: '' }, window.WARDIYA_CONFIG || {});
+if (/^#[0-9a-fA-F]{6}$/.test(CONFIG.brandColor)) { document.documentElement.style.setProperty('--p', CONFIG.brandColor); document.documentElement.style.setProperty('--p2', CONFIG.brandColor); }
+document.title = CONFIG.appName + ' Attendance';
+var MODE = CONFIG.apiUrl ? 'live' : 'demo';
+var LS_KEY = 'wardiya_demo_v1', TOKEN_KEY = 'wardiya_token_' + MODE, LANG_KEY = 'wardiya_lang';
+
+// ---------------------------------------------------------------- safe storage
+var mem = {};
+var store = {
+  get: function (k) { try { return localStorage.getItem(k); } catch (e) { return mem[k] || null; } },
+  set: function (k, v) { try { localStorage.setItem(k, v); } catch (e) { mem[k] = v; } },
+  del: function (k) { try { localStorage.removeItem(k); } catch (e) { delete mem[k]; } }
+};
+
+// ---------------------------------------------------------------- i18n
+var T = {
+  signIn: ['Sign in', 'تسجيل الدخول'], code: ['Employee code', 'رمز الموظف'], pin: ['PIN', 'الرقم السري'],
+  welcome: ['Welcome back', 'مرحباً بعودتك'], signInSub: ['Sign in with your employee code and PIN.', 'سجّل الدخول برمز الموظف والرقم السري.'],
+  tryAdmin: ['Try as Admin', 'جرّب كمدير'], tryEmp: ['Try as Employee', 'جرّب كموظف'],
+  heroT: ['Attendance that runs on your own Google Sheet.', 'نظام حضور يعمل على جدول Google الخاص بك.'],
+  heroS: ['Check-in and check-out from any phone, GPS geofencing, late tracking and payroll-ready monthly reports. No per-user fees.', 'تسجيل الحضور والانصراف من أي هاتف، تحديد الموقع الجغرافي، تتبع التأخير وتقارير شهرية جاهزة للرواتب. بدون رسوم لكل مستخدم.'],
+  f1: ['Phone check-in with GPS', 'تسجيل من الهاتف مع GPS'], f2: ['Late & overtime tracking', 'تتبع التأخير والعمل الإضافي'], f3: ['Monthly payroll reports (Excel)', 'تقارير شهرية للرواتب (Excel)'], f4: ['Your data stays in your Google account', 'بياناتك تبقى في حسابك على Google'],
+  demoMode: ['Demo mode: sample data, saved only in this browser.', 'وضع العرض: بيانات تجريبية محفوظة في هذا المتصفح فقط.'], resetDemo: ['Reset demo data', 'إعادة تعيين البيانات'],
+  dashboard: ['Dashboard', 'لوحة التحكم'], clock: ['Check in / out', 'الحضور والانصراف'], attendance: ['Attendance log', 'سجل الحضور'], employees: ['Employees', 'الموظفون'],
+  branches: ['Branches', 'الفروع'], reports: ['Monthly report', 'التقرير الشهري'], settings: ['Settings', 'الإعدادات'], audit: ['Audit log', 'سجل التدقيق'], history: ['My history', 'سجلي'],
+  logout: ['Sign out', 'تسجيل الخروج'], changePin: ['Change PIN', 'تغيير الرقم السري'],
+  checkIn: ['Check in', 'تسجيل حضور'], checkOut: ['Check out', 'تسجيل انصراف'], tapToCheckIn: ['Tap to start your day', 'اضغط لبدء يومك'], tapToCheckOut: ['Tap when you leave', 'اضغط عند المغادرة'],
+  notIn: ['Not checked in', 'لم يسجل حضور'], inSince: ['Checked in since', 'حاضر منذ'], workedToday: ['Worked today', 'ساعات اليوم'],
+  note: ['Note (optional)', 'ملاحظة (اختياري)'], locating: ['Getting your location…', 'جارٍ تحديد موقعك…'], locOk: ['Location captured', 'تم تحديد الموقع'], locNo: ['Location not available', 'الموقع غير متاح'],
+  present: ['Present today', 'حاضرون اليوم'], late: ['Late', 'متأخر'], inNow: ['In now', 'موجودون الآن'], absent: ['Not checked in', 'لم يسجلوا'], onLeave: ['On leave', 'في إجازة'],
+  onTime30: ['On-time rate (30 days)', 'نسبة الالتزام (30 يوماً)'], missingOut: ['Missing check-outs', 'انصراف غير مسجل'], hoursToday: ['Hours today', 'ساعات اليوم'],
+  last14: ['Attendance — last 14 days', 'الحضور — آخر 14 يوماً'], onTime: ['On time', 'في الوقت'], notCheckedIn: ['Not checked in yet', 'لم يسجلوا بعد'], recent: ['Today’s activity', 'نشاط اليوم'],
+  allIn: ['Everyone is in. 🎉', 'الجميع حاضرون 🎉'], noActivity: ['No check-ins yet today.', 'لا تسجيلات اليوم بعد.'], nonWorkday: ['Today is not a working day.', 'اليوم ليس يوم عمل.'],
+  from: ['From', 'من'], to: ['To', 'إلى'], employee: ['Employee', 'الموظف'], branch: ['Branch', 'الفرع'], status: ['Status', 'الحالة'], all: ['All', 'الكل'],
+  date: ['Date', 'التاريخ'], in: ['In', 'حضور'], out: ['Out', 'انصراف'], hours: ['Hours', 'الساعات'], flags: ['Flags', 'تنبيهات'], actions: ['', ''],
+  addEntry: ['Add entry', 'إضافة سجل'], exportCsv: ['Export CSV', 'تصدير CSV'], edit: ['Edit', 'تعديل'], del: ['Delete', 'حذف'], save: ['Save', 'حفظ'], cancel: ['Cancel', 'إلغاء'],
+  st_late: ['Late', 'متأخر'], st_missing: ['Missing check-out', 'بدون انصراف'], st_flagged: ['Location flag', 'تنبيه موقع'], st_leave: ['Leave', 'إجازة'], st_manual: ['Manual / edited', 'يدوي / معدّل'],
+  onTimeP: ['On time', 'في الوقت'], open: ['Working', 'يعمل'], outside: ['Outside area', 'خارج النطاق'], noLoc: ['No location', 'بدون موقع'], manual: ['Manual', 'يدوي'], edited: ['Edited', 'معدّل'],
+  type: ['Type', 'النوع'], work: ['Work', 'عمل'], leave: ['Leave', 'إجازة'], reason: ['Reason for change (saved in audit log)', 'سبب التعديل (يحفظ في سجل التدقيق)'],
+  editEntry: ['Edit entry', 'تعديل السجل'], newEntry: ['New entry', 'سجل جديد'], confirmDel: ['Delete this entry?', 'حذف هذا السجل؟'],
+  addEmp: ['Add employee', 'إضافة موظف'], importEmp: ['Import', 'استيراد'], name: ['Full name', 'الاسم الكامل'], dept: ['Department', 'القسم'], email: ['Email', 'البريد'], phone: ['Phone', 'الهاتف'],
+  role: ['Role', 'الدور'], admin: ['Admin', 'مدير'], emp: ['Employee', 'موظف'], active: ['Active', 'نشط'], inactive: ['Inactive', 'غير نشط'], startPin: ['Starting PIN (4–8 digits)', 'الرقم السري المبدئي (4–8 أرقام)'],
+  resetPinHint: ['Leave empty to keep the current PIN.', 'اتركه فارغاً للإبقاء على الرقم الحالي.'], deactivate: ['Deactivate', 'تعطيل'], activate: ['Activate', 'تفعيل'], noBranch: ['— No branch —', '— بدون فرع —'],
+  importHelp: ['One employee per line: code, name, department, branch name, PIN, email, phone', 'موظف في كل سطر: الرمز، الاسم، القسم، اسم الفرع، الرقم السري، البريد، الهاتف'],
+  addBranch: ['Add branch', 'إضافة فرع'], address: ['Address', 'العنوان'], lat: ['Latitude', 'خط العرض'], lng: ['Longitude', 'خط الطول'], radius: ['Allowed radius (metres)', 'النطاق المسموح (متر)'],
+  useMyLoc: ['Use my current location', 'استخدم موقعي الحالي'], geofence: ['Geofence', 'النطاق الجغرافي'], noFence: ['No geofence', 'بدون نطاق'], openMap: ['Open map', 'فتح الخريطة'],
+  month: ['Month', 'الشهر'], workingDays: ['Work days', 'أيام العمل'], daysPresent: ['Present', 'حضور'], daysAbsent: ['Absent', 'غياب'], lateDays: ['Late days', 'أيام تأخير'], lateMins: ['Late min', 'دقائق تأخير'],
+  overtime: ['Overtime h', 'إضافي (س)'], avgIn: ['Avg. in', 'متوسط الحضور'], rate: ['Attendance', 'الالتزام'], print: ['Print', 'طباعة'],
+  company: ['Company name', 'اسم الشركة'], tz: ['Time zone', 'المنطقة الزمنية'], workStart: ['Work starts', 'بداية الدوام'], workEnd: ['Work ends', 'نهاية الدوام'], grace: ['Grace period (minutes)', 'فترة السماح (دقائق)'],
+  workDaysL: ['Working days', 'أيام العمل'], gfMode: ['Geofence rule', 'قاعدة النطاق'], gfOff: ['Off — do not check location', 'إيقاف — لا تتحقق من الموقع'], gfFlag: ['Flag — allow, but mark check-ins outside the branch', 'تنبيه — السماح مع تمييز التسجيل خارج الفرع'], gfBlock: ['Block — only allow check-in inside the branch', 'منع — السماح فقط داخل الفرع'],
+  saved: ['Saved', 'تم الحفظ'], when: ['When', 'الوقت'], who: ['By', 'بواسطة'], action: ['Action', 'الإجراء'], details: ['Details', 'التفاصيل'],
+  curPin: ['Current PIN', 'الرقم الحالي'], newPin: ['New PIN', 'الرقم الجديد'], newPin2: ['Repeat new PIN', 'أعد إدخال الرقم الجديد'], mustChange: ['For security, please set your own PIN before continuing.', 'للأمان، يرجى تعيين رقمك السري قبل المتابعة.'],
+  pinMismatch: ['The new PINs do not match.', 'الرقمان غير متطابقين.'], checkedIn: ['Checked in at', 'تم تسجيل الحضور الساعة'], checkedOut: ['Checked out. Worked', 'تم تسجيل الانصراف. ساعات العمل'],
+  lateBy: ['late by', 'متأخر بـ'], min: ['min', 'د'], total: ['Total', 'الإجمالي'], days: ['days', 'أيام'], liveMode: ['Live', 'مباشر'],
+  sun: ['Sun', 'أحد'], mon: ['Mon', 'إثنين'], tue: ['Tue', 'ثلاثاء'], wed: ['Wed', 'أربعاء'], thu: ['Thu', 'خميس'], fri: ['Fri', 'جمعة'], sat: ['Sat', 'سبت'],
+  netErr: ['Cannot reach the server. Check your internet connection.', 'تعذر الوصول إلى الخادم. تحقق من اتصال الإنترنت.'], records: ['records', 'سجلات'], view: ['View', 'عرض']
+};
+var lang = store.get(LANG_KEY) || ((navigator.language || '').indexOf('ar') === 0 ? 'ar' : 'en');
+function t(k) { var v = T[k]; return v ? (v[lang === 'ar' ? 1 : 0] || v[0]) : k; }
+function applyLang() { document.documentElement.lang = lang; document.documentElement.dir = lang === 'ar' ? 'rtl' : 'ltr'; }
+applyLang();
+
+// ---------------------------------------------------------------- utils
+function esc(s) { return String(s === null || s === undefined ? '' : s).replace(/[&<>"']/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; }); }
+function $(s, r) { return (r || document).querySelector(s); }
+function $$(s, r) { return Array.prototype.slice.call((r || document).querySelectorAll(s)); }
+function hm(mins) { mins = Math.round(mins || 0); return Math.floor(mins / 60) + 'h ' + (mins % 60 < 10 ? '0' : '') + (mins % 60) + 'm'; }
+function initials(n) { return String(n || '?').split(/\s+/).map(function (x) { return x[0]; }).slice(0, 2).join('').toUpperCase(); }
+function toast(msg, bad) { var el = document.createElement('div'); el.className = 'toast' + (bad ? ' bad' : ''); el.textContent = msg; $('#toasts').appendChild(el); setTimeout(function () { el.remove(); }, 4200); }
+function tzParts(d, tz) {
+  var o = {}; new Intl.DateTimeFormat('en-GB', { timeZone: tz, year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false }).formatToParts(d).forEach(function (p) { o[p.type] = p.value; });
+  if (o.hour === '24') o.hour = '00'; return o;
+}
+function fmtDate(iso, opts) {
+  var p = iso.split('-').map(Number), d = new Date(Date.UTC(p[0], p[1] - 1, p[2], 12));
+  return new Intl.DateTimeFormat(lang === 'ar' ? 'ar-u-nu-latn' : 'en-GB', Object.assign({ timeZone: 'UTC' }, opts || { weekday: 'short', day: 'numeric', month: 'short' })).format(d);
+}
+var DAYKEYS = ['sun', 'mon', 'tue', 'wed', 'thu', 'fri', 'sat'];
+
+// ---------------------------------------------------------------- backends
+var localApp = null;
+function newId() { if (window.crypto && crypto.randomUUID) return crypto.randomUUID(); return 'id' + Date.now().toString(36) + Math.random().toString(36).slice(2); }
+function newToken() { var a = new Uint8Array(24); (window.crypto || {}).getRandomValues ? crypto.getRandomValues(a) : a.forEach(function (_, i) { a[i] = Math.random() * 256; }); return Array.prototype.map.call(a, function (b) { return ('0' + b.toString(16)).slice(-2); }).join(''); }
+function buildLocal() {
+  var db;
+  function load() { try { db = JSON.parse(store.get(LS_KEY) || 'null'); } catch (e) { db = null; } }
+  function persist() { store.set(LS_KEY, JSON.stringify(db)); }
+  load();
+  var S = {
+    list: function (t) { return db[t]; },
+    insert: function (t, o) { db[t].push(JSON.parse(JSON.stringify(o))); persist(); return o; },
+    update: function (t, id, patch) { db[t].forEach(function (o) { if (o.id === id) for (var k in patch) o[k] = patch[k]; }); persist(); },
+    remove: function (t, id) { db[t] = db[t].filter(function (o) { return o.id !== id; }); persist(); },
+    getSettings: function () { return db.settings; }, saveSettings: function (s) { db.settings = s; persist(); },
+    sessionPut: function (k, v) { db.sessions[k] = v; persist(); }, sessionGet: function (k) { return db.sessions[k] || null; }, sessionDel: function (k) { delete db.sessions[k]; persist(); },
+    counterGet: function (k) { var c = db.counters[k]; return c && c.exp > Date.now() ? c.v : 0; }, counterSet: function (k, v, sec) { db.counters[k] = { v: v, exp: Date.now() + sec * 1000 }; persist(); }
+  };
+  var env = {
+    store: S, now: function () { return new Date(); },
+    tzDate: function (d, tz) { var p = tzParts(d, tz); return p.year + '-' + p.month + '-' + p.day; },
+    tzTime: function (d, tz) { var p = tzParts(d, tz); return p.hour + ':' + p.minute; },
+    newId: newId, newToken: newToken,
+    validTz: function (tz) { try { new Intl.DateTimeFormat('en', { timeZone: tz }); return true; } catch (e) { return false; } },
+    lock: function (fn) { return fn(); }, log: function (e) { console.error(e); }
+  };
+  if (!db || !db.employees) { db = seedDemo(env); persist(); }
+  return WardiyaCore.createApp(env);
+}
+function seedDemo(env) {
+  var seed = 20261123; function rnd() { seed = (seed * 1664525 + 1013904223) % 4294967296; return seed / 4294967296; }
+  var tz = 'UTC'; try { tz = Intl.DateTimeFormat().resolvedOptions().timeZone || 'UTC'; } catch (e) { }
+  var gulfSunThu = ['Asia/Riyadh', 'Asia/Qatar', 'Asia/Kuwait', 'Asia/Bahrain', 'Asia/Muscat', 'Africa/Tripoli', 'Africa/Cairo'].indexOf(tz) >= 0;
+  var workDays = gulfSunThu ? [0, 1, 2, 3, 4] : [1, 2, 3, 4, 5];
+  var db = { employees: [], branches: [], records: [], audit: [], sessions: {}, counters: {},
+    settings: { companyName: 'Al Noor Medical Centre (Demo)', timezone: tz, workStart: '09:00', workEnd: '17:00', graceMinutes: 10, workDays: workDays, geofenceMode: 'flag' } };
+  var b1 = { id: newId(), name: 'Downtown Clinic', address: 'Sheikh Zayed Rd, Dubai (sample)', lat: 25.2048, lng: 55.2708, radius: 200 };
+  var b2 = { id: newId(), name: 'Marina Clinic', address: 'Dubai Marina (sample, no geofence)', lat: '', lng: '', radius: '' };
+  db.branches.push(b1, b2);
+  function emp(code, name, dept, br, role, pin) {
+    var salt = newToken().slice(0, 16);
+    var e = { id: newId(), code: code, name: name, email: '', phone: '', department: dept, branchId: br ? br.id : '', role: role || 'employee', active: true, mustChangePin: false, salt: salt, pinHash: WardiyaCore.hashPin(pin || '1111', salt), createdAt: new Date().toISOString() };
+    db.employees.push(e); return e;
+  }
+  emp('ADMIN', 'Layla Haddad', 'Management', null, 'admin', '1234');
+  var people = [['E001', 'Omar Khalil', 'Reception', b2], ['E002', 'Sara Mansour', 'Nursing', b1], ['E003', 'James Carter', 'Radiology', b1], ['E004', 'Fatima Al Zahra', 'Nursing', b1],
+    ['E005', 'Rahul Menon', 'Pharmacy', b1], ['E006', 'Aisha Noor', 'Reception', b1], ['E007', 'Daniel Okafor', 'Lab', b2], ['E008', 'Mariam Saeed', 'Nursing', b2],
+    ['E009', 'Yousef Haddad', 'Admin', b1], ['E010', 'Grace Lim', 'Dental', b2], ['E011', 'Hassan Ali', 'Facilities', b1], ['E012', 'Nadia Farouk', 'Accounts', b1]];
+  var list = people.map(function (p) { return emp(p[0], p[1], p[2], p[3]); });
+  var now = new Date(), today = env.tzDate(now, tz), nowT = env.tzTime(now, tz), nowMin = Number(nowT.slice(0, 2)) * 60 + Number(nowT.slice(3));
+  function t2(m) { m = Math.max(0, Math.min(1439, Math.round(m))); return ('0' + Math.floor(m / 60)).slice(-2) + ':' + ('0' + (m % 60)).slice(-2); }
+  for (var back = 24; back >= 0; back--) {
+    var d = WardiyaCore.addDays(today, -back);
+    if (workDays.indexOf(WardiyaCore.weekday(d)) < 0) continue;
+    list.forEach(function (e, idx) {
+      if (back === 0 && e.code === 'E001') return; // leave the demo employee free to check in
+      var r = rnd();
+      if (r < 0.035) { db.records.push(rec(e, d, 'leave')); return; }
+      if (r < 0.07) return; // absent
+      var habit = idx % 4 === 1 ? 12 : 0; // a couple of habitual late-comers
+      var inM = 540 - 18 + rnd() * 24 + (rnd() < 0.16 ? 10 + rnd() * 40 : 0) + habit * rnd();
+      var outM = 1020 - 10 + rnd() * 55;
+      if (back === 0) {
+        if (inM > nowMin) return;
+        if (outM > nowMin) outM = null;
+      }
+      var x = rec(e, d, 'work', t2(inM), outM === null ? '' : t2(outM), back === 0 ? new Date(now.getTime() - (nowMin - inM) * 60000).toISOString() : new Date(now.getTime() - back * 86400000).toISOString());
+      if (back > 0 && back < 6 && rnd() < 0.025) x.outTime = '';
+      if (e.branchId === b1.id && rnd() < 0.05) { x.flags = 'in_outside'; x.inDist = 300 + Math.round(rnd() * 900); }
+      db.records.push(x);
+    });
+  }
+  function rec(e, d, type, inT, outT, inAt) {
+    var late = 0;
+    if (type === 'work') { var m = Number(inT.slice(0, 2)) * 60 + Number(inT.slice(3)); late = m - 540 > 10 ? m - 540 : 0; }
+    return { id: newId(), empId: e.id, branchId: e.branchId, date: d, type: type, inTime: inT || '', outTime: outT || '', inAt: inAt || '', outAt: outT ? inAt : '',
+      inLat: '', inLng: '', inAcc: '', inDist: '', outLat: '', outLng: '', outDist: '', lateMin: late, flags: '', note: '', source: 'app', editedBy: '', editedAt: '' };
+  }
+  db.audit.push({ id: newId(), ts: now.toISOString(), actor: 'system', action: 'setup', detail: 'Demo data created' });
+  return db;
+}
+
+var token = store.get(TOKEN_KEY);
+function api(action, payload) {
+  if (MODE === 'demo') {
+    if (!localApp) localApp = buildLocal();
+    var res = localApp.handle(action, JSON.parse(JSON.stringify(payload || {})), token);
+    return new Promise(function (ok) { setTimeout(function () { ok(res); }, 120); });
+  }
+  return fetch(CONFIG.apiUrl, { method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: JSON.stringify({ action: action, payload: payload || {}, token: token }) })
+    .then(function (r) { return r.json(); })
+    .catch(function () { return { ok: false, code: 'NETWORK', error: t('netErr') }; });
+}
+function call(action, payload, btn) {
+  var label;
+  if (btn) { btn.disabled = true; label = btn.innerHTML; btn.innerHTML = '<span class="spin"></span>'; }
+  return api(action, payload).then(function (res) {
+    if (btn) { btn.disabled = false; btn.innerHTML = label; }
+    if (!res.ok && res.code === 'AUTH') { token = null; store.del(TOKEN_KEY); state.user = null; renderLogin(res.error); throw res; }
+    if (!res.ok && res.code === 'MUST_CHANGE_PIN') { pinModal(true); throw res; }
+    return res;
+  });
+}
+
+// ---------------------------------------------------------------- state & routing
+var state = { user: null, settings: null, view: null, cache: {} };
+var ICONS = {
+  dashboard: '<path d="M3 13h8V3H3zM13 21h8V11h-8zM3 21h8v-6H3zM13 3v6h8V3z"/>', clock: '<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>',
+  attendance: '<path d="M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01"/>', employees: '<circle cx="9" cy="8" r="4"/><path d="M2 21c0-4 3-7 7-7s7 3 7 7M17 11a3 3 0 100-6M22 21c0-3-2-5-4-6"/>',
+  branches: '<path d="M12 21s-7-6.2-7-11a7 7 0 0114 0c0 4.8-7 11-7 11z"/><circle cx="12" cy="10" r="2.5"/>', reports: '<path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/>',
+  settings: '<circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 00.3 1.8l.1.1a2 2 0 11-2.8 2.8l-.1-.1a1.7 1.7 0 00-2.9 1.2V21a2 2 0 11-4 0v-.1A1.7 1.7 0 008 19.4a1.7 1.7 0 00-1.8.3l-.1.1a2 2 0 11-2.8-2.8l.1-.1A1.7 1.7 0 003 14H3a2 2 0 110-4h.1A1.7 1.7 0 004.6 8a1.7 1.7 0 00-.3-1.8l-.1-.1a2 2 0 112.8-2.8l.1.1A1.7 1.7 0 009 4.6V4a2 2 0 114 0v.1a1.7 1.7 0 001 1.5 1.7 1.7 0 001.8-.3l.1-.1a2 2 0 112.8 2.8l-.1.1a1.7 1.7 0 00-.3 1.8V10a1.7 1.7 0 001.5 1H21a2 2 0 110 4h-.1a1.7 1.7 0 00-1.5 1z"/>',
+  audit: '<path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>', history: '<path d="M3 12a9 9 0 109-9 9 9 0 00-6.4 2.6L3 8M3 3v5h5M12 7v5l4 2"/>'
+};
+function icon(k) { return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">' + (ICONS[k] || '') + '</svg>'; }
+var LOGO = /^(https:\/\/|[\w.\/-]+\.(png|svg|jpg|jpeg|webp)$)/i.test(CONFIG.logoUrl) ? '<img src="' + esc(CONFIG.logoUrl) + '" width="32" height="32" style="border-radius:8px;object-fit:contain;background:#fff" alt="">' : '<svg width="32" height="32" viewBox="0 0 64 64"><rect width="64" height="64" rx="16" fill="#0E7C66"/><circle cx="32" cy="32" r="17" fill="none" stroke="#fff" stroke-width="5"/><path d="M24 32l6 6 11-12" fill="none" stroke="#F4A63A" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+function views() { return state.user && state.user.role === 'admin' ? ['dashboard', 'clock', 'attendance', 'employees', 'branches', 'reports', 'settings', 'audit'] : ['clock', 'history']; }
+
+// ---------------------------------------------------------------- login
+function renderLogin(errMsg) {
+  $('#app').innerHTML =
+    '<div id="login"><div class="lg-side"><div class="logo">' + LOGO + '<span>' + esc(CONFIG.appName) + '</span></div><div><h1>' + t('heroT') + '</h1><p>' + t('heroS') + '</p>' +
+    '<div class="lg-feats"><div><i>✓</i>' + t('f1') + '</div><div><i>✓</i>' + t('f2') + '</div><div><i>✓</i>' + t('f3') + '</div><div><i>✓</i>' + t('f4') + '</div></div></div>' +
+    '<div class="small" style="opacity:.6">v' + WardiyaCore.VERSION + (MODE === 'demo' ? ' · Demo' : '') + '</div></div>' +
+    '<div class="lg-main"><form class="lg-box" id="lf" autocomplete="off"><div style="display:flex;justify-content:flex-end;margin-bottom:24px"><button type="button" class="btn sm" data-lang>' + (lang === 'ar' ? 'English' : 'العربية') + '</button></div>' +
+    '<h2>' + t('welcome') + '</h2><p class="muted" style="margin:0 0 20px">' + t('signInSub') + '</p>' +
+    (errMsg ? '<div class="err">' + esc(errMsg) + '</div>' : '') +
+    '<div class="field"><label for="lc">' + t('code') + '</label><input class="inp" id="lc" autocapitalize="characters" required maxlength="20" placeholder="E001"></div>' +
+    '<div class="field"><label for="lp">' + t('pin') + '</label><input class="inp" id="lp" type="password" inputmode="numeric" required maxlength="8" placeholder="••••"></div>' +
+    '<button class="btn pri" style="width:100%;padding:12px" id="lb">' + t('signIn') + '</button>' +
+    (MODE === 'demo' ? '<div class="demo-cards"><button type="button" class="demo-card" data-demo="ADMIN|1234"><b>' + t('tryAdmin') + '</b><span>ADMIN · 1234</span></button><button type="button" class="demo-card" data-demo="E001|1111"><b>' + t('tryEmp') + '</b><span>E001 · 1111</span></button></div><p class="hint">' + t('demoMode') + '</p>' : '') +
+    '</form></div></div>';
+  $('#lf').onsubmit = function (e) { e.preventDefault(); doLogin($('#lc').value, $('#lp').value, $('#lb')); };
+  $$('[data-demo]').forEach(function (b) { b.onclick = function () { var p = b.getAttribute('data-demo').split('|'); $('#lc').value = p[0]; $('#lp').value = p[1]; doLogin(p[0], p[1], $('#lb')); }; });
+  $('[data-lang]').onclick = function () { setLang(lang === 'ar' ? 'en' : 'ar'); renderLogin(); };
+}
+function doLogin(code, pin, btn) {
+  call('login', { code: code, pin: pin }, btn).then(function (res) {
+    if (!res.ok) { renderLogin(res.error); $('#lc').value = code; return; }
+    token = res.data.token; store.set(TOKEN_KEY, token);
+    state.user = res.data.user; state.settings = res.data.settings;
+    renderShell(); go(views()[0]);
+    if (state.user.mustChangePin) pinModal(true);
+  }).catch(function () { });
+}
+function setLang(l) { lang = l; store.set(LANG_KEY, l); applyLang(); }
+
+// ---------------------------------------------------------------- shell
+function renderShell() {
+  var u = state.user, vs = views();
+  $('#app').innerHTML =
+    '<div id="shell"><aside class="side"><div class="logo">' + LOGO + '<span>' + esc(CONFIG.appName) + '</span></div><nav class="nav">' +
+    vs.map(function (v) { return '<button data-go="' + v + '">' + icon(v) + '<span>' + t(v) + '</span></button>'; }).join('') +
+    '</nav><div class="side-foot">' + esc(state.settings.companyName) + '<br>v' + WardiyaCore.VERSION + ' · ' + (MODE === 'demo' ? 'Demo' : t('liveMode')) + '</div></aside>' +
+    '<div class="main"><nav class="mob-nav">' + vs.map(function (v) { return '<button data-go="' + v + '">' + t(v) + '</button>'; }).join('') + '</nav>' +
+    (MODE === 'demo' ? '<div class="banner"><span>⚡ ' + t('demoMode') + '</span><button class="btn sm" id="rst">' + t('resetDemo') + '</button></div>' : '') +
+    '<header class="top"><h1 id="vt"></h1><div class="who"><button class="btn sm ghost" data-lang>' + (lang === 'ar' ? 'EN' : 'عربي') + '</button>' +
+    '<div class="avatar" title="' + esc(u.name) + '">' + esc(initials(u.name)) + '</div><div class="hide-m"><div style="font-weight:600;font-size:14px">' + esc(u.name) + '</div><div class="small muted">' + esc(u.code) + ' · ' + (u.role === 'admin' ? t('admin') : t('emp')) + '</div></div>' +
+    '<button class="btn sm" id="cpin">' + t('changePin') + '</button><button class="btn sm" id="lo">' + t('logout') + '</button></div></header>' +
+    '<main class="content" id="view"></main></div></div>';
+  $$('[data-go]').forEach(function (b) { b.onclick = function () { go(b.getAttribute('data-go')); }; });
+  $('#lo').onclick = function () { api('logout'); token = null; store.del(TOKEN_KEY); state.user = null; stopTimers(); renderLogin(); };
+  $('#cpin').onclick = function () { pinModal(false); };
+  $('[data-lang]').onclick = function () { setLang(lang === 'ar' ? 'en' : 'ar'); var v = state.view; renderShell(); go(v); };
+  if ($('#rst')) $('#rst').onclick = function () { if (!confirm(t('resetDemo') + '?')) return; store.del(LS_KEY); store.del(TOKEN_KEY); localApp = null; token = null; state.user = null; stopTimers(); renderLogin(); };
+}
+var timers = [];
+function stopTimers() { timers.forEach(clearInterval); timers = []; }
+function go(v) {
+  if (views().indexOf(v) < 0) v = views()[0];
+  stopTimers(); state.view = v;
+  $$('[data-go]').forEach(function (b) { b.classList.toggle('on', b.getAttribute('data-go') === v); });
+  $('#vt').textContent = t(v);
+  $('#view').innerHTML = '<div class="loading">…</div>';
+  ({ dashboard: vDashboard, clock: vClock, history: vHistory, attendance: vAttendance, employees: vEmployees, branches: vBranches, reports: vReports, settings: vSettings, audit: vAudit })[v]();
+  window.scrollTo(0, 0);
+}
+
+// ---------------------------------------------------------------- modal
+function modal(title, bodyHtml, onSave, opts) {
+  opts = opts || {};
+  var wrap = document.createElement('div'); wrap.className = 'overlay';
+  wrap.innerHTML = '<form class="modal card" novalidate><h3>' + esc(title) + '</h3><div class="err hidden" id="merr"></div>' + bodyHtml +
+    '<div class="acts">' + (opts.extra || '') + (opts.noCancel ? '' : '<button type="button" class="btn" data-x>' + t('cancel') + '</button>') + '<button class="btn pri" id="msave">' + (opts.saveLabel || t('save')) + '</button></div></form>';
+  document.body.appendChild(wrap);
+  var form = $('form', wrap);
+  function close() { wrap.remove(); }
+  if (!opts.noCancel) { $('[data-x]', wrap).onclick = close; wrap.addEventListener('mousedown', function (e) { if (e.target === wrap) close(); }); }
+  function showErr(m) { var el = $('#merr', wrap); el.textContent = m; el.classList.remove('hidden'); }
+  form.onsubmit = function (e) { e.preventDefault(); onSave(form, close, showErr, $('#msave', wrap)); };
+  var first = $('input,select,textarea', form); if (first) setTimeout(function () { first.focus(); }, 30);
+  if (opts.onOpen) opts.onOpen(form, wrap);
+  return wrap;
+}
+function val(f, n) { var el = f.elements[n]; return el ? el.value.trim() : ''; }
+
+function pinModal(forced) {
+  if (document.querySelector('.overlay [name=newPin]')) return;
+  modal(t('changePin'), (forced ? '<p class="muted" style="margin-top:-6px">' + t('mustChange') + '</p>' : '') +
+    '<div class="field"><label>' + t('curPin') + '</label><input class="inp" name="oldPin" type="password" inputmode="numeric" maxlength="8" required></div>' +
+    '<div class="row"><div class="field"><label>' + t('newPin') + '</label><input class="inp" name="newPin" type="password" inputmode="numeric" maxlength="8" required></div>' +
+    '<div class="field"><label>' + t('newPin2') + '</label><input class="inp" name="newPin2" type="password" inputmode="numeric" maxlength="8" required></div></div>',
+    function (f, close, err, btn) {
+      if (val(f, 'newPin') !== val(f, 'newPin2')) return err(t('pinMismatch'));
+      call('changePin', { oldPin: val(f, 'oldPin'), newPin: val(f, 'newPin') }, btn).then(function (r) {
+        if (!r.ok) return err(r.error);
+        close(); toast(t('saved')); state.user.mustChangePin = false; if (forced) go(state.view);
+      }).catch(function () { });
+    }, { noCancel: forced, extra: forced ? '<button type="button" class="btn" onclick="this.closest(\'.overlay\').remove();document.getElementById(\'lo\').click()">' + t('logout') + '</button>' : '' });
+}
+
+// ---------------------------------------------------------------- shared bits
+function statusPills(r) {
+  var h = '';
+  if (r.type === 'leave') return '<span class="pill b">' + t('leave') + '</span>';
+  if (!r.outTime && !r.missingOut) h += '<span class="pill g">● ' + t('open') + '</span> ';
+  if (Number(r.lateMin) > 0) h += '<span class="pill a">' + t('late') + ' ' + r.lateMin + t('min') + '</span> ';
+  else if (r.inTime) h += '<span class="pill">' + t('onTimeP') + '</span> ';
+  if (r.missingOut) h += '<span class="pill r">' + t('st_missing') + '</span> ';
+  if (/outside/.test(r.flags || '')) h += '<span class="pill r" title="' + esc(r.inDist ? r.inDist + ' m' : '') + '">' + t('outside') + (r.inDist ? ' ' + esc(r.inDist) + 'm' : '') + '</span> ';
+  if (/no_location/.test(r.flags || '')) h += '<span class="pill a">' + t('noLoc') + '</span> ';
+  if (r.source === 'manual') h += '<span class="pill">' + t('manual') + '</span> '; else if (r.editedBy) h += '<span class="pill">' + t('edited') + '</span> ';
+  return h;
+}
+function csvDownload(name, rows) {
+  var csv = rows.map(function (r) { return r.map(function (c) { c = String(c === null || c === undefined ? '' : c); if (/^[=+\-@]/.test(c)) c = "'" + c; return '"' + c.replace(/"/g, '""') + '"'; }).join(','); }).join('\r\n');
+  var blob = new Blob(['﻿' + csv], { type: 'text/csv;charset=utf-8' });
+  var a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = name; document.body.appendChild(a); a.click(); setTimeout(function () { URL.revokeObjectURL(a.href); a.remove(); }, 500);
+}
+function getPosition() {
+  return new Promise(function (resolve) {
+    if (!navigator.geolocation) return resolve(null);
+    var done = false;
+    var timer = setTimeout(function () { if (!done) { done = true; resolve(null); } }, 12000);
+    navigator.geolocation.getCurrentPosition(function (p) { if (done) return; done = true; clearTimeout(timer); resolve({ lat: p.coords.latitude, lng: p.coords.longitude, acc: p.coords.accuracy }); },
+      function () { if (done) return; done = true; clearTimeout(timer); resolve(null); }, { enableHighAccuracy: true, timeout: 11000, maximumAge: 30000 });
+  });
+}
+function loadLookups() {
+  if (state.user.role !== 'admin') return Promise.resolve();
+  return Promise.all([call('listEmployees'), call('listBranches')]).then(function (r) { state.cache.emps = r[0].data || []; state.cache.branches = r[1].data || []; });
+}
+function empOptions(sel, withAll) { return (withAll ? '<option value="">' + t('all') + '</option>' : '') + (state.cache.emps || []).map(function (e) { return '<option value="' + esc(e.id) + '"' + (e.id === sel ? ' selected' : '') + '>' + esc(e.code + ' — ' + e.name) + '</option>'; }).join(''); }
+function branchOptions(sel, first) { return '<option value="">' + first + '</option>' + (state.cache.branches || []).map(function (b) { return '<option value="' + esc(b.id) + '"' + (b.id === sel ? ' selected' : '') + '>' + esc(b.name) + '</option>'; }).join(''); }
+
+// ---------------------------------------------------------------- views: clock
+function vClock() {
+  call('me').then(function (res) {
+    if (!res.ok) return $('#view').innerHTML = '<div class="err">' + esc(res.error) + '</div>';
+    var d = res.data, s = d.settings, open = d.open;
+    state.settings = s;
+    var startedMin = open ? Date.now() : 0, base = d.todayMinutes;
+    $('#view').innerHTML = '<div class="card clock"><div class="date" id="cd"></div><div class="time" id="ct">--:--</div>' +
+      '<div>' + (open ? '<span class="pill g">● ' + t('inSince') + ' ' + esc(open.inTime) + '</span>' : '<span class="pill">' + t('notIn') + '</span>') +
+      (d.branch ? ' <span class="pill">' + esc(d.branch.name) + '</span>' : '') + '</div>' +
+      '<button class="big-btn ' + (open ? 'out' : 'in') + '" id="cb">' + (open ? t('checkOut') : t('checkIn')) + '<small>' + (open ? t('tapToCheckOut') : t('tapToCheckIn')) + '</small></button>' +
+      '<div class="field" style="max-width:340px;margin:0 auto 10px"><input class="inp" id="cn" maxlength="150" placeholder="' + t('note') + '"></div>' +
+      '<div class="loc" id="cl"></div>' +
+      '<div class="sessions"><div class="li"><span class="muted">' + t('workedToday') + '</span><b id="cw">' + hm(base) + '</b></div>' +
+      d.todayRecords.filter(function (r) { return r.type !== 'leave'; }).map(function (r) { return '<div class="li"><span>' + esc(r.inTime) + ' → ' + (r.outTime ? esc(r.outTime) : '…') + '</span><span>' + statusPills(r) + '</span></div>'; }).join('') +
+      '</div></div>';
+    function tick() {
+      var p = tzParts(new Date(), s.timezone);
+      $('#ct').textContent = p.hour + ':' + p.minute;
+      $('#cd').textContent = fmtDate(p.year + '-' + p.month + '-' + p.day, { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
+      if (open) $('#cw').textContent = hm(base + (Date.now() - startedMin) / 60000);
+    }
+    tick(); timers.push(setInterval(tick, 1000 * 15));
+    $('#cb').onclick = function () {
+      var btn = this; btn.disabled = true;
+      $('#cl').innerHTML = '<span class="spin" style="border-color:#ccd;border-top-color:var(--p)"></span> ' + t('locating');
+      getPosition().then(function (pos) {
+        $('#cl').textContent = pos ? '📍 ' + t('locOk') + ' (±' + Math.round(pos.acc) + ' m)' : '📍 ' + t('locNo');
+        var payload = Object.assign({ note: $('#cn').value }, pos || {});
+        return call(open ? 'checkOut' : 'checkIn', payload, btn);
+      }).then(function (r) {
+        if (!r.ok) { btn.disabled = false; toast(r.error, true); return; }
+        if (open) toast(t('checkedOut') + ' ' + hm(r.data.minutes));
+        else toast(t('checkedIn') + ' ' + r.data.record.inTime + (r.data.late ? ' — ' + t('lateBy') + ' ' + r.data.record.lateMin + ' ' + t('min') : ''), r.data.late);
+        vClock();
+      }).catch(function () { btn.disabled = false; });
+    };
+  }).catch(function () { });
+}
+
+// ---------------------------------------------------------------- views: employee history
+function vHistory() {
+  var p = tzParts(new Date(), state.settings.timezone), month = state.cache.hMonth || (p.year + '-' + p.month);
+  var first = month + '-01', last = WardiyaCore.addDays(WardiyaCore.addDays(first, 32).slice(0, 7) + '-01', -1);
+  call('myRecords', { from: first, to: last }).then(function (res) {
+    var list = res.data || [], mins = 0, late = 0, days = {};
+    list.forEach(function (r) { mins += r.minutes; if (Number(r.lateMin) > 0) late++; if (r.type !== 'leave') days[r.date] = 1; });
+    $('#view').innerHTML = '<div class="toolbar"><div class="field"><label>' + t('month') + '</label><input class="inp" type="month" id="hm" value="' + month + '"></div></div>' +
+      '<div class="kpis"><div class="card kpi"><div class="l">' + t('daysPresent') + '</div><div class="v">' + Object.keys(days).length + '</div></div><div class="card kpi"><div class="l">' + t('hours') + '</div><div class="v">' + hm(mins) + '</div></div><div class="card kpi"><div class="l">' + t('lateDays') + '</div><div class="v">' + late + '</div></div></div>' +
+      '<div class="card tbl-wrap"><table><thead><tr><th>' + t('date') + '</th><th>' + t('in') + '</th><th>' + t('out') + '</th><th class="num">' + t('hours') + '</th><th>' + t('status') + '</th></tr></thead><tbody>' +
+      (list.length ? list.map(function (r) { return '<tr><td>' + fmtDate(r.date) + '</td><td>' + esc(r.inTime || '—') + '</td><td>' + esc(r.outTime || '—') + '</td><td class="num">' + (r.minutes ? hm(r.minutes) : '—') + '</td><td>' + statusPills(r) + '</td></tr>'; }).join('') : '<tr><td colspan="5" class="empty">—</td></tr>') +
+      '</tbody></table></div>';
+    $('#hm').onchange = function () { state.cache.hMonth = this.value; vHistory(); };
+  }).catch(function () { });
+}
+
+// ---------------------------------------------------------------- views: dashboard
+function vDashboard() {
+  call('dashboard').then(function (res) {
+    if (!res.ok) return $('#view').innerHTML = '<div class="err">' + esc(res.error) + '</div>';
+    var d = res.data, k = d.kpi, max = Math.max(1, k.activeEmployees);
+    function card(l, v, s, color) { return '<div class="card kpi"><div class="l">' + l + '</div><div class="v"' + (color ? ' style="color:' + color + '"' : '') + '>' + v + '</div>' + (s ? '<div class="s">' + s + '</div>' : '') + '</div>'; }
+    $('#view').innerHTML =
+      '<p class="muted" style="margin:-6px 0 16px">' + fmtDate(d.date, { weekday: 'long', day: 'numeric', month: 'long' }) + ' · ' + esc(d.time) + (d.isWorkday ? '' : ' · ' + t('nonWorkday')) + '</p>' +
+      '<div class="kpis">' + card(t('present'), k.present + '<span class="muted" style="font-size:16px;font-weight:600"> / ' + k.activeEmployees + '</span>', k.inNow + ' ' + t('inNow').toLowerCase()) +
+      card(t('late'), k.late, '', k.late ? 'var(--amb)' : '') + card(t('absent'), k.absent, k.onLeave ? k.onLeave + ' ' + t('onLeave').toLowerCase() : '', k.absent ? 'var(--red)' : '') +
+      card(t('onTime30'), k.onTimeRate30 === null ? '—' : k.onTimeRate30 + '%') +
+      card(t('missingOut'), k.missingCheckouts, k.missingCheckouts ? '<a href="#" id="gomiss">' + t('view') + ' →</a>' : '', k.missingCheckouts ? 'var(--red)' : '') + '</div>' +
+      '<div class="grid2"><div class="card sec"><h3>' + t('last14') + '<span class="legend"><span><i style="background:var(--p)"></i>' + t('onTime') + '</span><span><i style="background:var(--acc)"></i>' + t('late') + '</span></span></h3><div class="bars">' +
+      d.trend.map(function (x) {
+        var onT = x.present - x.late;
+        return '<div class="bar' + (x.workday ? '' : ' off') + '" title="' + esc(x.date + ': ' + x.present + ' present, ' + x.late + ' late') + '"><small>' + (x.present || '') + '</small><div class="stack" style="height:130px;justify-content:flex-start"><i style="height:' + (onT / max * 100) + '%"></i><i class="late" style="height:' + (x.late / max * 100) + '%"></i></div><small>' + esc(fmtDate(x.date, { weekday: 'narrow' })) + '<br>' + Number(x.date.slice(8)) + '</small></div>';
+      }).join('') + '</div></div>' +
+      '<div class="card sec"><h3>' + t('notCheckedIn') + ' <span class="pill' + (d.notCheckedIn.length ? ' r' : ' g') + '">' + d.notCheckedIn.length + '</span></h3><div class="list">' +
+      (d.isWorkday ? (d.notCheckedIn.length ? d.notCheckedIn.slice(0, 12).map(function (e) { return '<div class="li"><div><div class="n">' + esc(e.name) + '</div><div class="m">' + esc(e.code) + '</div></div></div>'; }).join('') : '<div class="empty">' + t('allIn') + '</div>') : '<div class="empty">' + t('nonWorkday') + '</div>') +
+      '</div></div></div>' +
+      '<div class="card sec" style="margin-top:16px"><h3>' + t('recent') + '</h3><div class="list">' +
+      (d.recent.length ? d.recent.map(function (r) { return '<div class="li"><div><div class="n">' + esc(r.empName) + ' <span class="muted small">' + esc(r.empCode) + '</span></div><div class="m">' + esc(r.branchName) + ' · ' + esc(r.inTime) + (r.outTime ? ' → ' + esc(r.outTime) : '') + '</div></div><div>' + statusPills(r) + '</div></div>'; }).join('') : '<div class="empty">' + t('noActivity') + '</div>') +
+      '</div></div>';
+    if ($('#gomiss')) $('#gomiss').onclick = function (e) { e.preventDefault(); state.cache.attFilter = { status: 'missing' }; go('attendance'); };
+    timers.push(setInterval(function () { if (state.view === 'dashboard' && !document.querySelector('.overlay')) vDashboard(); }, 60000));
+  }).catch(function () { });
+}
+
+// ---------------------------------------------------------------- views: attendance log
+function vAttendance() {
+  var p = tzParts(new Date(), state.settings.timezone), today = p.year + '-' + p.month + '-' + p.day;
+  var f = Object.assign({ from: WardiyaCore.addDays(today, -6), to: today, empId: '', branchId: '', status: '' }, state.cache.attFilter || {});
+  if (f.status === 'missing' && !state.cache.attFilter.from) f.from = WardiyaCore.addDays(today, -30);
+  state.cache.attFilter = f;
+  loadLookups().then(function () { return call('listRecords', f); }).then(function (res) {
+    if (!res.ok) return $('#view').innerHTML = '<div class="err">' + esc(res.error) + '</div>';
+    var list = res.data.records, mins = 0; list.forEach(function (r) { mins += r.minutes; });
+    var sts = ['late', 'missing', 'flagged', 'leave', 'manual'];
+    $('#view').innerHTML = '<div class="toolbar">' +
+      '<div class="field"><label>' + t('from') + '</label><input class="inp" type="date" id="ff" value="' + esc(res.data.from) + '"></div>' +
+      '<div class="field"><label>' + t('to') + '</label><input class="inp" type="date" id="ft" value="' + esc(res.data.to) + '"></div>' +
+      '<div class="field"><label>' + t('employee') + '</label><select class="inp" id="fe">' + empOptions(f.empId, true) + '</select></div>' +
+      '<div class="field"><label>' + t('branch') + '</label><select class="inp" id="fb">' + branchOptions(f.branchId, t('all')) + '</select></div>' +
+      '<div class="field"><label>' + t('status') + '</label><select class="inp" id="fs"><option value="">' + t('all') + '</option>' + sts.map(function (s) { return '<option value="' + s + '"' + (f.status === s ? ' selected' : '') + '>' + t('st_' + s) + '</option>'; }).join('') + '</select></div>' +
+      '<div style="flex:1"></div><button class="btn" id="fx">' + t('exportCsv') + '</button><button class="btn pri" id="fa">+ ' + t('addEntry') + '</button></div>' +
+      '<p class="small muted" style="margin:0 0 10px">' + res.data.total + ' ' + t('records') + ' · ' + t('total') + ' ' + hm(mins) + '</p>' +
+      '<div class="card tbl-wrap"><table><thead><tr><th>' + t('date') + '</th><th>' + t('employee') + '</th><th class="hide-m">' + t('branch') + '</th><th>' + t('in') + '</th><th>' + t('out') + '</th><th class="num">' + t('hours') + '</th><th>' + t('status') + '</th><th></th></tr></thead><tbody>' +
+      (list.length ? list.map(function (r) {
+        return '<tr><td style="white-space:nowrap">' + fmtDate(r.date) + '</td><td><b>' + esc(r.empName) + '</b><div class="small muted">' + esc(r.empCode) + (r.note ? ' · ' + esc(r.note) : '') + '</div></td><td class="hide-m">' + esc(r.branchName) + '</td><td>' + esc(r.inTime || '—') + '</td><td>' + esc(r.outTime || '—') + '</td><td class="num">' + (r.minutes ? hm(r.minutes) : '—') + '</td><td>' + statusPills(r) + '</td><td style="white-space:nowrap"><button class="btn sm" data-edit="' + esc(r.id) + '">' + t('edit') + '</button></td></tr>';
+      }).join('') : '<tr><td colspan="8" class="empty">—</td></tr>') + '</tbody></table></div>';
+    function refilter() { state.cache.attFilter = { from: $('#ff').value, to: $('#ft').value, empId: $('#fe').value, branchId: $('#fb').value, status: $('#fs').value }; vAttendance(); }
+    ['#ff', '#ft', '#fe', '#fb', '#fs'].forEach(function (s) { $(s).onchange = refilter; });
+    $('#fa').onclick = function () { recordModal(null); };
+    $$('[data-edit]').forEach(function (b) { b.onclick = function () { recordModal(list.filter(function (r) { return r.id === b.getAttribute('data-edit'); })[0]); }; });
+    $('#fx').onclick = function () {
+      csvDownload('attendance_' + res.data.from + '_' + res.data.to + '.csv', [['Date', 'Code', 'Employee', 'Branch', 'Type', 'In', 'Out', 'Hours', 'Late (min)', 'Flags', 'Distance (m)', 'Note', 'Source', 'Edited by']].concat(list.map(function (r) {
+        return [r.date, r.empCode, r.empName, r.branchName, r.type, r.inTime, r.outTime, (r.minutes / 60).toFixed(2), r.lateMin, (r.flags || '') + (r.missingOut ? ' missing_out' : ''), r.inDist, r.note, r.source, r.editedBy];
+      })));
+    };
+  }).catch(function () { });
+}
+function recordModal(r) {
+  var p = tzParts(new Date(), state.settings.timezone), today = p.year + '-' + p.month + '-' + p.day;
+  var isNew = !r; r = r || { date: today, type: 'work', inTime: state.settings.workStart, outTime: state.settings.workEnd, note: '' };
+  var m = modal(isNew ? t('newEntry') : t('editEntry') + ' — ' + r.empName,
+    (isNew ? '<div class="field"><label>' + t('employee') + '</label><select class="inp" name="empId" required>' + empOptions('', false) + '</select></div>' : '') +
+    '<div class="row"><div class="field"><label>' + t('date') + '</label><input class="inp" type="date" name="date" value="' + esc(r.date) + '" required></div>' +
+    '<div class="field"><label>' + t('type') + '</label><select class="inp" name="type"><option value="work"' + (r.type !== 'leave' ? ' selected' : '') + '>' + t('work') + '</option><option value="leave"' + (r.type === 'leave' ? ' selected' : '') + '>' + t('leave') + '</option></select></div></div>' +
+    '<div class="row times"><div class="field"><label>' + t('in') + '</label><input class="inp" type="time" name="inTime" value="' + esc(r.inTime) + '"></div><div class="field"><label>' + t('out') + '</label><input class="inp" type="time" name="outTime" value="' + esc(r.outTime) + '"></div></div>' +
+    '<div class="field"><label>' + t('note') + '</label><input class="inp" name="note" maxlength="150" value="' + esc(r.note) + '"></div>' +
+    '<div class="field"><label>' + t('reason') + '</label><input class="inp" name="reason" maxlength="200" required></div>',
+    function (f, close, err, btn) {
+      var payload = { id: isNew ? '' : r.id, empId: val(f, 'empId'), date: val(f, 'date'), type: val(f, 'type'), inTime: val(f, 'inTime'), outTime: val(f, 'outTime'), note: val(f, 'note'), reason: val(f, 'reason') };
+      call('saveRecord', payload, btn).then(function (res) { if (!res.ok) return err(res.error); close(); toast(t('saved')); vAttendance(); }).catch(function () { });
+    }, {
+      extra: isNew ? '' : '<button type="button" class="btn dan" id="mdel" style="margin-inline-end:auto">' + t('del') + '</button>',
+      onOpen: function (f, wrap) {
+        function sync() { $('.times', wrap).classList.toggle('hidden', f.elements.type.value === 'leave'); }
+        f.elements.type.onchange = sync; sync();
+        var d = $('#mdel', wrap);
+        if (d) d.onclick = function () {
+          var reason = val(f, 'reason'); if (!reason) { f.elements.reason.focus(); var e = $('#merr', wrap); e.textContent = t('reason'); e.classList.remove('hidden'); return; }
+          if (!confirm(t('confirmDel'))) return;
+          call('deleteRecord', { id: r.id, reason: reason }, d).then(function (res) { if (!res.ok) { var e = $('#merr', wrap); e.textContent = res.error; e.classList.remove('hidden'); return; } wrap.remove(); toast(t('saved')); vAttendance(); }).catch(function () { });
+        };
+      }
+    });
+  return m;
+}
+
+// ---------------------------------------------------------------- views: employees
+function vEmployees() {
+  loadLookups().then(function () {
+    var list = state.cache.emps, brs = {}; state.cache.branches.forEach(function (b) { brs[b.id] = b.name; });
+    $('#view').innerHTML = '<div class="toolbar"><div class="field" style="flex:1;max-width:320px"><label>&nbsp;</label><input class="inp" id="es" placeholder="🔍 ' + t('name') + ' / ' + t('code') + '"></div><div style="flex:1"></div><button class="btn" id="ei">' + t('importEmp') + '</button><button class="btn pri" id="ea">+ ' + t('addEmp') + '</button></div>' +
+      '<div class="card tbl-wrap"><table><thead><tr><th>' + t('code') + '</th><th>' + t('name') + '</th><th class="hide-m">' + t('dept') + '</th><th class="hide-m">' + t('branch') + '</th><th>' + t('role') + '</th><th>' + t('status') + '</th><th></th></tr></thead><tbody id="eb">' +
+      list.map(function (e) {
+        return '<tr data-q="' + esc((e.code + ' ' + e.name + ' ' + e.department).toLowerCase()) + '"><td><b>' + esc(e.code) + '</b></td><td>' + esc(e.name) + '<div class="small muted">' + esc(e.email || e.phone || '') + '</div></td><td class="hide-m">' + esc(e.department) + '</td><td class="hide-m">' + esc(brs[e.branchId] || '—') + '</td><td>' + (e.role === 'admin' ? '<span class="pill b">' + t('admin') + '</span>' : t('emp')) + '</td><td>' + (e.active ? '<span class="pill g">' + t('active') + '</span>' : '<span class="pill">' + t('inactive') + '</span>') + '</td>' +
+          '<td style="white-space:nowrap;text-align:end"><button class="btn sm" data-ee="' + esc(e.id) + '">' + t('edit') + '</button> ' + (e.id !== state.user.id ? '<button class="btn sm' + (e.active ? ' dan' : '') + '" data-ea="' + esc(e.id) + '" data-on="' + (e.active ? '0' : '1') + '">' + (e.active ? t('deactivate') : t('activate')) + '</button>' : '') + '</td></tr>';
+      }).join('') + '</tbody></table></div>';
+    $('#es').oninput = function () { var q = this.value.toLowerCase(); $$('#eb tr').forEach(function (tr) { tr.classList.toggle('hidden', tr.getAttribute('data-q').indexOf(q) < 0); }); };
+    $('#ea').onclick = function () { empModal(null); };
+    $('#ei').onclick = importModal;
+    $$('[data-ee]').forEach(function (b) { b.onclick = function () { empModal(list.filter(function (e) { return e.id === b.getAttribute('data-ee'); })[0]); }; });
+    $$('[data-ea]').forEach(function (b) { b.onclick = function () { call('setEmployeeActive', { id: b.getAttribute('data-ea'), active: b.getAttribute('data-on') === '1' }, b).then(function (r) { if (!r.ok) return toast(r.error, true); vEmployees(); }).catch(function () { }); }; });
+  }).catch(function () { });
+}
+function empModal(e) {
+  var isNew = !e; e = e || { code: '', name: '', department: '', branchId: '', role: 'employee', email: '', phone: '' };
+  modal(isNew ? t('addEmp') : t('edit') + ' — ' + e.name,
+    '<div class="row"><div class="field"><label>' + t('code') + '</label><input class="inp" name="code" value="' + esc(e.code) + '" maxlength="20" required placeholder="E013"></div><div class="field"><label>' + t('name') + '</label><input class="inp" name="name" value="' + esc(e.name) + '" maxlength="80" required></div></div>' +
+    '<div class="row"><div class="field"><label>' + t('dept') + '</label><input class="inp" name="department" value="' + esc(e.department) + '" maxlength="60"></div><div class="field"><label>' + t('branch') + '</label><select class="inp" name="branchId">' + branchOptions(e.branchId, t('noBranch')) + '</select></div></div>' +
+    '<div class="row"><div class="field"><label>' + t('email') + '</label><input class="inp" name="email" type="email" value="' + esc(e.email) + '"></div><div class="field"><label>' + t('phone') + '</label><input class="inp" name="phone" value="' + esc(e.phone) + '"></div></div>' +
+    '<div class="row"><div class="field"><label>' + t('role') + '</label><select class="inp" name="role"><option value="employee">' + t('emp') + '</option><option value="admin"' + (e.role === 'admin' ? ' selected' : '') + '>' + t('admin') + '</option></select></div>' +
+    '<div class="field"><label>' + t('startPin') + '</label><input class="inp" name="pin" inputmode="numeric" maxlength="8"' + (isNew ? ' required' : '') + '>' + (isNew ? '' : '<span class="hint">' + t('resetPinHint') + '</span>') + '</div></div>',
+    function (f, close, err, btn) {
+      var p = { id: isNew ? '' : e.id }; ['code', 'name', 'department', 'branchId', 'email', 'phone', 'role', 'pin'].forEach(function (k) { p[k] = val(f, k); });
+      call('saveEmployee', p, btn).then(function (r) { if (!r.ok) return err(r.error); close(); toast(t('saved')); vEmployees(); }).catch(function () { });
+    });
+}
+function importModal() {
+  modal(t('importEmp'), '<p class="hint" style="margin-top:-4px">' + t('importHelp') + '</p><textarea class="inp" name="csv" rows="8" style="font-family:ui-monospace,monospace;font-size:13px" placeholder="E013,Ali Hassan,Sales,Downtown Clinic,4821\nE014,Mary Jones,Nursing,,5937,mary@example.com"></textarea><div id="ir"></div>',
+    function (f, close, err, btn) {
+      call('importEmployees', { csv: f.elements.csv.value }, btn).then(function (r) {
+        if (!r.ok) return err(r.error);
+        $('#ir').innerHTML = '<p><b>+' + r.data.added + '</b></p>' + (r.data.errors.length ? '<div class="err" style="white-space:pre-line">' + esc(r.data.errors.join('\n')) + '</div>' : '');
+        if (!r.data.errors.length) { close(); toast('+' + r.data.added); }
+        vEmployees();
+      }).catch(function () { });
+    });
+}
+
+// ---------------------------------------------------------------- views: branches
+function vBranches() {
+  loadLookups().then(function () {
+    var counts = {}; state.cache.emps.forEach(function (e) { if (e.active) counts[e.branchId] = (counts[e.branchId] || 0) + 1; });
+    $('#view').innerHTML = '<div class="toolbar"><div style="flex:1"></div><button class="btn pri" id="ba">+ ' + t('addBranch') + '</button></div><div class="branch-cards">' +
+      (state.cache.branches.length ? state.cache.branches.map(function (b) {
+        var fenced = b.lat !== '' && b.lat !== null && Number(b.radius) > 0;
+        return '<div class="card sec"><h3>' + esc(b.name) + '<span class="pill">' + (counts[b.id] || 0) + ' 👤</span></h3><p class="muted small" style="margin:-6px 0 12px">' + esc(b.address || '') + '</p>' +
+          '<p style="margin:0 0 14px">' + (fenced ? '<span class="pill g">' + t('geofence') + ': ' + esc(b.radius) + ' m</span> <a class="small" target="_blank" rel="noopener" href="https://www.openstreetmap.org/?mlat=' + encodeURIComponent(b.lat) + '&mlon=' + encodeURIComponent(b.lng) + '#map=17/' + encodeURIComponent(b.lat) + '/' + encodeURIComponent(b.lng) + '">' + t('openMap') + ' ↗</a>' : '<span class="pill">' + t('noFence') + '</span>') + '</p>' +
+          '<div style="display:flex;gap:8px"><button class="btn sm" data-be="' + esc(b.id) + '">' + t('edit') + '</button><button class="btn sm dan" data-bd="' + esc(b.id) + '">' + t('del') + '</button></div></div>';
+      }).join('') : '<div class="empty card">—</div>') + '</div>';
+    $('#ba').onclick = function () { branchModal(null); };
+    $$('[data-be]').forEach(function (b) { b.onclick = function () { branchModal(state.cache.branches.filter(function (x) { return x.id === b.getAttribute('data-be'); })[0]); }; });
+    $$('[data-bd]').forEach(function (b) { b.onclick = function () { if (!confirm(t('del') + '?')) return; call('deleteBranch', { id: b.getAttribute('data-bd') }, b).then(function (r) { if (!r.ok) return toast(r.error, true); toast(t('saved')); vBranches(); }).catch(function () { }); }; });
+  }).catch(function () { });
+}
+function branchModal(b) {
+  var isNew = !b; b = b || { name: '', address: '', lat: '', lng: '', radius: 150 };
+  modal(isNew ? t('addBranch') : t('edit') + ' — ' + b.name,
+    '<div class="field"><label>' + t('name') + '</label><input class="inp" name="name" value="' + esc(b.name) + '" maxlength="60" required></div>' +
+    '<div class="field"><label>' + t('address') + '</label><input class="inp" name="address" value="' + esc(b.address) + '" maxlength="150"></div>' +
+    '<div class="row"><div class="field"><label>' + t('lat') + '</label><input class="inp" name="lat" inputmode="decimal" value="' + esc(b.lat) + '"></div><div class="field"><label>' + t('lng') + '</label><input class="inp" name="lng" inputmode="decimal" value="' + esc(b.lng) + '"></div></div>' +
+    '<div class="field"><label>' + t('radius') + '</label><input class="inp" name="radius" type="number" min="20" max="50000" value="' + esc(b.radius || 150) + '"><span class="hint">' + t('noFence') + ': ' + t('lat') + ' / ' + t('lng') + ' = ∅</span></div>' +
+    '<button type="button" class="btn sm" id="myl">📍 ' + t('useMyLoc') + '</button><div style="height:12px"></div>',
+    function (f, close, err, btn) {
+      var p = { id: isNew ? '' : b.id, name: val(f, 'name'), address: val(f, 'address'), lat: val(f, 'lat'), lng: val(f, 'lng'), radius: val(f, 'radius') };
+      call('saveBranch', p, btn).then(function (r) { if (!r.ok) return err(r.error); close(); toast(t('saved')); vBranches(); }).catch(function () { });
+    }, {
+      onOpen: function (f, wrap) {
+        $('#myl', wrap).onclick = function () {
+          var btn = this; btn.disabled = true; btn.textContent = t('locating');
+          getPosition().then(function (pos) {
+            btn.disabled = false; btn.textContent = '📍 ' + t('useMyLoc');
+            if (!pos) return toast(t('locNo'), true);
+            f.elements.lat.value = pos.lat.toFixed(6); f.elements.lng.value = pos.lng.toFixed(6);
+            if (Number(f.elements.radius.value) < Math.round(pos.acc) + 50) f.elements.radius.value = Math.min(50000, Math.max(100, Math.round(pos.acc) + 50));
+          });
+        };
+      }
+    });
+}
+
+// ---------------------------------------------------------------- views: reports
+function vReports() {
+  var p = tzParts(new Date(), state.settings.timezone), month = state.cache.rMonth || (p.year + '-' + p.month);
+  call('monthlyReport', { month: month }).then(function (res) {
+    if (!res.ok) return $('#view').innerHTML = '<div class="err">' + esc(res.error) + '</div>';
+    var d = res.data, rows = d.rows, tot = { hours: 0, late: 0, absent: 0, ot: 0 };
+    rows.forEach(function (r) { tot.hours += r.hours; tot.late += r.lateDays; tot.absent += r.absent; tot.ot += r.overtimeHours; });
+    function rateCell(r) { if (r === null) return '—'; var c = r >= 95 ? 'g' : r >= 85 ? 'a' : 'r'; return '<span class="pill ' + c + '">' + r + '%</span>'; }
+    $('#view').innerHTML = '<div class="toolbar"><div class="field"><label>' + t('month') + '</label><input class="inp" type="month" id="rm" value="' + esc(d.month) + '"></div><div style="flex:1"></div><button class="btn" id="rp">' + t('print') + '</button><button class="btn pri" id="rx">' + t('exportCsv') + '</button></div>' +
+      '<h2 style="margin:0 0 4px;font-size:18px">' + esc(state.settings.companyName) + ' — ' + esc(fmtDate(d.month + '-01', { month: 'long', year: 'numeric' })) + '</h2><p class="muted small" style="margin:0 0 14px">' + d.workingDays + ' ' + t('workingDays').toLowerCase() + ' (' + esc(d.from) + ' → ' + esc(d.countedUntil) + ')</p>' +
+      '<div class="kpis"><div class="card kpi"><div class="l">' + t('hours') + '</div><div class="v">' + tot.hours.toFixed(1) + '</div></div><div class="card kpi"><div class="l">' + t('overtime') + '</div><div class="v">' + tot.ot.toFixed(1) + '</div></div><div class="card kpi"><div class="l">' + t('lateDays') + '</div><div class="v">' + tot.late + '</div></div><div class="card kpi"><div class="l">' + t('daysAbsent') + '</div><div class="v">' + tot.absent + '</div></div></div>' +
+      '<div class="card tbl-wrap"><table><thead><tr><th>' + t('employee') + '</th><th class="hide-m">' + t('dept') + '</th><th class="num">' + t('daysPresent') + '</th><th class="num">' + t('daysAbsent') + '</th><th class="num">' + t('leave') + '</th><th class="num">' + t('lateDays') + '</th><th class="num hide-m">' + t('lateMins') + '</th><th class="num">' + t('hours') + '</th><th class="num hide-m">' + t('overtime') + '</th><th class="num hide-m">' + t('avgIn') + '</th><th class="num">' + t('rate') + '</th></tr></thead><tbody>' +
+      (rows.length ? rows.map(function (r) {
+        return '<tr><td><b>' + esc(r.name) + '</b><div class="small muted">' + esc(r.code) + (r.missingCheckouts ? ' · <span style="color:var(--red)">' + r.missingCheckouts + ' ' + t('st_missing').toLowerCase() + '</span>' : '') + '</div></td><td class="hide-m">' + esc(r.department) + '</td><td class="num">' + r.present + '</td><td class="num">' + r.absent + '</td><td class="num">' + r.leave + '</td><td class="num">' + r.lateDays + '</td><td class="num hide-m">' + r.lateMinutes + '</td><td class="num"><b>' + r.hours.toFixed(1) + '</b></td><td class="num hide-m">' + r.overtimeHours.toFixed(1) + '</td><td class="num hide-m">' + esc(r.avgCheckIn || '—') + '</td><td class="num">' + rateCell(r.attendanceRate) + '</td></tr>';
+      }).join('') : '<tr><td colspan="11" class="empty">—</td></tr>') + '</tbody></table></div>';
+    $('#rm').onchange = function () { state.cache.rMonth = this.value; vReports(); };
+    $('#rp').onclick = function () { window.print(); };
+    $('#rx').onclick = function () {
+      csvDownload('monthly_report_' + d.month + '.csv', [['Month', 'Code', 'Employee', 'Department', 'Branch', 'Working days', 'Present', 'Absent', 'Leave', 'Late days', 'Late minutes', 'Hours', 'Overtime hours', 'Avg check-in', 'Missing check-outs', 'Attendance %']].concat(rows.map(function (r) {
+        return [d.month, r.code, r.name, r.department, r.branch, r.workingDays, r.present, r.absent, r.leave, r.lateDays, r.lateMinutes, r.hours, r.overtimeHours, r.avgCheckIn, r.missingCheckouts, r.attendanceRate];
+      })));
+    };
+  }).catch(function () { });
+}
+
+// ---------------------------------------------------------------- views: settings
+function vSettings() {
+  call('getSettings').then(function (res) {
+    var s = res.data, tzs = [];
+    try { tzs = Intl.supportedValuesOf('timeZone'); } catch (e) { tzs = ['Asia/Dubai', 'Asia/Riyadh', 'Asia/Qatar', 'Asia/Kuwait', 'Asia/Bahrain', 'Asia/Muscat', 'Africa/Tripoli', 'Africa/Cairo', 'Europe/London', 'America/New_York', 'America/Chicago', 'America/Los_Angeles', 'UTC']; }
+    if (tzs.indexOf(s.timezone) < 0) tzs.unshift(s.timezone);
+    $('#view').innerHTML = '<form class="card sec" id="sf" style="max-width:720px">' +
+      '<div class="field"><label>' + t('company') + '</label><input class="inp" name="companyName" maxlength="80" value="' + esc(s.companyName) + '" required></div>' +
+      '<div class="row"><div class="field"><label>' + t('tz') + '</label><select class="inp" name="timezone">' + tzs.map(function (z) { return '<option' + (z === s.timezone ? ' selected' : '') + '>' + esc(z) + '</option>'; }).join('') + '</select></div>' +
+      '<div class="field"><label>' + t('grace') + '</label><input class="inp" type="number" min="0" max="180" name="graceMinutes" value="' + esc(s.graceMinutes) + '"></div></div>' +
+      '<div class="row"><div class="field"><label>' + t('workStart') + '</label><input class="inp" type="time" name="workStart" value="' + esc(s.workStart) + '"></div><div class="field"><label>' + t('workEnd') + '</label><input class="inp" type="time" name="workEnd" value="' + esc(s.workEnd) + '"></div></div>' +
+      '<div class="field"><label>' + t('workDaysL') + '</label><div class="days">' + DAYKEYS.map(function (k, i) { return '<label><input type="checkbox" name="wd" value="' + i + '"' + (s.workDays.indexOf(i) >= 0 ? ' checked' : '') + '>' + t(k) + '</label>'; }).join('') + '</div></div>' +
+      '<div class="field"><label>' + t('gfMode') + '</label><select class="inp" name="geofenceMode">' + ['off', 'flag', 'block'].map(function (m) { return '<option value="' + m + '"' + (s.geofenceMode === m ? ' selected' : '') + '>' + t('gf' + m.charAt(0).toUpperCase() + m.slice(1)) + '</option>'; }).join('') + '</select></div>' +
+      '<div class="err hidden" id="serr"></div><button class="btn pri" id="ss">' + t('save') + '</button></form>';
+    $('#sf').onsubmit = function (e) {
+      e.preventDefault(); var f = this;
+      var p = { companyName: val(f, 'companyName'), timezone: val(f, 'timezone'), graceMinutes: val(f, 'graceMinutes'), workStart: val(f, 'workStart'), workEnd: val(f, 'workEnd'), geofenceMode: val(f, 'geofenceMode'),
+        workDays: $$('[name=wd]:checked', f).map(function (c) { return Number(c.value); }) };
+      call('saveSettings', p, $('#ss')).then(function (r) {
+        if (!r.ok) { $('#serr').textContent = r.error; $('#serr').classList.remove('hidden'); return; }
+        $('#serr').classList.add('hidden'); state.settings = r.data; toast(t('saved')); $('.side-foot').firstChild.textContent = r.data.companyName;
+      }).catch(function () { });
+    };
+  }).catch(function () { });
+}
+
+// ---------------------------------------------------------------- views: audit
+function vAudit() {
+  call('listAudit').then(function (res) {
+    var list = res.data || [];
+    $('#view').innerHTML = '<div class="card tbl-wrap"><table><thead><tr><th>' + t('when') + '</th><th>' + t('who') + '</th><th>' + t('action') + '</th><th>' + t('details') + '</th></tr></thead><tbody>' +
+      (list.length ? list.map(function (a) { var d = new Date(a.ts); return '<tr><td style="white-space:nowrap" class="small">' + esc(isNaN(d) ? a.ts : d.toLocaleString(lang === 'ar' ? 'ar-u-nu-latn' : 'en-GB', { timeZone: state.settings.timezone, dateStyle: 'medium', timeStyle: 'short' })) + '</td><td><b>' + esc(a.actor) + '</b></td><td><span class="pill">' + esc(String(a.action).replace(/_/g, ' ')) + '</span></td><td class="small">' + esc(a.detail) + '</td></tr>'; }).join('') : '<tr><td colspan="4" class="empty">—</td></tr>') +
+      '</tbody></table></div>';
+  }).catch(function () { });
+}
+
+// ---------------------------------------------------------------- boot
+function boot() {
+  if (!token) return renderLogin();
+  api('me').then(function (res) {
+    if (!res.ok) { token = null; store.del(TOKEN_KEY); return renderLogin(); }
+    state.user = res.data.user; state.settings = res.data.settings;
+    renderShell(); go(views()[0]);
+    if (state.user.mustChangePin) pinModal(true);
+  });
+}
+boot();
+})();
+</script>
 </body>
 </html>
