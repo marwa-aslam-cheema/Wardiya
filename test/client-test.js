@@ -8,7 +8,7 @@ const db = { employees: [], branches: [], records: [], audit: [], settings: {} }
 const fmt = (d, tz, o) => new Intl.DateTimeFormat('en-CA', Object.assign({ timeZone: tz }, o)).format(d);
 const app = C.createApp({ store: { list: t => db[t], insert: (t, o) => db[t].push(o), update: (t, id, p) => db[t].forEach(o => { if (o.id === id) Object.assign(o, p); }), remove: (t, id) => { db[t] = db[t].filter(o => o.id !== id); }, getSettings: () => db.settings, saveSettings: s => { db.settings = s; }, sessionPut: (k, v) => { ss[k] = v; }, sessionGet: k => ss[k] || null, sessionDel: k => { delete ss[k]; }, counterGet: k => cn[k] || 0, counterSet: (k, v) => { cn[k] = v; } },
   now: () => new Date(), newId: () => crypto.randomUUID(), newToken: () => crypto.randomBytes(24).toString('hex'), tzDate: (d, tz) => fmt(d, tz, { year: 'numeric', month: '2-digit', day: '2-digit' }), tzTime: (d, tz) => fmt(d, tz, { hour: '2-digit', minute: '2-digit', hourCycle: 'h23' }), validTz: () => true, lock: f => f() });
-app.bootstrap({ adminPin: '583920', settings: { companyName: 'EGATE Beloun Demo', timezone: 'Africa/Tripoli', workStart: '09:00', workEnd: '17:00', graceMinutes: 10, workDays: [1, 2, 3, 4, 5], geofenceMode: 'flag' } });
+app.bootstrap({ adminPin: '583920', settings: { appName: 'EGATE Beloun Attendance', companyName: 'EGATE Beloun Demo', timezone: 'Africa/Tripoli', workStart: '09:00', workEnd: '17:00', graceMinutes: 10, workDays: [1, 2, 3, 4, 5], geofenceMode: 'flag' } });
 fs.mkdirSync(path.join(root, 'c/zz-test'), { recursive: true }); fs.copyFileSync(path.join(root, 'app/index.html'), path.join(root, 'c/zz-test/index.html'));
 const server = http.createServer((q, s) => { let p = q.url.split('?')[0]; if (p.endsWith('/')) p += 'index.html'; const f = path.join(root, p); if (!fs.existsSync(f)) { s.writeHead(404); return s.end(); } s.writeHead(200, { 'Content-Type': f.endsWith('.js') ? 'text/javascript' : 'text/html' }); fs.createReadStream(f).pipe(s); });
 (async () => {
@@ -17,7 +17,7 @@ const server = http.createServer((q, s) => { let p = q.url.split('?')[0]; if (p.
   const page = await b.newPage(); let pass = 0, fail = 0; const ok = (n, c) => { if (c) pass++; else { fail++; console.log('FAIL', n); } };
   await page.route(API, async r => { const x = JSON.parse(r.request().postData()); await r.fulfill({ status: 200, contentType: 'application/json', headers: { 'Access-Control-Allow-Origin': '*' }, body: JSON.stringify(app.handle(x.action, x.payload, x.token)) }); });
   await page.goto('http://localhost:8126/c/egate/'); await page.waitForSelector('#lf');
-  ok('EGATE branding', /EGATE Beloun/.test(await page.textContent('.lg-side')));
+  ok('EGATE branding from Company Settings', /EGATE Beloun Attendance/.test(await page.textContent('.lg-side')));
   ok('live mode (no demo logins)', !(await page.$('[data-demo]')));
   await page.fill('#lc', 'ADMIN'); await page.fill('#lp', '583920'); await page.click('#lb');
   await page.waitForSelector('[name=newPin]'); ok('forced PIN change', true);

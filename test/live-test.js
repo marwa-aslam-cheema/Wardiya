@@ -18,11 +18,11 @@ const app = C.createApp({
   tzTime: (d, tz) => fmt(d, tz, { hour: '2-digit', minute: '2-digit', hourCycle: 'h23' }),
   validTz: () => true, lock: f => f()
 });
-app.bootstrap({ adminPin: '482613', settings: { companyName: 'Live Test Co', timezone: 'Asia/Dubai', workStart: '09:00', workEnd: '17:00', graceMinutes: 10, workDays: [0, 1, 2, 3, 4, 5, 6], geofenceMode: 'off' } });
+app.bootstrap({ adminPin: '482613', settings: { appName: 'Acme Time', brandColor: '#1D4ED8', welcomeMessage: 'Hello team', companyName: 'Live Test Co', timezone: 'Asia/Dubai', workStart: '09:00', workEnd: '17:00', graceMinutes: 10, workDays: [0, 1, 2, 3, 4, 5, 6], geofenceMode: 'off' } });
 
 const API = 'https://script.google.com/macros/s/TEST/exec';
 const cfgPath = path.join(__dirname, '..', 'docs/app/config.js');
-fs.writeFileSync(cfgPath, `window.WARDIYA_CONFIG = { apiUrl: '${API}', appName: 'Acme Time', brandColor: '#1D4ED8' };`);
+fs.writeFileSync(cfgPath, `window.WARDIYA_CONFIG = { apiUrl: '${API}', appName: 'Config Name', brandColor: '#123456' };`);
 
 (async () => {
   const http = require('http');
@@ -42,8 +42,9 @@ fs.writeFileSync(cfgPath, `window.WARDIYA_CONFIG = { apiUrl: '${API}', appName: 
   await page.goto('http://localhost:8124/app/');
   await page.waitForSelector('#lf');
   ok('no demo cards in live mode', !(await page.$('[data-demo]')));
-  ok('app name branding', /Acme Time/.test(await page.textContent('.lg-side .logo')));
-  ok('brand colour', (await page.evaluate(() => getComputedStyle(document.documentElement).getPropertyValue('--p'))).trim() === '#1D4ED8');
+  ok('app name from sheet wins over config.js', /Acme Time/.test(await page.textContent('.lg-side .logo')));
+  ok('welcome message shown', /Hello team/.test(await page.textContent('.welcome')));
+  ok('brand colour from sheet', (await page.evaluate(() => getComputedStyle(document.documentElement).getPropertyValue('--p'))).trim() === '#1D4ED8');
   await page.fill('#lc', 'ADMIN'); await page.fill('#lp', '482613'); await page.click('#lb');
   await page.waitForSelector('[name=newPin]');
   ok('forced PIN change in live mode', true);

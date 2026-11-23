@@ -24,7 +24,7 @@ a{color:var(--p)}
 .btn.sm{padding:6px 10px;font-size:13px;border-radius:8px}.btn.ghost{border-color:transparent;background:transparent}
 .field{display:flex;flex-direction:column;gap:6px;margin-bottom:14px}.field label{font-size:13px;font-weight:600;color:var(--mut)}
 .inp{width:100%;padding:10px 12px;border:1px solid var(--line);border-radius:10px;background:#fff;outline:none;transition:.15s}
-.inp:focus{border-color:var(--p);box-shadow:0 0 0 3px rgba(14,124,102,.15)}
+.inp:focus{border-color:var(--p);box-shadow:0 0 0 3px color-mix(in srgb,var(--p) 18%,transparent)}
 .row{display:flex;gap:12px;flex-wrap:wrap}.row>.field{flex:1;min-width:140px}
 .hint{font-size:12.5px;color:var(--mut)}
 .card{background:var(--card);border:1px solid var(--line);border-radius:var(--r);box-shadow:var(--sh)}
@@ -34,7 +34,7 @@ a{color:var(--p)}
 .logo svg{flex:none}
 /* login */
 #login{min-height:100vh;display:grid;grid-template-columns:1.1fr 1fr}
-.lg-side{background:linear-gradient(150deg,#0B3B31,#0E7C66 70%);color:#fff;padding:48px;display:flex;flex-direction:column;justify-content:space-between;position:relative;overflow:hidden}
+.lg-side{background:linear-gradient(150deg,#0B1F1A,var(--p) 78%);color:#fff;padding:48px;display:flex;flex-direction:column;justify-content:space-between;position:relative;overflow:hidden}
 .lg-side:after{content:"";position:absolute;width:420px;height:420px;border-radius:50%;border:60px solid rgba(255,255,255,.05);right:-140px;bottom:-140px}
 .lg-side h1{font-size:38px;line-height:1.1;letter-spacing:-.03em;margin:0 0 14px;max-width:460px}
 .lg-side p{opacity:.85;max-width:440px;margin:0}
@@ -44,9 +44,10 @@ a{color:var(--p)}
 .lg-box{width:100%;max-width:380px}
 .lg-box h2{margin:0 0 4px;font-size:24px;letter-spacing:-.02em}
 .demo-cards{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:18px 0 6px}
-.demo-card{border:1px dashed #bcd6ce;background:var(--pl);border-radius:12px;padding:12px;cursor:pointer;text-align:start}
+.demo-card{border:1px dashed color-mix(in srgb,var(--p) 35%,#fff);background:var(--pl);border-radius:12px;padding:12px;cursor:pointer;text-align:start}
 .demo-card b{display:block;font-size:14px}.demo-card span{font-size:12px;color:var(--mut)}
 .demo-card:hover{border-style:solid;border-color:var(--p)}
+.welcome{background:var(--pl);border-inline-start:4px solid var(--p);border-radius:10px;padding:12px 14px;margin:-6px 0 18px;font-size:14px;white-space:pre-line}
 .err{background:var(--redl);color:var(--red);border-radius:10px;padding:10px 12px;font-size:14px;margin-bottom:12px}
 /* shell */
 #shell{min-height:100vh;display:grid;grid-template-columns:240px 1fr}
@@ -54,7 +55,7 @@ a{color:var(--p)}
 .side .logo{color:#fff;padding:4px 10px 18px}
 .nav{display:flex;flex-direction:column;gap:2px}
 .nav button{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:10px;border:0;background:transparent;color:inherit;cursor:pointer;font-weight:500;text-align:start}
-.nav button:hover{background:rgba(255,255,255,.06)}.nav button.on{background:rgba(14,124,102,.35);color:#fff}
+.nav button:hover{background:rgba(255,255,255,.06)}.nav button.on{background:color-mix(in srgb,var(--p) 45%,transparent);color:#fff}
 .nav svg{width:18px;height:18px;flex:none;opacity:.9}
 .side-foot{margin-top:auto;padding:10px;font-size:12px;opacity:.6}
 .main{min-width:0;display:flex;flex-direction:column}
@@ -95,8 +96,8 @@ td.num,th.num{text-align:end;font-variant-numeric:tabular-nums}
 .clock .time{font-size:64px;font-weight:800;letter-spacing:-.04em;font-variant-numeric:tabular-nums;margin:2px 0 8px}
 .big-btn{width:210px;height:210px;border-radius:50%;border:0;cursor:pointer;color:#fff;font-size:22px;font-weight:800;margin:18px auto;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;transition:transform .12s,box-shadow .2s}
 .big-btn small{font-size:13px;font-weight:600;opacity:.85}
-.big-btn.in{background:radial-gradient(circle at 30% 25%,#18a386,#0E7C66);box-shadow:0 12px 40px rgba(14,124,102,.35),0 0 0 12px rgba(14,124,102,.08)}
-.big-btn.out{background:radial-gradient(circle at 30% 25%,#f2b25a,#E08A12);box-shadow:0 12px 40px rgba(224,138,18,.35),0 0 0 12px rgba(224,138,18,.1)}
+.big-btn.in{background:radial-gradient(circle at 30% 25%,color-mix(in srgb,var(--p) 75%,#fff),var(--p));box-shadow:0 12px 40px color-mix(in srgb,var(--p) 35%,transparent),0 0 0 12px color-mix(in srgb,var(--p) 8%,transparent)}
+.big-btn.out{background:radial-gradient(circle at 30% 25%,color-mix(in srgb,var(--acc) 75%,#fff),color-mix(in srgb,var(--acc) 85%,#000));box-shadow:0 12px 40px color-mix(in srgb,var(--acc) 35%,transparent),0 0 0 12px color-mix(in srgb,var(--acc) 10%,transparent)}
 .big-btn:active{transform:scale(.97)}.big-btn:disabled{opacity:.6}
 .loc{font-size:13px;color:var(--mut);display:flex;justify-content:center;gap:6px;align-items:center;flex-wrap:wrap}
 .sessions{margin-top:20px;text-align:start}
@@ -121,7 +122,7 @@ td.num,th.num{text-align:end;font-variant-numeric:tabular-nums}
  #shell{grid-template-columns:1fr}.side{display:none}
  .mob-nav{display:flex;overflow-x:auto;gap:4px;padding:8px 12px;background:#0B1F1A;position:sticky;top:0;z-index:6;scrollbar-width:none}
  .mob-nav button{flex:none;border:0;background:transparent;color:#cfe0db;padding:8px 12px;border-radius:9px;font-weight:600;font-size:13.5px}
- .mob-nav button.on{background:rgba(14,124,102,.45);color:#fff}
+ .mob-nav button.on{background:color-mix(in srgb,var(--p) 55%,transparent);color:#fff}
  .top{padding:12px 16px;top:50px}.content{padding:16px 14px 60px}.banner{padding:8px 16px}
  .grid2{grid-template-columns:1fr}.top .avatar{display:none}.top h1{font-size:17px}.top .btn.sm{padding:6px 8px}.clock .time{font-size:52px}.big-btn{width:180px;height:180px}
  .hide-m{display:none}
@@ -199,6 +200,14 @@ var T = {
   pinMismatch: ['The new PINs do not match.', 'الرقمان غير متطابقين.'], checkedIn: ['Checked in at', 'تم تسجيل الحضور الساعة'], checkedOut: ['Checked out. Worked', 'تم تسجيل الانصراف. ساعات العمل'],
   lateBy: ['late by', 'متأخر بـ'], min: ['min', 'د'], total: ['Total', 'الإجمالي'], days: ['days', 'أيام'], liveMode: ['Live', 'مباشر'],
   sun: ['Sun', 'أحد'], mon: ['Mon', 'إثنين'], tue: ['Tue', 'ثلاثاء'], wed: ['Wed', 'أربعاء'], thu: ['Thu', 'خميس'], fri: ['Fri', 'جمعة'], sat: ['Sat', 'سبت'],
+  leftEarly: ['Left early', 'خروج مبكر'], st_early: ['Left early', 'خروج مبكر'], earlyDays: ['Early days', 'أيام خروج مبكر'],
+  secCompany: ['Company & branding', 'الشركة والهوية'], secRules: ['Working rules', 'قواعد الدوام'], secMsgs: ['Custom messages', 'رسائل مخصصة'],
+  appNameL: ['App name (shown in the header)', 'اسم التطبيق (يظهر في الأعلى)'], brandColorL: ['Main colour', 'اللون الرئيسي'], accentColorL: ['Accent colour', 'اللون الثانوي'],
+  logoL: ['Logo link (https:// or Google Drive share link)', 'رابط الشعار (https:// أو رابط Google Drive)'], logoHint: ['In Google Drive: right-click the image → Share → Anyone with the link → Copy link.', 'في Google Drive: زر يمين على الصورة ← مشاركة ← أي شخص لديه الرابط ← نسخ الرابط.'],
+  earlyLeaveL: ['Early-leave allowance (minutes)', 'السماح بالخروج المبكر (دقائق)'], earlyLeaveHint: ['Leaving earlier than this before work ends counts as "left early".', 'الخروج قبل نهاية الدوام بأكثر من هذا يُحسب خروجاً مبكراً.'],
+  earliestL: ['Earliest check-in (minutes before start, 0 = any time)', 'أبكر حضور (دقائق قبل البداية، 0 = أي وقت)'], graceHint: ['Arriving later than this after work starts counts as "late".', 'الوصول بعد بداية الدوام بأكثر من هذا يُحسب تأخيراً.'],
+  welcomeL: ['Welcome message (sign-in screen)', 'رسالة الترحيب (شاشة الدخول)'], checkInMsgL: ['Message after on-time check-in', 'رسالة بعد الحضور في الوقت'], lateMsgL: ['Message after late check-in', 'رسالة بعد الحضور المتأخر'],
+  checkOutMsgL: ['Message after check-out', 'رسالة بعد الانصراف'], earlyMsgL: ['Message after early check-out', 'رسالة بعد الانصراف المبكر'], sheetHint: ['You can also change all of these in the "Company Settings" tab of your Google Sheet.', 'يمكنك أيضاً تغيير كل هذا من تبويب "Company Settings" في جدول Google.'],
   netErr: ['Cannot reach the server. Check your internet connection.', 'تعذر الوصول إلى الخادم. تحقق من اتصال الإنترنت.'], records: ['records', 'سجلات'], view: ['View', 'عرض']
 };
 var lang = store.get(LANG_KEY) || ((navigator.language || '').indexOf('ar') === 0 ? 'ar' : 'en');
@@ -337,7 +346,33 @@ var ICONS = {
   audit: '<path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>', history: '<path d="M3 12a9 9 0 109-9 9 9 0 00-6.4 2.6L3 8M3 3v5h5M12 7v5l4 2"/>'
 };
 function icon(k) { return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">' + (ICONS[k] || '') + '</svg>'; }
-var LOGO = /^(https:\/\/|[\w.\/-]+\.(png|svg|jpg|jpeg|webp)$)/i.test(CONFIG.logoUrl) ? '<img src="' + esc(CONFIG.logoUrl) + '" width="32" height="32" style="border-radius:8px;object-fit:contain;background:#fff" alt="">' : '<svg width="32" height="32" viewBox="0 0 64 64"><rect width="64" height="64" rx="16" fill="#0E7C66"/><circle cx="32" cy="32" r="17" fill="none" stroke="#fff" stroke-width="5"/><path d="M24 32l6 6 11-12" fill="none" stroke="#F4A63A" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+var DEFAULT_LOGO = '<svg width="32" height="32" viewBox="0 0 64 64"><rect width="64" height="64" rx="16" style="fill:var(--p)"/><circle cx="32" cy="32" r="17" fill="none" stroke="#fff" stroke-width="5"/><path d="M24 32l6 6 11-12" fill="none" style="stroke:var(--acc)" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+var BRAND_KEY = 'wardiya_brand_' + MODE;
+var brand = { appName: CONFIG.appName, brandColor: CONFIG.brandColor, accentColor: '', logoUrl: CONFIG.logoUrl, welcomeMessage: '', companyName: '' };
+try { Object.assign(brand, JSON.parse(store.get(BRAND_KEY) || '{}')); } catch (e) { }
+var LOGO = DEFAULT_LOGO;
+// A Google Drive share link is turned into a direct image link (the file must be shared "Anyone with the link").
+function logoSrc(u) {
+  u = String(u || '').trim();
+  var m = /drive\.google\.com\/(?:file\/d\/|open\?id=|uc\?(?:export=\w+&)?id=)([\w-]{20,})/.exec(u);
+  if (m) return 'https://drive.google.com/thumbnail?id=' + m[1] + '&sz=w256';
+  return /^(https:\/\/\S+|[\w.\/-]+\.(png|svg|jpg|jpeg|webp))$/i.test(u) ? u : '';
+}
+function darken(hex, f) { var n = parseInt(hex.slice(1), 16), r = n >> 16, g = (n >> 8) & 255, b = n & 255; return '#' + [r, g, b].map(function (c) { return ('0' + Math.round(c * f).toString(16)).slice(-2); }).join(''); }
+function applyBrand(b) {
+  if (b) { ['appName', 'brandColor', 'accentColor', 'logoUrl', 'welcomeMessage', 'companyName'].forEach(function (k) { if (b[k] !== undefined) brand[k] = b[k]; }); store.set(BRAND_KEY, JSON.stringify(brand)); }
+  var root = document.documentElement.style;
+  if (/^#[0-9a-fA-F]{6}$/.test(brand.brandColor || '')) { root.setProperty('--p', brand.brandColor); root.setProperty('--p2', darken(brand.brandColor, 0.82)); root.setProperty('--pl', 'color-mix(in srgb,' + brand.brandColor + ' 12%,#fff)'); }
+  var meta = document.querySelector('meta[name=theme-color]'); if (meta && /^#[0-9a-fA-F]{6}$/.test(brand.brandColor || '')) meta.setAttribute('content', brand.brandColor);
+  if (/^#[0-9a-fA-F]{6}$/.test(brand.accentColor || '')) root.setProperty('--acc', brand.accentColor);
+  var src = logoSrc(brand.logoUrl);
+  LOGO = src ? '<img src="' + esc(src) + '" width="32" height="32" style="border-radius:8px;object-fit:contain;background:#fff" alt="" onerror="this.outerHTML=window.DEFAULT_LOGO_HTML">' : DEFAULT_LOGO;
+  CONFIG.appName = brand.appName || 'Wardiya';
+  document.title = CONFIG.appName + ' Attendance';
+}
+window.DEFAULT_LOGO_HTML = DEFAULT_LOGO;
+applyBrand();
+
 function views() { return state.user && state.user.role === 'admin' ? ['dashboard', 'clock', 'attendance', 'employees', 'branches', 'reports', 'settings', 'audit'] : ['clock', 'history']; }
 
 // ---------------------------------------------------------------- login
@@ -348,6 +383,7 @@ function renderLogin(errMsg) {
     '<div class="small" style="opacity:.6">v' + WardiyaCore.VERSION + (MODE === 'demo' ? ' · Demo' : '') + '</div></div>' +
     '<div class="lg-main"><form class="lg-box" id="lf" autocomplete="off"><div style="display:flex;justify-content:flex-end;margin-bottom:24px"><button type="button" class="btn sm" data-lang>' + (lang === 'ar' ? 'English' : 'العربية') + '</button></div>' +
     '<h2>' + t('welcome') + '</h2><p class="muted" style="margin:0 0 20px">' + t('signInSub') + '</p>' +
+    (brand.welcomeMessage ? '<div class="welcome">' + esc(brand.welcomeMessage) + '</div>' : '') +
     (errMsg ? '<div class="err">' + esc(errMsg) + '</div>' : '') +
     '<div class="field"><label for="lc">' + t('code') + '</label><input class="inp" id="lc" autocapitalize="characters" required maxlength="20" placeholder="E001"></div>' +
     '<div class="field"><label for="lp">' + t('pin') + '</label><input class="inp" id="lp" type="password" inputmode="numeric" required maxlength="8" placeholder="••••"></div>' +
@@ -362,7 +398,7 @@ function doLogin(code, pin, btn) {
   call('login', { code: code, pin: pin }, btn).then(function (res) {
     if (!res.ok) { renderLogin(res.error); $('#lc').value = code; return; }
     token = res.data.token; store.set(TOKEN_KEY, token);
-    state.user = res.data.user; state.settings = res.data.settings;
+    state.user = res.data.user; state.settings = res.data.settings; applyBrand(res.data.settings);
     renderShell(); go(views()[0]);
     if (state.user.mustChangePin) pinModal(true);
   }).catch(function () { });
@@ -386,7 +422,7 @@ function renderShell() {
   $('#lo').onclick = function () { api('logout'); token = null; store.del(TOKEN_KEY); state.user = null; stopTimers(); renderLogin(); };
   $('#cpin').onclick = function () { pinModal(false); };
   $('[data-lang]').onclick = function () { setLang(lang === 'ar' ? 'en' : 'ar'); var v = state.view; renderShell(); go(v); };
-  if ($('#rst')) $('#rst').onclick = function () { if (!confirm(t('resetDemo') + '?')) return; store.del(LS_KEY); store.del(TOKEN_KEY); localApp = null; token = null; state.user = null; stopTimers(); renderLogin(); };
+  if ($('#rst')) $('#rst').onclick = function () { if (!confirm(t('resetDemo') + '?')) return; store.del(LS_KEY); store.del(TOKEN_KEY); store.del(BRAND_KEY); localApp = null; token = null; state.user = null; stopTimers(); renderLogin(); };
 }
 var timers = [];
 function stopTimers() { timers.forEach(clearInterval); timers = []; }
@@ -439,6 +475,7 @@ function statusPills(r) {
   if (r.type === 'leave') return '<span class="pill b">' + t('leave') + '</span>';
   if (!r.outTime && !r.missingOut) h += '<span class="pill g">● ' + t('open') + '</span> ';
   if (Number(r.lateMin) > 0) h += '<span class="pill a">' + t('late') + ' ' + r.lateMin + t('min') + '</span> ';
+  if (Number(r.earlyMin) > 0) h += '<span class="pill a">' + t('leftEarly') + ' ' + r.earlyMin + t('min') + '</span> ';
   else if (r.inTime) h += '<span class="pill">' + t('onTimeP') + '</span> ';
   if (r.missingOut) h += '<span class="pill r">' + t('st_missing') + '</span> ';
   if (/outside/.test(r.flags || '')) h += '<span class="pill r" title="' + esc(r.inDist ? r.inDist + ' m' : '') + '">' + t('outside') + (r.inDist ? ' ' + esc(r.inDist) + 'm' : '') + '</span> ';
@@ -472,7 +509,7 @@ function vClock() {
   call('me').then(function (res) {
     if (!res.ok) return $('#view').innerHTML = '<div class="err">' + esc(res.error) + '</div>';
     var d = res.data, s = d.settings, open = d.open;
-    state.settings = s;
+    state.settings = s; applyBrand(s);
     var startedMin = open ? Date.now() : 0, base = d.todayMinutes;
     $('#view').innerHTML = '<div class="card clock"><div class="date" id="cd"></div><div class="time" id="ct">--:--</div>' +
       '<div>' + (open ? '<span class="pill g">● ' + t('inSince') + ' ' + esc(open.inTime) + '</span>' : '<span class="pill">' + t('notIn') + '</span>') +
@@ -499,8 +536,9 @@ function vClock() {
         return call(open ? 'checkOut' : 'checkIn', payload, btn);
       }).then(function (r) {
         if (!r.ok) { btn.disabled = false; toast(r.error, true); return; }
-        if (open) toast(t('checkedOut') + ' ' + hm(r.data.minutes));
-        else toast(t('checkedIn') + ' ' + r.data.record.inTime + (r.data.late ? ' — ' + t('lateBy') + ' ' + r.data.record.lateMin + ' ' + t('min') : ''), r.data.late);
+        var st = state.settings || {};
+        if (open) toast((r.data.early && st.earlyLeaveMessage ? st.earlyLeaveMessage + ' — ' : (!r.data.early && st.checkOutMessage ? st.checkOutMessage + ' — ' : '')) + t('checkedOut') + ' ' + hm(r.data.minutes) + (r.data.early ? ' (' + t('leftEarly') + ' ' + r.data.record.earlyMin + ' ' + t('min') + ')' : ''), r.data.early);
+        else toast((r.data.late && st.lateMessage ? st.lateMessage + ' — ' : (!r.data.late && st.checkInMessage ? st.checkInMessage + ' — ' : '')) + t('checkedIn') + ' ' + r.data.record.inTime + (r.data.late ? ' (' + t('lateBy') + ' ' + r.data.record.lateMin + ' ' + t('min') + ')' : ''), r.data.late);
         vClock();
       }).catch(function () { btn.disabled = false; });
     };
@@ -560,7 +598,7 @@ function vAttendance() {
   loadLookups().then(function () { return call('listRecords', f); }).then(function (res) {
     if (!res.ok) return $('#view').innerHTML = '<div class="err">' + esc(res.error) + '</div>';
     var list = res.data.records, mins = 0; list.forEach(function (r) { mins += r.minutes; });
-    var sts = ['late', 'missing', 'flagged', 'leave', 'manual'];
+    var sts = ['late', 'early', 'missing', 'flagged', 'leave', 'manual'];
     $('#view').innerHTML = '<div class="toolbar">' +
       '<div class="field"><label>' + t('from') + '</label><input class="inp" type="date" id="ff" value="' + esc(res.data.from) + '"></div>' +
       '<div class="field"><label>' + t('to') + '</label><input class="inp" type="date" id="ft" value="' + esc(res.data.to) + '"></div>' +
@@ -634,7 +672,7 @@ function empModal(e) {
   var isNew = !e; e = e || { code: '', name: '', department: '', branchId: '', role: 'employee', email: '', phone: '' };
   modal(isNew ? t('addEmp') : t('edit') + ' — ' + e.name,
     '<div class="row"><div class="field"><label>' + t('code') + '</label><input class="inp" name="code" value="' + esc(e.code) + '" maxlength="20" required placeholder="E013"></div><div class="field"><label>' + t('name') + '</label><input class="inp" name="name" value="' + esc(e.name) + '" maxlength="80" required></div></div>' +
-    '<div class="row"><div class="field"><label>' + t('dept') + '</label><input class="inp" name="department" value="' + esc(e.department) + '" maxlength="60"></div><div class="field"><label>' + t('branch') + '</label><select class="inp" name="branchId">' + branchOptions(e.branchId, t('noBranch')) + '</select></div></div>' +
+    '<div class="row"><div class="field"><label>' + t('dept') + '</label><input class="inp" name="department" value="' + esc(e.department) + '" maxlength="60"></div><div class="field"><label>' + t('branch') + '</label><select class="inp" name="branchId">' + branchOptions(e.branchId || (isNew && state.cache.branches.length === 1 ? state.cache.branches[0].id : ''), t('noBranch')) + '</select></div></div>' +
     '<div class="row"><div class="field"><label>' + t('email') + '</label><input class="inp" name="email" type="email" value="' + esc(e.email) + '"></div><div class="field"><label>' + t('phone') + '</label><input class="inp" name="phone" value="' + esc(e.phone) + '"></div></div>' +
     '<div class="row"><div class="field"><label>' + t('role') + '</label><select class="inp" name="role"><option value="employee">' + t('emp') + '</option><option value="admin"' + (e.role === 'admin' ? ' selected' : '') + '>' + t('admin') + '</option></select></div>' +
     '<div class="field"><label>' + t('startPin') + '</label><input class="inp" name="pin" inputmode="numeric" maxlength="8"' + (isNew ? ' required' : '') + '>' + (isNew ? '' : '<span class="hint">' + t('resetPinHint') + '</span>') + '</div></div>',
@@ -708,15 +746,15 @@ function vReports() {
     $('#view').innerHTML = '<div class="toolbar"><div class="field"><label>' + t('month') + '</label><input class="inp" type="month" id="rm" value="' + esc(d.month) + '"></div><div style="flex:1"></div><button class="btn" id="rp">' + t('print') + '</button><button class="btn pri" id="rx">' + t('exportCsv') + '</button></div>' +
       '<h2 style="margin:0 0 4px;font-size:18px">' + esc(state.settings.companyName) + ' — ' + esc(fmtDate(d.month + '-01', { month: 'long', year: 'numeric' })) + '</h2><p class="muted small" style="margin:0 0 14px">' + d.workingDays + ' ' + t('workingDays').toLowerCase() + ' (' + esc(d.from) + ' → ' + esc(d.countedUntil) + ')</p>' +
       '<div class="kpis"><div class="card kpi"><div class="l">' + t('hours') + '</div><div class="v">' + tot.hours.toFixed(1) + '</div></div><div class="card kpi"><div class="l">' + t('overtime') + '</div><div class="v">' + tot.ot.toFixed(1) + '</div></div><div class="card kpi"><div class="l">' + t('lateDays') + '</div><div class="v">' + tot.late + '</div></div><div class="card kpi"><div class="l">' + t('daysAbsent') + '</div><div class="v">' + tot.absent + '</div></div></div>' +
-      '<div class="card tbl-wrap"><table><thead><tr><th>' + t('employee') + '</th><th class="hide-m">' + t('dept') + '</th><th class="num">' + t('daysPresent') + '</th><th class="num">' + t('daysAbsent') + '</th><th class="num">' + t('leave') + '</th><th class="num">' + t('lateDays') + '</th><th class="num hide-m">' + t('lateMins') + '</th><th class="num">' + t('hours') + '</th><th class="num hide-m">' + t('overtime') + '</th><th class="num hide-m">' + t('avgIn') + '</th><th class="num">' + t('rate') + '</th></tr></thead><tbody>' +
+      '<div class="card tbl-wrap"><table><thead><tr><th>' + t('employee') + '</th><th class="hide-m">' + t('dept') + '</th><th class="num">' + t('daysPresent') + '</th><th class="num">' + t('daysAbsent') + '</th><th class="num">' + t('leave') + '</th><th class="num">' + t('lateDays') + '</th><th class="num hide-m">' + t('lateMins') + '</th><th class="num hide-m">' + t('earlyDays') + '</th><th class="num">' + t('hours') + '</th><th class="num hide-m">' + t('overtime') + '</th><th class="num hide-m">' + t('avgIn') + '</th><th class="num">' + t('rate') + '</th></tr></thead><tbody>' +
       (rows.length ? rows.map(function (r) {
-        return '<tr><td><b>' + esc(r.name) + '</b><div class="small muted">' + esc(r.code) + (r.missingCheckouts ? ' · <span style="color:var(--red)">' + r.missingCheckouts + ' ' + t('st_missing').toLowerCase() + '</span>' : '') + '</div></td><td class="hide-m">' + esc(r.department) + '</td><td class="num">' + r.present + '</td><td class="num">' + r.absent + '</td><td class="num">' + r.leave + '</td><td class="num">' + r.lateDays + '</td><td class="num hide-m">' + r.lateMinutes + '</td><td class="num"><b>' + r.hours.toFixed(1) + '</b></td><td class="num hide-m">' + r.overtimeHours.toFixed(1) + '</td><td class="num hide-m">' + esc(r.avgCheckIn || '—') + '</td><td class="num">' + rateCell(r.attendanceRate) + '</td></tr>';
+        return '<tr><td><b>' + esc(r.name) + '</b><div class="small muted">' + esc(r.code) + (r.missingCheckouts ? ' · <span style="color:var(--red)">' + r.missingCheckouts + ' ' + t('st_missing').toLowerCase() + '</span>' : '') + '</div></td><td class="hide-m">' + esc(r.department) + '</td><td class="num">' + r.present + '</td><td class="num">' + r.absent + '</td><td class="num">' + r.leave + '</td><td class="num">' + r.lateDays + '</td><td class="num hide-m">' + r.lateMinutes + '</td><td class="num hide-m">' + (r.earlyLeaveDays || 0) + '</td><td class="num"><b>' + r.hours.toFixed(1) + '</b></td><td class="num hide-m">' + r.overtimeHours.toFixed(1) + '</td><td class="num hide-m">' + esc(r.avgCheckIn || '—') + '</td><td class="num">' + rateCell(r.attendanceRate) + '</td></tr>';
       }).join('') : '<tr><td colspan="11" class="empty">—</td></tr>') + '</tbody></table></div>';
     $('#rm').onchange = function () { state.cache.rMonth = this.value; vReports(); };
     $('#rp').onclick = function () { window.print(); };
     $('#rx').onclick = function () {
-      csvDownload('monthly_report_' + d.month + '.csv', [['Month', 'Code', 'Employee', 'Department', 'Branch', 'Working days', 'Present', 'Absent', 'Leave', 'Late days', 'Late minutes', 'Hours', 'Overtime hours', 'Avg check-in', 'Missing check-outs', 'Attendance %']].concat(rows.map(function (r) {
-        return [d.month, r.code, r.name, r.department, r.branch, r.workingDays, r.present, r.absent, r.leave, r.lateDays, r.lateMinutes, r.hours, r.overtimeHours, r.avgCheckIn, r.missingCheckouts, r.attendanceRate];
+      csvDownload('monthly_report_' + d.month + '.csv', [['Month', 'Code', 'Employee', 'Department', 'Branch', 'Working days', 'Present', 'Absent', 'Leave', 'Late days', 'Late minutes', 'Early-leave days', 'Early-leave minutes', 'Hours', 'Overtime hours', 'Avg check-in', 'Missing check-outs', 'Attendance %']].concat(rows.map(function (r) {
+        return [d.month, r.code, r.name, r.department, r.branch, r.workingDays, r.present, r.absent, r.leave, r.lateDays, r.lateMinutes, r.earlyLeaveDays || 0, r.earlyLeaveMinutes || 0, r.hours, r.overtimeHours, r.avgCheckIn, r.missingCheckouts, r.attendanceRate];
       })));
     };
   }).catch(function () { });
@@ -728,21 +766,39 @@ function vSettings() {
     var s = res.data, tzs = [];
     try { tzs = Intl.supportedValuesOf('timeZone'); } catch (e) { tzs = ['Asia/Dubai', 'Asia/Riyadh', 'Asia/Qatar', 'Asia/Kuwait', 'Asia/Bahrain', 'Asia/Muscat', 'Africa/Tripoli', 'Africa/Cairo', 'Europe/London', 'America/New_York', 'America/Chicago', 'America/Los_Angeles', 'UTC']; }
     if (tzs.indexOf(s.timezone) < 0) tzs.unshift(s.timezone);
-    $('#view').innerHTML = '<form class="card sec" id="sf" style="max-width:720px">' +
-      '<div class="field"><label>' + t('company') + '</label><input class="inp" name="companyName" maxlength="80" value="' + esc(s.companyName) + '" required></div>' +
+    function inp(name, label, attrs, hint) { return '<div class="field"><label>' + label + '</label><input class="inp" name="' + name + '" value="' + esc(s[name]) + '" ' + (attrs || '') + '>' + (hint ? '<span class="hint">' + hint + '</span>' : '') + '</div>'; }
+    function color(name, label) { return '<div class="field"><label>' + label + '</label><div style="display:flex;gap:8px"><input type="color" name="' + name + 'Pick" value="' + esc(s[name]) + '" style="width:48px;height:42px;border:1px solid var(--line);border-radius:10px;padding:2px;background:#fff"><input class="inp" name="' + name + '" value="' + esc(s[name]) + '" maxlength="7"></div></div>'; }
+    $('#view').innerHTML = '<form class="card sec" id="sf" style="max-width:760px">' +
+      '<p class="hint" style="margin-top:0">' + t('sheetHint') + '</p>' +
+      '<h3>' + t('secCompany') + '</h3>' +
+      '<div class="row">' + inp('companyName', t('company'), 'maxlength="80" required') + inp('appName', t('appNameL'), 'maxlength="40"') + '</div>' +
+      '<div class="row">' + color('brandColor', t('brandColorL')) + color('accentColor', t('accentColorL')) + '</div>' +
+      inp('logoUrl', t('logoL'), 'placeholder="https://…"', t('logoHint')) +
+      '<h3>' + t('secRules') + '</h3>' +
       '<div class="row"><div class="field"><label>' + t('tz') + '</label><select class="inp" name="timezone">' + tzs.map(function (z) { return '<option' + (z === s.timezone ? ' selected' : '') + '>' + esc(z) + '</option>'; }).join('') + '</select></div>' +
-      '<div class="field"><label>' + t('grace') + '</label><input class="inp" type="number" min="0" max="180" name="graceMinutes" value="' + esc(s.graceMinutes) + '"></div></div>' +
-      '<div class="row"><div class="field"><label>' + t('workStart') + '</label><input class="inp" type="time" name="workStart" value="' + esc(s.workStart) + '"></div><div class="field"><label>' + t('workEnd') + '</label><input class="inp" type="time" name="workEnd" value="' + esc(s.workEnd) + '"></div></div>' +
+      inp('workStart', t('workStart'), 'type="time"') + inp('workEnd', t('workEnd'), 'type="time"') + '</div>' +
+      '<div class="row">' + inp('graceMinutes', t('grace'), 'type="number" min="0" max="180"', t('graceHint')) + inp('earlyLeaveMinutes', t('earlyLeaveL'), 'type="number" min="0" max="240"', t('earlyLeaveHint')) + '</div>' +
+      inp('earliestCheckInMinutes', t('earliestL'), 'type="number" min="0" max="720"') +
       '<div class="field"><label>' + t('workDaysL') + '</label><div class="days">' + DAYKEYS.map(function (k, i) { return '<label><input type="checkbox" name="wd" value="' + i + '"' + (s.workDays.indexOf(i) >= 0 ? ' checked' : '') + '>' + t(k) + '</label>'; }).join('') + '</div></div>' +
       '<div class="field"><label>' + t('gfMode') + '</label><select class="inp" name="geofenceMode">' + ['off', 'flag', 'block'].map(function (m) { return '<option value="' + m + '"' + (s.geofenceMode === m ? ' selected' : '') + '>' + t('gf' + m.charAt(0).toUpperCase() + m.slice(1)) + '</option>'; }).join('') + '</select></div>' +
+      '<h3>' + t('secMsgs') + '</h3>' +
+      inp('welcomeMessage', t('welcomeL'), 'maxlength="200"') +
+      '<div class="row">' + inp('checkInMessage', t('checkInMsgL'), 'maxlength="200"') + inp('lateMessage', t('lateMsgL'), 'maxlength="200"') + '</div>' +
+      '<div class="row">' + inp('checkOutMessage', t('checkOutMsgL'), 'maxlength="200"') + inp('earlyLeaveMessage', t('earlyMsgL'), 'maxlength="200"') + '</div>' +
       '<div class="err hidden" id="serr"></div><button class="btn pri" id="ss">' + t('save') + '</button></form>';
+    ['brandColor', 'accentColor'].forEach(function (n) {
+      var f = $('#sf'); f.elements[n + 'Pick'].oninput = function () { f.elements[n].value = this.value.toUpperCase(); };
+      f.elements[n].oninput = function () { if (/^#[0-9a-fA-F]{6}$/.test(this.value)) f.elements[n + 'Pick'].value = this.value; };
+    });
     $('#sf').onsubmit = function (e) {
-      e.preventDefault(); var f = this;
-      var p = { companyName: val(f, 'companyName'), timezone: val(f, 'timezone'), graceMinutes: val(f, 'graceMinutes'), workStart: val(f, 'workStart'), workEnd: val(f, 'workEnd'), geofenceMode: val(f, 'geofenceMode'),
-        workDays: $$('[name=wd]:checked', f).map(function (c) { return Number(c.value); }) };
+      e.preventDefault(); var f = this, p = {};
+      ['companyName', 'appName', 'timezone', 'workStart', 'workEnd', 'graceMinutes', 'earlyLeaveMinutes', 'earliestCheckInMinutes', 'geofenceMode', 'brandColor', 'accentColor', 'logoUrl',
+        'welcomeMessage', 'checkInMessage', 'lateMessage', 'checkOutMessage', 'earlyLeaveMessage'].forEach(function (k) { p[k] = val(f, k); });
+      p.workDays = $$('[name=wd]:checked', f).map(function (c) { return Number(c.value); });
       call('saveSettings', p, $('#ss')).then(function (r) {
         if (!r.ok) { $('#serr').textContent = r.error; $('#serr').classList.remove('hidden'); return; }
-        $('#serr').classList.add('hidden'); state.settings = r.data; toast(t('saved')); $('.side-foot').firstChild.textContent = r.data.companyName;
+        $('#serr').classList.add('hidden'); state.settings = r.data; applyBrand(r.data); toast(t('saved'));
+        var v = state.view; renderShell(); go(v);
       }).catch(function () { });
     };
   }).catch(function () { });
@@ -764,12 +820,14 @@ function boot() {
     $('#app').innerHTML = '<div style="max-width:560px;margin:80px auto;padding:24px" class="card"><h2 style="margin-top:0">Setup incomplete</h2><p>' + esc(CONFIG_ERROR) + '</p><p class="muted small">This message is shown instead of the app so that no attendance data is lost. See guides/CLIENT_INSTALL.md, step 5.</p></div>';
     return;
   }
-  if (!token) return renderLogin();
-  api('me').then(function (res) {
-    if (!res.ok) { token = null; store.del(TOKEN_KEY); return renderLogin(); }
-    state.user = res.data.user; state.settings = res.data.settings;
-    renderShell(); go(views()[0]);
-    if (state.user.mustChangePin) pinModal(true);
+  api('info').then(function (r) { if (r && r.ok) applyBrand(r.data); }).then(function () {
+    if (!token) return renderLogin();
+    return api('me').then(function (res) {
+      if (!res.ok) { token = null; store.del(TOKEN_KEY); return renderLogin(); }
+      state.user = res.data.user; state.settings = res.data.settings; applyBrand(res.data.settings);
+      renderShell(); go(views()[0]);
+      if (state.user.mustChangePin) pinModal(true);
+    });
   });
 }
 boot();
