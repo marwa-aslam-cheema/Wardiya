@@ -11,7 +11,7 @@ Employees check in and out from their phone, with GPS geofencing, late and overt
 | EGATE Beloun (live, real data) | https://marwa-aslam-cheema.github.io/Wardiya/c/egate/ |
 | EGATE Google Sheet | https://docs.google.com/spreadsheets/d/1RZDIgn9AFRks7f8-ch_JMpXeLjshOZWrgHIpaHkmYf8/edit |
 
-Still to do: replace `YOUR_EMAIL@gmail.com` and `YOUR_WHATSAPP_NUMBER` in `docs/index.html`.
+Contact on the landing page: marwa.aslam911@gmail.com · WhatsApp +218 92 210 5197.
 
 ## Folder structure
 
