@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Wardiya — Staff attendance on your own Google Sheet</title>
+<meta name="description" content="Phone check-in/check-out with GPS geofencing, late tracking and payroll-ready monthly reports. Runs in your own Google account. One-time setup, no per-user fees. English & Arabic.">
+<meta property="og:title" content="Wardiya — Staff attendance on your own Google Sheet">
+<meta property="og:description" content="Phone check-in with GPS, late tracking and payroll-ready reports. One-time setup, no per-user fees.">
+<meta property="og:image" content="assets/dashboard.png">
+<meta name="theme-color" content="#0E7C66">
+<link rel="icon" href="assets/logo.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=IBM+Plex+Sans+Arabic:wght@500;600&display=swap" rel="stylesheet">
+<style>
+:root{--p:#0E7C66;--p2:#0A6352;--pl:#E6F2EF;--acc:#F4A63A;--ink:#0B1F1A;--mut:#56655F;--line:#E3E9E7;--bg:#FBFCFB}
+*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,sans-serif;color:var(--ink);background:var(--bg);line-height:1.55;-webkit-font-smoothing:antialiased}
+a{color:var(--p);text-decoration:none}img{max-width:100%;display:block}
+.wrap{max-width:1160px;margin:0 auto;padding:0 24px}
+.btn{display:inline-flex;align-items:center;gap:8px;padding:13px 20px;border-radius:12px;font-weight:700;border:1px solid var(--line);background:#fff;color:var(--ink);transition:.15s}
+.btn:hover{transform:translateY(-1px);box-shadow:0 6px 18px rgba(11,31,26,.08)}
+.btn.pri{background:var(--p);border-color:var(--p);color:#fff}.btn.pri:hover{background:var(--p2)}
+header{position:sticky;top:0;z-index:10;background:rgba(251,252,251,.88);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+.nav{display:flex;align-items:center;justify-content:space-between;height:68px}
+.logo{display:flex;align-items:center;gap:10px;font-weight:800;font-size:20px;letter-spacing:-.02em;color:var(--ink)}
+.links{display:flex;gap:26px;align-items:center;font-weight:500}.links a{color:var(--mut)}.links a:hover{color:var(--ink)}
+.hero{padding:72px 0 40px;display:grid;grid-template-columns:1.05fr 1fr;gap:48px;align-items:center}
+.eyebrow{display:inline-flex;gap:8px;align-items:center;background:var(--pl);color:var(--p2);font-weight:700;font-size:13px;padding:6px 12px;border-radius:99px}
+h1{font-size:54px;line-height:1.04;letter-spacing:-.04em;margin:18px 0}
+h1 em{font-style:normal;color:var(--p)}
+.lead{font-size:19px;color:var(--mut);max-width:540px}
+.ar{font-family:"IBM Plex Sans Arabic",sans-serif;direction:rtl;color:var(--mut);font-size:17px;margin-top:-6px}
+.ctas{display:flex;gap:12px;flex-wrap:wrap;margin:28px 0 14px}
+.trust{display:flex;gap:18px;flex-wrap:wrap;color:var(--mut);font-size:14px}.trust span:before{content:"✓ ";color:var(--p);font-weight:800}
+.shot{position:relative}
+.shot .desk{border-radius:16px;border:1px solid var(--line);box-shadow:0 30px 80px rgba(11,31,26,.16)}
+.shot .mob{position:absolute;width:30%;right:-14px;bottom:-34px;border-radius:22px;border:6px solid #0B1F1A;box-shadow:0 20px 50px rgba(11,31,26,.3)}
+section{padding:80px 0}
+.sec-h{text-align:center;max-width:720px;margin:0 auto 48px}.sec-h h2{font-size:38px;letter-spacing:-.03em;line-height:1.1;margin:0 0 12px}.sec-h p{color:var(--mut);font-size:18px;margin:0}
+.pain{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+.pcard{background:#fff;border:1px solid var(--line);border-radius:16px;padding:24px}
+.pcard b{display:block;font-size:17px;margin:10px 0 6px}.pcard p{margin:0;color:var(--mut)}
+.ico{width:42px;height:42px;border-radius:12px;background:var(--pl);color:var(--p);display:grid;place-items:center;font-size:20px}
+.feats{display:grid;grid-template-columns:repeat(4,1fr);gap:18px}
+.alt{background:#fff;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+.steps{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;counter-reset:s}
+.step{position:relative;padding:26px;border-radius:16px;background:var(--bg);border:1px solid var(--line)}
+.step:before{counter-increment:s;content:counter(s);position:absolute;top:-16px;left:24px;width:34px;height:34px;border-radius:50%;background:var(--p);color:#fff;display:grid;place-items:center;font-weight:800}
+.step b{display:block;font-size:18px;margin:8px 0 6px}.step p{margin:0;color:var(--mut)}
+table.cmp{width:100%;border-collapse:collapse;background:#fff;border-radius:16px;overflow:hidden;border:1px solid var(--line)}
+.cmp th,.cmp td{padding:15px 18px;border-bottom:1px solid var(--line);text-align:left}.cmp th{background:#F6F9F8;font-size:14px}
+.cmp td:nth-child(2){background:#F3FAF7;font-weight:600}.cmp tr:last-child td{border-bottom:0}
+.prices{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;align-items:stretch}
+.price{background:#fff;border:1px solid var(--line);border-radius:18px;padding:28px;display:flex;flex-direction:column}
+.price.hot{border:2px solid var(--p);box-shadow:0 20px 50px rgba(14,124,102,.15);position:relative}
+.price.hot:before{content:"Most popular";position:absolute;top:-13px;left:28px;background:var(--p);color:#fff;font-size:12px;font-weight:700;padding:4px 10px;border-radius:99px}
+.price h3{margin:0;font-size:20px}.price .for{color:var(--mut);font-size:14px;margin:4px 0 18px}
+.amt{font-size:44px;font-weight:800;letter-spacing:-.03em}.amt small{font-size:15px;color:var(--mut);font-weight:600}
+.was{color:var(--mut);text-decoration:line-through;font-size:15px;margin-inline-start:6px}
+.price ul{list-style:none;padding:0;margin:18px 0 24px;display:grid;gap:9px;flex:1}.price li:before{content:"✓";color:var(--p);font-weight:800;margin-right:9px}
+.note{text-align:center;color:var(--mut);margin-top:22px;font-size:15px}
+.offer{background:linear-gradient(135deg,#0B3B31,#0E7C66);color:#fff;border-radius:18px;padding:22px 26px;display:flex;justify-content:space-between;align-items:center;gap:18px;flex-wrap:wrap;margin-bottom:28px}
+.offer b{font-size:19px}.offer p{margin:4px 0 0;opacity:.85}
+.who{display:flex;flex-wrap:wrap;gap:12px;justify-content:center}.who span{background:#fff;border:1px solid var(--line);border-radius:99px;padding:10px 18px;font-weight:600}
+.faq{max-width:800px;margin:0 auto}details{background:#fff;border:1px solid var(--line);border-radius:14px;padding:18px 22px;margin-bottom:12px}summary{font-weight:700;cursor:pointer;font-size:16.5px}details p{color:var(--mut);margin:10px 0 0}
+.cta{background:#0B1F1A;color:#fff;border-radius:24px;padding:56px;text-align:center}.cta h2{font-size:36px;letter-spacing:-.03em;margin:0 0 10px}.cta p{opacity:.8;font-size:18px;margin:0 0 26px}
+footer{padding:40px 0;color:var(--mut);font-size:14px;border-top:1px solid var(--line)}
+.fl{display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap}
+@media(max-width:960px){.hero{grid-template-columns:1fr;padding-top:40px}h1{font-size:40px}.feats{grid-template-columns:1fr 1fr}.pain,.steps,.prices{grid-template-columns:1fr}.links a:not(.btn){display:none}.shot .mob{right:6px}.cta{padding:36px 22px}section{padding:56px 0}.sec-h h2{font-size:30px}}
+@media(max-width:520px){.feats{grid-template-columns:1fr}.cmp th,.cmp td{padding:11px 10px;font-size:14px}}
+</style>
+</head>
+<body>
+<header><div class="wrap nav">
+  <a class="logo" href="#"><img src="assets/logo.svg" width="34" height="34" alt="">Wardiya</a>
+  <nav class="links"><a href="#features">Features</a><a href="#how">How it works</a><a href="#pricing">Pricing</a><a href="#faq">FAQ</a><a class="btn pri" href="app/index.html">Live demo</a></nav>
+</div></header>
+
+<main>
+<div class="wrap hero">
+  <div>
+    <span class="eyebrow">● For teams of 5–100 · English &amp; Arabic</span>
+    <h1>Staff attendance on <em>your own</em> Google Sheet.</h1>
+    <p class="lead">Employees check in and out from their phone, with GPS checks for each branch. You get a live dashboard, late and overtime tracking, and payroll-ready monthly reports. One setup fee and no per-user charges.</p>
+    <p class="ar">نظام حضور وانصراف للموظفين يعمل على جدول Google الخاص بك</p>
+    <div class="ctas"><a class="btn pri" href="app/index.html">Try the live demo →</a><a class="btn" href="#contact">Book a 15-minute walkthrough</a></div>
+    <div class="trust"><span>No app to install</span><span>Data stays in your Google account</span><span>Set up in 48 hours</span></div>
+  </div>
+  <div class="shot"><img class="desk" src="assets/dashboard.png" alt="Wardiya admin dashboard showing today's attendance"><img class="mob" src="assets/mobile.png" alt="Employee check-in screen on a phone"></div>
+</div>
+
+<section>
+  <div class="wrap">
+    <div class="sec-h"><h2>Paper registers and WhatsApp messages cost you money</h2><p>Small teams lose hours every month on attendance. Disputes over pay happen because nobody has a reliable record.</p></div>
+    <div class="pain">
+      <div class="pcard"><div class="ico">📝</div><b>Paper sheets and Excel files</b><p>Someone types the register into Excel every month, then fixes mistakes before payroll.</p></div>
+      <div class="pcard"><div class="ico">🕘</div><b>"I was only 5 minutes late"</b><p>Without timestamps, lateness and overtime come down to memory. That leads to arguments and unfair pay.</p></div>
+      <div class="pcard"><div class="ico">📍</div><b>Checking in for a friend</b><p>Shared sign-in sheets make it easy to sign for someone else. Every check-in on Wardiya carries the time and the employee's location.</p></div>
+    </div>
+  </div>
+</section>
+
+<section id="features" class="alt">
+  <div class="wrap">
+    <div class="sec-h"><h2>Everything a growing team needs. Nothing it doesn't.</h2><p>Every feature below works in the live demo today.</p></div>
+    <div class="feats">
+      <div class="pcard"><div class="ico">📱</div><b>One-tap phone check-in</b><p>Works in any phone browser. Employees sign in with a code and PIN, with no app store download.</p></div>
+      <div class="pcard"><div class="ico">🛰️</div><b>GPS geofencing</b><p>Set a radius for each branch. Choose whether check-ins outside it are flagged or blocked.</p></div>
+      <div class="pcard"><div class="ico">⏱️</div><b>Late &amp; overtime rules</b><p>Your hours, grace period and working days (Sun–Thu or Mon–Fri) are applied automatically.</p></div>
+      <div class="pcard"><div class="ico">📊</div><b>Live dashboard</b><p>See who's in, who's late and who hasn't arrived. A 14-day trend and a 30-day on-time rate are included.</p></div>
+      <div class="pcard"><div class="ico">🧾</div><b>Payroll-ready reports</b><p>Monthly totals for each employee: days present, absences, leave, late minutes, hours and overtime. Export to Excel.</p></div>
+      <div class="pcard"><div class="ico">🏢</div><b>Multiple branches</b><p>Filter any report by branch, employee, lateness, missing check-outs or location flags.</p></div>
+      <div class="pcard"><div class="ico">🛡️</div><b>Audit trail</b><p>Every correction needs a reason and is logged with who made it and when, so records hold up in a dispute.</p></div>
+      <div class="pcard"><div class="ico">🌐</div><b>English &amp; العربية</b><p>The whole interface switches between English and Arabic, with full right-to-left layout.</p></div>
+    </div>
+  </div>
+</section>
+
+<section id="how">
+  <div class="wrap">
+    <div class="sec-h"><h2>Live in 48 hours</h2><p>We do the setup. You don't need an IT department.</p></div>
+    <div class="steps">
+      <div class="step"><b>15-minute call</b><p>We agree your working hours, branches and staff list, and the report format your accountant needs.</p></div>
+      <div class="step"><b>We set it up in your Google account</b><p>The system runs in a Google Sheet that you own. We add your branches, employees and geofences.</p></div>
+      <div class="step"><b>Your team starts checking in</b><p>Staff get a link and a PIN. You get a short training session and a one-page guide.</p></div>
+    </div>
+  </div>
+</section>
+
+<section class="alt">
+  <div class="wrap">
+    <div class="sec-h"><h2>Why own it instead of renting it?</h2><p>Most attendance apps charge every month for every employee. Wardiya is a one-time setup.</p></div>
+    <table class="cmp">
+      <tr><th></th><th>Wardiya</th><th>Typical per-user attendance apps</th></tr>
+      <tr><td>Pricing</td><td>One-time setup, optional low monthly care plan</td><td>Monthly fee per user, rising as you hire</td></tr>
+      <tr><td>Where your data lives</td><td>Your own Google Sheet</td><td>The vendor's servers</td></tr>
+      <tr><td>Reports</td><td>Built to match your payroll sheet</td><td>Standard export</td></tr>
+      <tr><td>Arabic &amp; Gulf work week</td><td>Built in</td><td>Varies</td></tr>
+      <tr><td>Support</td><td>Direct WhatsApp/email with the person who set it up</td><td>Ticket queue</td></tr>
+    </table>
+  </div>
+</section>
+
+<section id="pricing">
+  <div class="wrap">
+    <div class="sec-h"><h2>Simple pricing</h2><p>Pay once for setup. Add the care plan if you want ongoing changes and support.</p></div>
+    <div class="offer"><div><b>Founding-client offer: 40% off setup</b><p>For our first 5 clients, in exchange for honest feedback and a short testimonial if you're happy.</p></div><a class="btn" href="#contact">Claim a spot</a></div>
+    <div class="prices">
+      <div class="price"><h3>Starter</h3><div class="for">One location, up to 25 staff</div><div><span class="amt">$149</span><span class="was">$249</span><small> one-time</small></div>
+        <ul><li>Phone check-in / check-out</li><li>Dashboard, attendance log, monthly report</li><li>Late &amp; overtime rules</li><li>Excel/CSV export</li><li>Setup in your Google account</li><li>30 days of support</li></ul><a class="btn" href="#contact">Get started</a></div>
+      <div class="price hot"><h3>Professional</h3><div class="for">Up to 3 branches, up to 75 staff</div><div><span class="amt">$299</span><span class="was">$499</span><small> one-time</small></div>
+        <ul><li>Everything in Starter</li><li>GPS geofence for each branch</li><li>Your logo, colours and company name</li><li>Report columns matched to your payroll sheet</li><li>Staff import and live training session</li><li>60 days of support</li></ul><a class="btn pri" href="#contact">Get started</a></div>
+      <div class="price"><h3>Premium</h3><div class="for">Unlimited branches, 75–100+ staff</div><div><span class="amt">$599</span><span class="was">$999</span><small> from, one-time</small></div>
+        <ul><li>Everything in Professional</li><li>Custom rules (shifts, overtime, deductions)</li><li>Custom reports and dashboards</li><li>Payroll-file formatting (e.g. for your WPS provider)</li><li>Priority support</li><li>3 months of care plan included</li></ul><a class="btn" href="#contact">Talk to us</a></div>
+    </div>
+    <p class="note"><b>Care plan: $19/month</b> (or $190/year): fixes, updates, small changes and WhatsApp support. Not required. <b>Free 14-day pilot</b> available: try it with your real team before you pay.</p>
+  </div>
+</section>
+
+<section class="alt">
+  <div class="wrap">
+    <div class="sec-h"><h2>Built for teams that work on-site</h2></div>
+    <div class="who"><span>🏥 Clinics &amp; dental practices</span><span>🏗️ Construction &amp; contracting</span><span>🧑‍💼 Recruitment &amp; staffing agencies</span><span>🛍️ Retail shops</span><span>🍽️ Restaurants &amp; cafés</span><span>🧹 Cleaning &amp; facilities</span><span>🏢 Offices &amp; agencies</span><span>🎓 Training centres</span></div>
+  </div>
+</section>
+
+<section id="faq">
+  <div class="wrap faq">
+    <div class="sec-h"><h2>Questions</h2></div>
+    <details><summary>Where is our data stored?</summary><p>In a Google Sheet inside your own Google account. You can open it, back it up or export it any time. We don't keep a copy on our servers.</p></details>
+    <details><summary>Do employees need to install an app?</summary><p>No. They open a link in their phone browser, and they can add it to their home screen to use like an app. It works on iPhone and Android.</p></details>
+    <details><summary>Can staff check in from home?</summary><p>You decide. With geofencing on, check-ins outside the branch radius are either flagged for you to review or blocked completely.</p></details>
+    <details><summary>Is it secure?</summary><p>Each employee has a personal PIN, which is stored as a salted hash, never as plain text. Accounts lock after repeated wrong PINs. Admin pages are protected on the server. Every correction is recorded in an audit log with a reason.</p></details>
+    <details><summary>Are there usage limits?</summary><p>It runs on Google's free Apps Script service. It comfortably handles teams of up to about 100 staff. Older years can be archived with one click to keep it fast. For larger teams we'll tell you honestly whether a different setup suits you better.</p></details>
+    <details><summary>Does it calculate salaries?</summary><p>It produces the attendance figures payroll needs: days, hours, late minutes, overtime and leave. On Premium we format the export to match your payroll or WPS provider's template. The salary payment itself stays with your bank or payroll provider.</p></details>
+    <details><summary>What happens after the support period?</summary><p>The system keeps working, because it's yours. The optional care plan covers changes and support. Without it, we can quote for one-off changes.</p></details>
+  </div>
+</section>
+
+<section id="contact">
+  <div class="wrap"><div class="cta">
+    <h2>See it with your own team's data</h2>
+    <p>Book a 15-minute walkthrough, or start a free 14-day pilot.</p>
+    <div class="ctas" style="justify-content:center"><a class="btn pri" id="mail" href="mailto:marwa.aslam911@gmail.com?subject=Wardiya%20demo%20request">Email us</a><a class="btn" id="wa" href="https://wa.me/218922105197?text=Hi%2C%20I%27d%20like%20a%20Wardiya%20demo">WhatsApp</a><a class="btn" href="app/index.html">Open live demo</a></div>
+  </div></div>
+</section>
+</main>
+
+<footer><div class="wrap fl"><div><b style="color:var(--ink)">Wardiya</b> — attendance systems for small and medium businesses.</div><div>© <span id="yr"></span> Wardiya · <a href="app/index.html">Demo</a> · <a href="#pricing">Pricing</a></div></div></footer>
+<script>document.getElementById('yr').textContent = new Date().getFullYear();</script>
+</body>
+</html>

@@ -1,0 +1,769 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0E7C66">
+<title>Wardiya Attendance</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='16' fill='%230E7C66'/%3E%3Ccircle cx='32' cy='32' r='17' fill='none' stroke='%23fff' stroke-width='5'/%3E%3Cpath d='M24 32l6 6 11-12' fill='none' stroke='%23F4A63A' stroke-width='5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<script>window.WARDIYA_CONFIG = window.WARDIYA_CONFIG || {};</script>
+<script src="config.js" onerror="void 0"></script>
+<style>
+:root{--p:#0E7C66;--p2:#0A6352;--pl:#E6F2EF;--acc:#F4A63A;--ink:#0B1F1A;--mut:#5B6B66;--line:#E3E9E7;--bg:#F5F7F6;--card:#fff;--red:#C2410C;--redl:#FDECE4;--amb:#B45309;--ambl:#FEF3C7;--grn:#047857;--grnl:#D1FAE5;--blu:#1D4ED8;--blul:#DBEAFE;--r:14px;--sh:0 1px 2px rgba(11,31,26,.05),0 4px 16px rgba(11,31,26,.06)}
+*{box-sizing:border-box}html,body{margin:0}body{font-family:Inter,"IBM Plex Sans Arabic",system-ui,-apple-system,Segoe UI,Roboto,sans-serif;background:var(--bg);color:var(--ink);font-size:15px;line-height:1.45;-webkit-font-smoothing:antialiased}
+[dir=rtl] body{font-family:"IBM Plex Sans Arabic",Inter,system-ui,sans-serif}
+button,input,select,textarea{font:inherit;color:inherit}
+a{color:var(--p)}
+.hidden{display:none!important}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;border:1px solid var(--line);background:#fff;padding:9px 14px;border-radius:10px;font-weight:600;cursor:pointer;transition:.15s;white-space:nowrap;text-decoration:none;color:var(--ink)}
+.btn:hover{border-color:#c9d4d0;background:#fafcfb}.btn:disabled{opacity:.55;cursor:not-allowed}
+.btn.pri{background:var(--p);border-color:var(--p);color:#fff}.btn.pri:hover{background:var(--p2)}
+.btn.dan{color:var(--red);border-color:#f3c7b5}.btn.dan:hover{background:var(--redl)}
+.btn.sm{padding:6px 10px;font-size:13px;border-radius:8px}.btn.ghost{border-color:transparent;background:transparent}
+.field{display:flex;flex-direction:column;gap:6px;margin-bottom:14px}.field label{font-size:13px;font-weight:600;color:var(--mut)}
+.inp{width:100%;padding:10px 12px;border:1px solid var(--line);border-radius:10px;background:#fff;outline:none;transition:.15s}
+.inp:focus{border-color:var(--p);box-shadow:0 0 0 3px rgba(14,124,102,.15)}
+.row{display:flex;gap:12px;flex-wrap:wrap}.row>.field{flex:1;min-width:140px}
+.hint{font-size:12.5px;color:var(--mut)}
+.card{background:var(--card);border:1px solid var(--line);border-radius:var(--r);box-shadow:var(--sh)}
+.pill{display:inline-flex;align-items:center;gap:5px;padding:3px 9px;border-radius:99px;font-size:12px;font-weight:600;background:#EEF2F1;color:var(--mut);white-space:nowrap}
+.pill.g{background:var(--grnl);color:var(--grn)}.pill.r{background:var(--redl);color:var(--red)}.pill.a{background:var(--ambl);color:var(--amb)}.pill.b{background:var(--blul);color:var(--blu)}
+.logo{display:flex;align-items:center;gap:10px;font-weight:800;font-size:18px;letter-spacing:-.02em}
+.logo svg{flex:none}
+/* login */
+#login{min-height:100vh;display:grid;grid-template-columns:1.1fr 1fr}
+.lg-side{background:linear-gradient(150deg,#0B3B31,#0E7C66 70%);color:#fff;padding:48px;display:flex;flex-direction:column;justify-content:space-between;position:relative;overflow:hidden}
+.lg-side:after{content:"";position:absolute;width:420px;height:420px;border-radius:50%;border:60px solid rgba(255,255,255,.05);right:-140px;bottom:-140px}
+.lg-side h1{font-size:38px;line-height:1.1;letter-spacing:-.03em;margin:0 0 14px;max-width:460px}
+.lg-side p{opacity:.85;max-width:440px;margin:0}
+.lg-feats{display:grid;gap:10px;margin-top:28px}.lg-feats div{display:flex;gap:10px;align-items:center;opacity:.92}
+.lg-feats i{width:22px;height:22px;border-radius:7px;background:rgba(255,255,255,.14);display:grid;place-items:center;font-style:normal;font-size:12px}
+.lg-main{display:flex;align-items:center;justify-content:center;padding:32px}
+.lg-box{width:100%;max-width:380px}
+.lg-box h2{margin:0 0 4px;font-size:24px;letter-spacing:-.02em}
+.demo-cards{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:18px 0 6px}
+.demo-card{border:1px dashed #bcd6ce;background:var(--pl);border-radius:12px;padding:12px;cursor:pointer;text-align:start}
+.demo-card b{display:block;font-size:14px}.demo-card span{font-size:12px;color:var(--mut)}
+.demo-card:hover{border-style:solid;border-color:var(--p)}
+.err{background:var(--redl);color:var(--red);border-radius:10px;padding:10px 12px;font-size:14px;margin-bottom:12px}
+/* shell */
+#shell{min-height:100vh;display:grid;grid-template-columns:240px 1fr}
+.side{background:#0B1F1A;color:#cfe0db;padding:18px 12px;position:sticky;top:0;height:100vh;display:flex;flex-direction:column}
+.side .logo{color:#fff;padding:4px 10px 18px}
+.nav{display:flex;flex-direction:column;gap:2px}
+.nav button{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:10px;border:0;background:transparent;color:inherit;cursor:pointer;font-weight:500;text-align:start}
+.nav button:hover{background:rgba(255,255,255,.06)}.nav button.on{background:rgba(14,124,102,.35);color:#fff}
+.nav svg{width:18px;height:18px;flex:none;opacity:.9}
+.side-foot{margin-top:auto;padding:10px;font-size:12px;opacity:.6}
+.main{min-width:0;display:flex;flex-direction:column}
+.top{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:14px 28px;background:rgba(245,247,246,.9);backdrop-filter:blur(8px);position:sticky;top:0;z-index:5;border-bottom:1px solid var(--line)}
+.top h1{font-size:20px;margin:0;letter-spacing:-.02em}
+.top .who{display:flex;align-items:center;gap:8px}
+.avatar{width:34px;height:34px;border-radius:50%;background:var(--p);color:#fff;display:grid;place-items:center;font-weight:700;font-size:13px}
+.content{padding:24px 28px 80px;max-width:1240px;width:100%}
+.banner{background:#FFF7E6;border-bottom:1px solid #F7DFAE;color:#7A4A00;font-size:13.5px;padding:8px 28px;display:flex;gap:10px;align-items:center;justify-content:space-between;flex-wrap:wrap}
+.mob-nav{display:none}
+/* dashboard */
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:14px;margin-bottom:18px}
+.kpi{padding:16px 18px}.kpi .l{font-size:13px;color:var(--mut);font-weight:600}.kpi .v{font-size:30px;font-weight:800;letter-spacing:-.03em;margin-top:4px}.kpi .s{font-size:12.5px;color:var(--mut)}
+.grid2{display:grid;grid-template-columns:1.6fr 1fr;gap:16px}
+.sec{padding:18px}.sec h3{margin:0 0 14px;font-size:15px;display:flex;justify-content:space-between;align-items:center;gap:8px}
+.bars{display:flex;align-items:flex-end;gap:6px;height:170px;padding-top:10px}
+.bar{flex:1;display:flex;flex-direction:column;align-items:center;gap:6px;min-width:0}
+.bar .stack{width:100%;max-width:28px;display:flex;flex-direction:column-reverse;border-radius:6px 6px 2px 2px;overflow:hidden;background:#EEF2F1}
+.bar .stack i{display:block;background:var(--p)}.bar .stack i.late{background:var(--acc)}
+.bar small{font-size:10.5px;color:var(--mut)}.bar.off .stack{opacity:.35}
+.legend{display:flex;gap:14px;font-size:12px;color:var(--mut)}.legend i{display:inline-block;width:10px;height:10px;border-radius:3px;margin-inline-end:5px;vertical-align:-1px}
+.list{display:flex;flex-direction:column}.li{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:9px 0;border-bottom:1px solid var(--line)}.li:last-child{border-bottom:0}
+.li .n{font-weight:600}.li .m{font-size:12.5px;color:var(--mut)}
+.empty{color:var(--mut);text-align:center;padding:26px 10px;font-size:14px}
+/* tables */
+.toolbar{display:flex;gap:10px;flex-wrap:wrap;align-items:flex-end;margin-bottom:14px}
+.toolbar .field{margin:0;min-width:130px}
+.tbl-wrap{overflow:auto;border-radius:var(--r)}
+table{width:100%;border-collapse:collapse;font-size:14px}
+th{text-align:start;font-size:12px;text-transform:uppercase;letter-spacing:.04em;color:var(--mut);font-weight:700;padding:11px 12px;background:#FAFBFB;border-bottom:1px solid var(--line);white-space:nowrap}
+td{padding:11px 12px;border-bottom:1px solid var(--line);vertical-align:middle}
+tr:last-child td{border-bottom:0}tbody tr:hover{background:#FAFCFB}
+td.num,th.num{text-align:end;font-variant-numeric:tabular-nums}
+.muted{color:var(--mut)}.small{font-size:12.5px}
+/* clock */
+.clock{max-width:560px;margin:0 auto;text-align:center;padding:30px 24px}
+.clock .date{color:var(--mut);font-weight:600}
+.clock .time{font-size:64px;font-weight:800;letter-spacing:-.04em;font-variant-numeric:tabular-nums;margin:2px 0 8px}
+.big-btn{width:210px;height:210px;border-radius:50%;border:0;cursor:pointer;color:#fff;font-size:22px;font-weight:800;margin:18px auto;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;transition:transform .12s,box-shadow .2s}
+.big-btn small{font-size:13px;font-weight:600;opacity:.85}
+.big-btn.in{background:radial-gradient(circle at 30% 25%,#18a386,#0E7C66);box-shadow:0 12px 40px rgba(14,124,102,.35),0 0 0 12px rgba(14,124,102,.08)}
+.big-btn.out{background:radial-gradient(circle at 30% 25%,#f2b25a,#E08A12);box-shadow:0 12px 40px rgba(224,138,18,.35),0 0 0 12px rgba(224,138,18,.1)}
+.big-btn:active{transform:scale(.97)}.big-btn:disabled{opacity:.6}
+.loc{font-size:13px;color:var(--mut);display:flex;justify-content:center;gap:6px;align-items:center;flex-wrap:wrap}
+.sessions{margin-top:20px;text-align:start}
+/* modal & toast */
+.overlay{position:fixed;inset:0;background:rgba(11,31,26,.45);display:flex;align-items:center;justify-content:center;padding:16px;z-index:50}
+.modal{width:100%;max-width:520px;max-height:92vh;overflow:auto;padding:22px}
+.modal h3{margin:0 0 16px;font-size:18px}
+.modal .acts{display:flex;justify-content:flex-end;gap:10px;margin-top:8px}
+#toasts{position:fixed;bottom:18px;inset-inline-end:18px;display:flex;flex-direction:column;gap:8px;z-index:60}
+.toast{background:#0B1F1A;color:#fff;padding:11px 16px;border-radius:10px;box-shadow:var(--sh);font-size:14px;max-width:340px;animation:tin .2s}
+.toast.bad{background:var(--red)}
+@keyframes tin{from{opacity:0;transform:translateY(8px)}}
+.spin{width:16px;height:16px;border:2px solid rgba(255,255,255,.4);border-top-color:#fff;border-radius:50%;animation:sp .7s linear infinite}
+.btn:not(.pri) .spin{border-color:#ccd;border-top-color:var(--p)}
+@keyframes sp{to{transform:rotate(360deg)}}
+.days{display:flex;gap:6px;flex-wrap:wrap}.days label{display:flex;align-items:center;gap:5px;border:1px solid var(--line);border-radius:8px;padding:6px 10px;cursor:pointer;font-size:13.5px;background:#fff}
+.days input{accent-color:var(--p)}
+.branch-cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:14px}
+.loading{padding:60px;text-align:center;color:var(--mut)}
+@media (max-width:900px){
+ #login{grid-template-columns:1fr}.lg-side{padding:28px 24px}.lg-side h1{font-size:28px}.lg-feats{display:none}
+ #shell{grid-template-columns:1fr}.side{display:none}
+ .mob-nav{display:flex;overflow-x:auto;gap:4px;padding:8px 12px;background:#0B1F1A;position:sticky;top:0;z-index:6;scrollbar-width:none}
+ .mob-nav button{flex:none;border:0;background:transparent;color:#cfe0db;padding:8px 12px;border-radius:9px;font-weight:600;font-size:13.5px}
+ .mob-nav button.on{background:rgba(14,124,102,.45);color:#fff}
+ .top{padding:12px 16px;top:50px}.content{padding:16px 14px 60px}.banner{padding:8px 16px}
+ .grid2{grid-template-columns:1fr}.top .avatar{display:none}.top h1{font-size:17px}.top .btn.sm{padding:6px 8px}.clock .time{font-size:52px}.big-btn{width:180px;height:180px}
+ .hide-m{display:none}
+}
+@media print{.side,.mob-nav,.top .who,.banner,.toolbar .btn,.no-print{display:none!important}#shell{display:block}.content{padding:0}.card{box-shadow:none}}
+</style>
+</head>
+<body>
+<div id="app"><div class="loading">Loading…</div></div>
+<div id="toasts"></div>
+<script>
+/*__CORE__*/
+</script>
+<script>
+(function () {
+'use strict';
+var CONFIG = Object.assign({ apiUrl: '', appName: 'Wardiya', brandColor: '', logoUrl: '' }, window.WARDIYA_CONFIG || {});
+if (/^#[0-9a-fA-F]{6}$/.test(CONFIG.brandColor)) { document.documentElement.style.setProperty('--p', CONFIG.brandColor); document.documentElement.style.setProperty('--p2', CONFIG.brandColor); }
+document.title = CONFIG.appName + ' Attendance';
+var MODE = CONFIG.apiUrl ? 'live' : 'demo';
+var LS_KEY = 'wardiya_demo_v1', TOKEN_KEY = 'wardiya_token_' + MODE, LANG_KEY = 'wardiya_lang';
+
+// ---------------------------------------------------------------- safe storage
+var mem = {};
+var store = {
+  get: function (k) { try { return localStorage.getItem(k); } catch (e) { return mem[k] || null; } },
+  set: function (k, v) { try { localStorage.setItem(k, v); } catch (e) { mem[k] = v; } },
+  del: function (k) { try { localStorage.removeItem(k); } catch (e) { delete mem[k]; } }
+};
+
+// ---------------------------------------------------------------- i18n
+var T = {
+  signIn: ['Sign in', 'تسجيل الدخول'], code: ['Employee code', 'رمز الموظف'], pin: ['PIN', 'الرقم السري'],
+  welcome: ['Welcome back', 'مرحباً بعودتك'], signInSub: ['Sign in with your employee code and PIN.', 'سجّل الدخول برمز الموظف والرقم السري.'],
+  tryAdmin: ['Try as Admin', 'جرّب كمدير'], tryEmp: ['Try as Employee', 'جرّب كموظف'],
+  heroT: ['Attendance that runs on your own Google Sheet.', 'نظام حضور يعمل على جدول Google الخاص بك.'],
+  heroS: ['Check-in and check-out from any phone, GPS geofencing, late tracking and payroll-ready monthly reports. No per-user fees.', 'تسجيل الحضور والانصراف من أي هاتف، تحديد الموقع الجغرافي، تتبع التأخير وتقارير شهرية جاهزة للرواتب. بدون رسوم لكل مستخدم.'],
+  f1: ['Phone check-in with GPS', 'تسجيل من الهاتف مع GPS'], f2: ['Late & overtime tracking', 'تتبع التأخير والعمل الإضافي'], f3: ['Monthly payroll reports (Excel)', 'تقارير شهرية للرواتب (Excel)'], f4: ['Your data stays in your Google account', 'بياناتك تبقى في حسابك على Google'],
+  demoMode: ['Demo mode: sample data, saved only in this browser.', 'وضع العرض: بيانات تجريبية محفوظة في هذا المتصفح فقط.'], resetDemo: ['Reset demo data', 'إعادة تعيين البيانات'],
+  dashboard: ['Dashboard', 'لوحة التحكم'], clock: ['Check in / out', 'الحضور والانصراف'], attendance: ['Attendance log', 'سجل الحضور'], employees: ['Employees', 'الموظفون'],
+  branches: ['Branches', 'الفروع'], reports: ['Monthly report', 'التقرير الشهري'], settings: ['Settings', 'الإعدادات'], audit: ['Audit log', 'سجل التدقيق'], history: ['My history', 'سجلي'],
+  logout: ['Sign out', 'تسجيل الخروج'], changePin: ['Change PIN', 'تغيير الرقم السري'],
+  checkIn: ['Check in', 'تسجيل حضور'], checkOut: ['Check out', 'تسجيل انصراف'], tapToCheckIn: ['Tap to start your day', 'اضغط لبدء يومك'], tapToCheckOut: ['Tap when you leave', 'اضغط عند المغادرة'],
+  notIn: ['Not checked in', 'لم يسجل حضور'], inSince: ['Checked in since', 'حاضر منذ'], workedToday: ['Worked today', 'ساعات اليوم'],
+  note: ['Note (optional)', 'ملاحظة (اختياري)'], locating: ['Getting your location…', 'جارٍ تحديد موقعك…'], locOk: ['Location captured', 'تم تحديد الموقع'], locNo: ['Location not available', 'الموقع غير متاح'],
+  present: ['Present today', 'حاضرون اليوم'], late: ['Late', 'متأخر'], inNow: ['In now', 'موجودون الآن'], absent: ['Not checked in', 'لم يسجلوا'], onLeave: ['On leave', 'في إجازة'],
+  onTime30: ['On-time rate (30 days)', 'نسبة الالتزام (30 يوماً)'], missingOut: ['Missing check-outs', 'انصراف غير مسجل'], hoursToday: ['Hours today', 'ساعات اليوم'],
+  last14: ['Attendance — last 14 days', 'الحضور — آخر 14 يوماً'], onTime: ['On time', 'في الوقت'], notCheckedIn: ['Not checked in yet', 'لم يسجلوا بعد'], recent: ['Today’s activity', 'نشاط اليوم'],
+  allIn: ['Everyone is in. 🎉', 'الجميع حاضرون 🎉'], noActivity: ['No check-ins yet today.', 'لا تسجيلات اليوم بعد.'], nonWorkday: ['Today is not a working day.', 'اليوم ليس يوم عمل.'],
+  from: ['From', 'من'], to: ['To', 'إلى'], employee: ['Employee', 'الموظف'], branch: ['Branch', 'الفرع'], status: ['Status', 'الحالة'], all: ['All', 'الكل'],
+  date: ['Date', 'التاريخ'], in: ['In', 'حضور'], out: ['Out', 'انصراف'], hours: ['Hours', 'الساعات'], flags: ['Flags', 'تنبيهات'], actions: ['', ''],
+  addEntry: ['Add entry', 'إضافة سجل'], exportCsv: ['Export CSV', 'تصدير CSV'], edit: ['Edit', 'تعديل'], del: ['Delete', 'حذف'], save: ['Save', 'حفظ'], cancel: ['Cancel', 'إلغاء'],
+  st_late: ['Late', 'متأخر'], st_missing: ['Missing check-out', 'بدون انصراف'], st_flagged: ['Location flag', 'تنبيه موقع'], st_leave: ['Leave', 'إجازة'], st_manual: ['Manual / edited', 'يدوي / معدّل'],
+  onTimeP: ['On time', 'في الوقت'], open: ['Working', 'يعمل'], outside: ['Outside area', 'خارج النطاق'], noLoc: ['No location', 'بدون موقع'], manual: ['Manual', 'يدوي'], edited: ['Edited', 'معدّل'],
+  type: ['Type', 'النوع'], work: ['Work', 'عمل'], leave: ['Leave', 'إجازة'], reason: ['Reason for change (saved in audit log)', 'سبب التعديل (يحفظ في سجل التدقيق)'],
+  editEntry: ['Edit entry', 'تعديل السجل'], newEntry: ['New entry', 'سجل جديد'], confirmDel: ['Delete this entry?', 'حذف هذا السجل؟'],
+  addEmp: ['Add employee', 'إضافة موظف'], importEmp: ['Import', 'استيراد'], name: ['Full name', 'الاسم الكامل'], dept: ['Department', 'القسم'], email: ['Email', 'البريد'], phone: ['Phone', 'الهاتف'],
+  role: ['Role', 'الدور'], admin: ['Admin', 'مدير'], emp: ['Employee', 'موظف'], active: ['Active', 'نشط'], inactive: ['Inactive', 'غير نشط'], startPin: ['Starting PIN (4–8 digits)', 'الرقم السري المبدئي (4–8 أرقام)'],
+  resetPinHint: ['Leave empty to keep the current PIN.', 'اتركه فارغاً للإبقاء على الرقم الحالي.'], deactivate: ['Deactivate', 'تعطيل'], activate: ['Activate', 'تفعيل'], noBranch: ['— No branch —', '— بدون فرع —'],
+  importHelp: ['One employee per line: code, name, department, branch name, PIN, email, phone', 'موظف في كل سطر: الرمز، الاسم، القسم، اسم الفرع، الرقم السري، البريد، الهاتف'],
+  addBranch: ['Add branch', 'إضافة فرع'], address: ['Address', 'العنوان'], lat: ['Latitude', 'خط العرض'], lng: ['Longitude', 'خط الطول'], radius: ['Allowed radius (metres)', 'النطاق المسموح (متر)'],
+  useMyLoc: ['Use my current location', 'استخدم موقعي الحالي'], geofence: ['Geofence', 'النطاق الجغرافي'], noFence: ['No geofence', 'بدون نطاق'], openMap: ['Open map', 'فتح الخريطة'],
+  month: ['Month', 'الشهر'], workingDays: ['Work days', 'أيام العمل'], daysPresent: ['Present', 'حضور'], daysAbsent: ['Absent', 'غياب'], lateDays: ['Late days', 'أيام تأخير'], lateMins: ['Late min', 'دقائق تأخير'],
+  overtime: ['Overtime h', 'إضافي (س)'], avgIn: ['Avg. in', 'متوسط الحضور'], rate: ['Attendance', 'الالتزام'], print: ['Print', 'طباعة'],
+  company: ['Company name', 'اسم الشركة'], tz: ['Time zone', 'المنطقة الزمنية'], workStart: ['Work starts', 'بداية الدوام'], workEnd: ['Work ends', 'نهاية الدوام'], grace: ['Grace period (minutes)', 'فترة السماح (دقائق)'],
+  workDaysL: ['Working days', 'أيام العمل'], gfMode: ['Geofence rule', 'قاعدة النطاق'], gfOff: ['Off — do not check location', 'إيقاف — لا تتحقق من الموقع'], gfFlag: ['Flag — allow, but mark check-ins outside the branch', 'تنبيه — السماح مع تمييز التسجيل خارج الفرع'], gfBlock: ['Block — only allow check-in inside the branch', 'منع — السماح فقط داخل الفرع'],
+  saved: ['Saved', 'تم الحفظ'], when: ['When', 'الوقت'], who: ['By', 'بواسطة'], action: ['Action', 'الإجراء'], details: ['Details', 'التفاصيل'],
+  curPin: ['Current PIN', 'الرقم الحالي'], newPin: ['New PIN', 'الرقم الجديد'], newPin2: ['Repeat new PIN', 'أعد إدخال الرقم الجديد'], mustChange: ['For security, please set your own PIN before continuing.', 'للأمان، يرجى تعيين رقمك السري قبل المتابعة.'],
+  pinMismatch: ['The new PINs do not match.', 'الرقمان غير متطابقين.'], checkedIn: ['Checked in at', 'تم تسجيل الحضور الساعة'], checkedOut: ['Checked out. Worked', 'تم تسجيل الانصراف. ساعات العمل'],
+  lateBy: ['late by', 'متأخر بـ'], min: ['min', 'د'], total: ['Total', 'الإجمالي'], days: ['days', 'أيام'], liveMode: ['Live', 'مباشر'],
+  sun: ['Sun', 'أحد'], mon: ['Mon', 'إثنين'], tue: ['Tue', 'ثلاثاء'], wed: ['Wed', 'أربعاء'], thu: ['Thu', 'خميس'], fri: ['Fri', 'جمعة'], sat: ['Sat', 'سبت'],
+  netErr: ['Cannot reach the server. Check your internet connection.', 'تعذر الوصول إلى الخادم. تحقق من اتصال الإنترنت.'], records: ['records', 'سجلات'], view: ['View', 'عرض']
+};
+var lang = store.get(LANG_KEY) || ((navigator.language || '').indexOf('ar') === 0 ? 'ar' : 'en');
+function t(k) { var v = T[k]; return v ? (v[lang === 'ar' ? 1 : 0] || v[0]) : k; }
+function applyLang() { document.documentElement.lang = lang; document.documentElement.dir = lang === 'ar' ? 'rtl' : 'ltr'; }
+applyLang();
+
+// ---------------------------------------------------------------- utils
+function esc(s) { return String(s === null || s === undefined ? '' : s).replace(/[&<>"']/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; }); }
+function $(s, r) { return (r || document).querySelector(s); }
+function $$(s, r) { return Array.prototype.slice.call((r || document).querySelectorAll(s)); }
+function hm(mins) { mins = Math.round(mins || 0); return Math.floor(mins / 60) + 'h ' + (mins % 60 < 10 ? '0' : '') + (mins % 60) + 'm'; }
+function initials(n) { return String(n || '?').split(/\s+/).map(function (x) { return x[0]; }).slice(0, 2).join('').toUpperCase(); }
+function toast(msg, bad) { var el = document.createElement('div'); el.className = 'toast' + (bad ? ' bad' : ''); el.textContent = msg; $('#toasts').appendChild(el); setTimeout(function () { el.remove(); }, 4200); }
+function tzParts(d, tz) {
+  var o = {}; new Intl.DateTimeFormat('en-GB', { timeZone: tz, year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false }).formatToParts(d).forEach(function (p) { o[p.type] = p.value; });
+  if (o.hour === '24') o.hour = '00'; return o;
+}
+function fmtDate(iso, opts) {
+  var p = iso.split('-').map(Number), d = new Date(Date.UTC(p[0], p[1] - 1, p[2], 12));
+  return new Intl.DateTimeFormat(lang === 'ar' ? 'ar-u-nu-latn' : 'en-GB', Object.assign({ timeZone: 'UTC' }, opts || { weekday: 'short', day: 'numeric', month: 'short' })).format(d);
+}
+var DAYKEYS = ['sun', 'mon', 'tue', 'wed', 'thu', 'fri', 'sat'];
+
+// ---------------------------------------------------------------- backends
+var localApp = null;
+function newId() { if (window.crypto && crypto.randomUUID) return crypto.randomUUID(); return 'id' + Date.now().toString(36) + Math.random().toString(36).slice(2); }
+function newToken() { var a = new Uint8Array(24); (window.crypto || {}).getRandomValues ? crypto.getRandomValues(a) : a.forEach(function (_, i) { a[i] = Math.random() * 256; }); return Array.prototype.map.call(a, function (b) { return ('0' + b.toString(16)).slice(-2); }).join(''); }
+function buildLocal() {
+  var db;
+  function load() { try { db = JSON.parse(store.get(LS_KEY) || 'null'); } catch (e) { db = null; } }
+  function persist() { store.set(LS_KEY, JSON.stringify(db)); }
+  load();
+  var S = {
+    list: function (t) { return db[t]; },
+    insert: function (t, o) { db[t].push(JSON.parse(JSON.stringify(o))); persist(); return o; },
+    update: function (t, id, patch) { db[t].forEach(function (o) { if (o.id === id) for (var k in patch) o[k] = patch[k]; }); persist(); },
+    remove: function (t, id) { db[t] = db[t].filter(function (o) { return o.id !== id; }); persist(); },
+    getSettings: function () { return db.settings; }, saveSettings: function (s) { db.settings = s; persist(); },
+    sessionPut: function (k, v) { db.sessions[k] = v; persist(); }, sessionGet: function (k) { return db.sessions[k] || null; }, sessionDel: function (k) { delete db.sessions[k]; persist(); },
+    counterGet: function (k) { var c = db.counters[k]; return c && c.exp > Date.now() ? c.v : 0; }, counterSet: function (k, v, sec) { db.counters[k] = { v: v, exp: Date.now() + sec * 1000 }; persist(); }
+  };
+  var env = {
+    store: S, now: function () { return new Date(); },
+    tzDate: function (d, tz) { var p = tzParts(d, tz); return p.year + '-' + p.month + '-' + p.day; },
+    tzTime: function (d, tz) { var p = tzParts(d, tz); return p.hour + ':' + p.minute; },
+    newId: newId, newToken: newToken,
+    validTz: function (tz) { try { new Intl.DateTimeFormat('en', { timeZone: tz }); return true; } catch (e) { return false; } },
+    lock: function (fn) { return fn(); }, log: function (e) { console.error(e); }
+  };
+  if (!db || !db.employees) { db = seedDemo(env); persist(); }
+  return WardiyaCore.createApp(env);
+}
+function seedDemo(env) {
+  var seed = 20261123; function rnd() { seed = (seed * 1664525 + 1013904223) % 4294967296; return seed / 4294967296; }
+  var tz = 'UTC'; try { tz = Intl.DateTimeFormat().resolvedOptions().timeZone || 'UTC'; } catch (e) { }
+  var gulfSunThu = ['Asia/Riyadh', 'Asia/Qatar', 'Asia/Kuwait', 'Asia/Bahrain', 'Asia/Muscat', 'Africa/Tripoli', 'Africa/Cairo'].indexOf(tz) >= 0;
+  var workDays = gulfSunThu ? [0, 1, 2, 3, 4] : [1, 2, 3, 4, 5];
+  var db = { employees: [], branches: [], records: [], audit: [], sessions: {}, counters: {},
+    settings: { companyName: 'Al Noor Medical Centre (Demo)', timezone: tz, workStart: '09:00', workEnd: '17:00', graceMinutes: 10, workDays: workDays, geofenceMode: 'flag' } };
+  var b1 = { id: newId(), name: 'Downtown Clinic', address: 'Sheikh Zayed Rd, Dubai (sample)', lat: 25.2048, lng: 55.2708, radius: 200 };
+  var b2 = { id: newId(), name: 'Marina Clinic', address: 'Dubai Marina (sample, no geofence)', lat: '', lng: '', radius: '' };
+  db.branches.push(b1, b2);
+  function emp(code, name, dept, br, role, pin) {
+    var salt = newToken().slice(0, 16);
+    var e = { id: newId(), code: code, name: name, email: '', phone: '', department: dept, branchId: br ? br.id : '', role: role || 'employee', active: true, mustChangePin: false, salt: salt, pinHash: WardiyaCore.hashPin(pin || '1111', salt), createdAt: new Date().toISOString() };
+    db.employees.push(e); return e;
+  }
+  emp('ADMIN', 'Layla Haddad', 'Management', null, 'admin', '1234');
+  var people = [['E001', 'Omar Khalil', 'Reception', b2], ['E002', 'Sara Mansour', 'Nursing', b1], ['E003', 'James Carter', 'Radiology', b1], ['E004', 'Fatima Al Zahra', 'Nursing', b1],
+    ['E005', 'Rahul Menon', 'Pharmacy', b1], ['E006', 'Aisha Noor', 'Reception', b1], ['E007', 'Daniel Okafor', 'Lab', b2], ['E008', 'Mariam Saeed', 'Nursing', b2],
+    ['E009', 'Yousef Haddad', 'Admin', b1], ['E010', 'Grace Lim', 'Dental', b2], ['E011', 'Hassan Ali', 'Facilities', b1], ['E012', 'Nadia Farouk', 'Accounts', b1]];
+  var list = people.map(function (p) { return emp(p[0], p[1], p[2], p[3]); });
+  var now = new Date(), today = env.tzDate(now, tz), nowT = env.tzTime(now, tz), nowMin = Number(nowT.slice(0, 2)) * 60 + Number(nowT.slice(3));
+  function t2(m) { m = Math.max(0, Math.min(1439, Math.round(m))); return ('0' + Math.floor(m / 60)).slice(-2) + ':' + ('0' + (m % 60)).slice(-2); }
+  for (var back = 24; back >= 0; back--) {
+    var d = WardiyaCore.addDays(today, -back);
+    if (workDays.indexOf(WardiyaCore.weekday(d)) < 0) continue;
+    list.forEach(function (e, idx) {
+      if (back === 0 && e.code === 'E001') return; // leave the demo employee free to check in
+      var r = rnd();
+      if (r < 0.035) { db.records.push(rec(e, d, 'leave')); return; }
+      if (r < 0.07) return; // absent
+      var habit = idx % 4 === 1 ? 12 : 0; // a couple of habitual late-comers
+      var inM = 540 - 18 + rnd() * 24 + (rnd() < 0.16 ? 10 + rnd() * 40 : 0) + habit * rnd();
+      var outM = 1020 - 10 + rnd() * 55;
+      if (back === 0) {
+        if (inM > nowMin) return;
+        if (outM > nowMin) outM = null;
+      }
+      var x = rec(e, d, 'work', t2(inM), outM === null ? '' : t2(outM), back === 0 ? new Date(now.getTime() - (nowMin - inM) * 60000).toISOString() : new Date(now.getTime() - back * 86400000).toISOString());
+      if (back > 0 && back < 6 && rnd() < 0.025) x.outTime = '';
+      if (e.branchId === b1.id && rnd() < 0.05) { x.flags = 'in_outside'; x.inDist = 300 + Math.round(rnd() * 900); }
+      db.records.push(x);
+    });
+  }
+  function rec(e, d, type, inT, outT, inAt) {
+    var late = 0;
+    if (type === 'work') { var m = Number(inT.slice(0, 2)) * 60 + Number(inT.slice(3)); late = m - 540 > 10 ? m - 540 : 0; }
+    return { id: newId(), empId: e.id, branchId: e.branchId, date: d, type: type, inTime: inT || '', outTime: outT || '', inAt: inAt || '', outAt: outT ? inAt : '',
+      inLat: '', inLng: '', inAcc: '', inDist: '', outLat: '', outLng: '', outDist: '', lateMin: late, flags: '', note: '', source: 'app', editedBy: '', editedAt: '' };
+  }
+  db.audit.push({ id: newId(), ts: now.toISOString(), actor: 'system', action: 'setup', detail: 'Demo data created' });
+  return db;
+}
+
+var token = store.get(TOKEN_KEY);
+function api(action, payload) {
+  if (MODE === 'demo') {
+    if (!localApp) localApp = buildLocal();
+    var res = localApp.handle(action, JSON.parse(JSON.stringify(payload || {})), token);
+    return new Promise(function (ok) { setTimeout(function () { ok(res); }, 120); });
+  }
+  return fetch(CONFIG.apiUrl, { method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: JSON.stringify({ action: action, payload: payload || {}, token: token }) })
+    .then(function (r) { return r.json(); })
+    .catch(function () { return { ok: false, code: 'NETWORK', error: t('netErr') }; });
+}
+function call(action, payload, btn) {
+  var label;
+  if (btn) { btn.disabled = true; label = btn.innerHTML; btn.innerHTML = '<span class="spin"></span>'; }
+  return api(action, payload).then(function (res) {
+    if (btn) { btn.disabled = false; btn.innerHTML = label; }
+    if (!res.ok && res.code === 'AUTH') { token = null; store.del(TOKEN_KEY); state.user = null; renderLogin(res.error); throw res; }
+    if (!res.ok && res.code === 'MUST_CHANGE_PIN') { pinModal(true); throw res; }
+    return res;
+  });
+}
+
+// ---------------------------------------------------------------- state & routing
+var state = { user: null, settings: null, view: null, cache: {} };
+var ICONS = {
+  dashboard: '<path d="M3 13h8V3H3zM13 21h8V11h-8zM3 21h8v-6H3zM13 3v6h8V3z"/>', clock: '<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>',
+  attendance: '<path d="M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01"/>', employees: '<circle cx="9" cy="8" r="4"/><path d="M2 21c0-4 3-7 7-7s7 3 7 7M17 11a3 3 0 100-6M22 21c0-3-2-5-4-6"/>',
+  branches: '<path d="M12 21s-7-6.2-7-11a7 7 0 0114 0c0 4.8-7 11-7 11z"/><circle cx="12" cy="10" r="2.5"/>', reports: '<path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/>',
+  settings: '<circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 00.3 1.8l.1.1a2 2 0 11-2.8 2.8l-.1-.1a1.7 1.7 0 00-2.9 1.2V21a2 2 0 11-4 0v-.1A1.7 1.7 0 008 19.4a1.7 1.7 0 00-1.8.3l-.1.1a2 2 0 11-2.8-2.8l.1-.1A1.7 1.7 0 003 14H3a2 2 0 110-4h.1A1.7 1.7 0 004.6 8a1.7 1.7 0 00-.3-1.8l-.1-.1a2 2 0 112.8-2.8l.1.1A1.7 1.7 0 009 4.6V4a2 2 0 114 0v.1a1.7 1.7 0 001 1.5 1.7 1.7 0 001.8-.3l.1-.1a2 2 0 112.8 2.8l-.1.1a1.7 1.7 0 00-.3 1.8V10a1.7 1.7 0 001.5 1H21a2 2 0 110 4h-.1a1.7 1.7 0 00-1.5 1z"/>',
+  audit: '<path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>', history: '<path d="M3 12a9 9 0 109-9 9 9 0 00-6.4 2.6L3 8M3 3v5h5M12 7v5l4 2"/>'
+};
+function icon(k) { return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">' + (ICONS[k] || '') + '</svg>'; }
+var LOGO = /^(https:\/\/|[\w.\/-]+\.(png|svg|jpg|jpeg|webp)$)/i.test(CONFIG.logoUrl) ? '<img src="' + esc(CONFIG.logoUrl) + '" width="32" height="32" style="border-radius:8px;object-fit:contain;background:#fff" alt="">' : '<svg width="32" height="32" viewBox="0 0 64 64"><rect width="64" height="64" rx="16" fill="#0E7C66"/><circle cx="32" cy="32" r="17" fill="none" stroke="#fff" stroke-width="5"/><path d="M24 32l6 6 11-12" fill="none" stroke="#F4A63A" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+function views() { return state.user && state.user.role === 'admin' ? ['dashboard', 'clock', 'attendance', 'employees', 'branches', 'reports', 'settings', 'audit'] : ['clock', 'history']; }
+
+// ---------------------------------------------------------------- login
+function renderLogin(errMsg) {
+  $('#app').innerHTML =
+    '<div id="login"><div class="lg-side"><div class="logo">' + LOGO + '<span>' + esc(CONFIG.appName) + '</span></div><div><h1>' + t('heroT') + '</h1><p>' + t('heroS') + '</p>' +
+    '<div class="lg-feats"><div><i>✓</i>' + t('f1') + '</div><div><i>✓</i>' + t('f2') + '</div><div><i>✓</i>' + t('f3') + '</div><div><i>✓</i>' + t('f4') + '</div></div></div>' +
+    '<div class="small" style="opacity:.6">v' + WardiyaCore.VERSION + (MODE === 'demo' ? ' · Demo' : '') + '</div></div>' +
+    '<div class="lg-main"><form class="lg-box" id="lf" autocomplete="off"><div style="display:flex;justify-content:flex-end;margin-bottom:24px"><button type="button" class="btn sm" data-lang>' + (lang === 'ar' ? 'English' : 'العربية') + '</button></div>' +
+    '<h2>' + t('welcome') + '</h2><p class="muted" style="margin:0 0 20px">' + t('signInSub') + '</p>' +
+    (errMsg ? '<div class="err">' + esc(errMsg) + '</div>' : '') +
+    '<div class="field"><label for="lc">' + t('code') + '</label><input class="inp" id="lc" autocapitalize="characters" required maxlength="20" placeholder="E001"></div>' +
+    '<div class="field"><label for="lp">' + t('pin') + '</label><input class="inp" id="lp" type="password" inputmode="numeric" required maxlength="8" placeholder="••••"></div>' +
+    '<button class="btn pri" style="width:100%;padding:12px" id="lb">' + t('signIn') + '</button>' +
+    (MODE === 'demo' ? '<div class="demo-cards"><button type="button" class="demo-card" data-demo="ADMIN|1234"><b>' + t('tryAdmin') + '</b><span>ADMIN · 1234</span></button><button type="button" class="demo-card" data-demo="E001|1111"><b>' + t('tryEmp') + '</b><span>E001 · 1111</span></button></div><p class="hint">' + t('demoMode') + '</p>' : '') +
+    '</form></div></div>';
+  $('#lf').onsubmit = function (e) { e.preventDefault(); doLogin($('#lc').value, $('#lp').value, $('#lb')); };
+  $$('[data-demo]').forEach(function (b) { b.onclick = function () { var p = b.getAttribute('data-demo').split('|'); $('#lc').value = p[0]; $('#lp').value = p[1]; doLogin(p[0], p[1], $('#lb')); }; });
+  $('[data-lang]').onclick = function () { setLang(lang === 'ar' ? 'en' : 'ar'); renderLogin(); };
+}
+function doLogin(code, pin, btn) {
+  call('login', { code: code, pin: pin }, btn).then(function (res) {
+    if (!res.ok) { renderLogin(res.error); $('#lc').value = code; return; }
+    token = res.data.token; store.set(TOKEN_KEY, token);
+    state.user = res.data.user; state.settings = res.data.settings;
+    renderShell(); go(views()[0]);
+    if (state.user.mustChangePin) pinModal(true);
+  }).catch(function () { });
+}
+function setLang(l) { lang = l; store.set(LANG_KEY, l); applyLang(); }
+
+// ---------------------------------------------------------------- shell
+function renderShell() {
+  var u = state.user, vs = views();
+  $('#app').innerHTML =
+    '<div id="shell"><aside class="side"><div class="logo">' + LOGO + '<span>' + esc(CONFIG.appName) + '</span></div><nav class="nav">' +
+    vs.map(function (v) { return '<button data-go="' + v + '">' + icon(v) + '<span>' + t(v) + '</span></button>'; }).join('') +
+    '</nav><div class="side-foot">' + esc(state.settings.companyName) + '<br>v' + WardiyaCore.VERSION + ' · ' + (MODE === 'demo' ? 'Demo' : t('liveMode')) + '</div></aside>' +
+    '<div class="main"><nav class="mob-nav">' + vs.map(function (v) { return '<button data-go="' + v + '">' + t(v) + '</button>'; }).join('') + '</nav>' +
+    (MODE === 'demo' ? '<div class="banner"><span>⚡ ' + t('demoMode') + '</span><button class="btn sm" id="rst">' + t('resetDemo') + '</button></div>' : '') +
+    '<header class="top"><h1 id="vt"></h1><div class="who"><button class="btn sm ghost" data-lang>' + (lang === 'ar' ? 'EN' : 'عربي') + '</button>' +
+    '<div class="avatar" title="' + esc(u.name) + '">' + esc(initials(u.name)) + '</div><div class="hide-m"><div style="font-weight:600;font-size:14px">' + esc(u.name) + '</div><div class="small muted">' + esc(u.code) + ' · ' + (u.role === 'admin' ? t('admin') : t('emp')) + '</div></div>' +
+    '<button class="btn sm" id="cpin">' + t('changePin') + '</button><button class="btn sm" id="lo">' + t('logout') + '</button></div></header>' +
+    '<main class="content" id="view"></main></div></div>';
+  $$('[data-go]').forEach(function (b) { b.onclick = function () { go(b.getAttribute('data-go')); }; });
+  $('#lo').onclick = function () { api('logout'); token = null; store.del(TOKEN_KEY); state.user = null; stopTimers(); renderLogin(); };
+  $('#cpin').onclick = function () { pinModal(false); };
+  $('[data-lang]').onclick = function () { setLang(lang === 'ar' ? 'en' : 'ar'); var v = state.view; renderShell(); go(v); };
+  if ($('#rst')) $('#rst').onclick = function () { if (!confirm(t('resetDemo') + '?')) return; store.del(LS_KEY); store.del(TOKEN_KEY); localApp = null; token = null; state.user = null; stopTimers(); renderLogin(); };
+}
+var timers = [];
+function stopTimers() { timers.forEach(clearInterval); timers = []; }
+function go(v) {
+  if (views().indexOf(v) < 0) v = views()[0];
+  stopTimers(); state.view = v;
+  $$('[data-go]').forEach(function (b) { b.classList.toggle('on', b.getAttribute('data-go') === v); });
+  $('#vt').textContent = t(v);
+  $('#view').innerHTML = '<div class="loading">…</div>';
+  ({ dashboard: vDashboard, clock: vClock, history: vHistory, attendance: vAttendance, employees: vEmployees, branches: vBranches, reports: vReports, settings: vSettings, audit: vAudit })[v]();
+  window.scrollTo(0, 0);
+}
+
+// ---------------------------------------------------------------- modal
+function modal(title, bodyHtml, onSave, opts) {
+  opts = opts || {};
+  var wrap = document.createElement('div'); wrap.className = 'overlay';
+  wrap.innerHTML = '<form class="modal card" novalidate><h3>' + esc(title) + '</h3><div class="err hidden" id="merr"></div>' + bodyHtml +
+    '<div class="acts">' + (opts.extra || '') + (opts.noCancel ? '' : '<button type="button" class="btn" data-x>' + t('cancel') + '</button>') + '<button class="btn pri" id="msave">' + (opts.saveLabel || t('save')) + '</button></div></form>';
+  document.body.appendChild(wrap);
+  var form = $('form', wrap);
+  function close() { wrap.remove(); }
+  if (!opts.noCancel) { $('[data-x]', wrap).onclick = close; wrap.addEventListener('mousedown', function (e) { if (e.target === wrap) close(); }); }
+  function showErr(m) { var el = $('#merr', wrap); el.textContent = m; el.classList.remove('hidden'); }
+  form.onsubmit = function (e) { e.preventDefault(); onSave(form, close, showErr, $('#msave', wrap)); };
+  var first = $('input,select,textarea', form); if (first) setTimeout(function () { first.focus(); }, 30);
+  if (opts.onOpen) opts.onOpen(form, wrap);
+  return wrap;
+}
+function val(f, n) { var el = f.elements[n]; return el ? el.value.trim() : ''; }
+
+function pinModal(forced) {
+  if (document.querySelector('.overlay [name=newPin]')) return;
+  modal(t('changePin'), (forced ? '<p class="muted" style="margin-top:-6px">' + t('mustChange') + '</p>' : '') +
+    '<div class="field"><label>' + t('curPin') + '</label><input class="inp" name="oldPin" type="password" inputmode="numeric" maxlength="8" required></div>' +
+    '<div class="row"><div class="field"><label>' + t('newPin') + '</label><input class="inp" name="newPin" type="password" inputmode="numeric" maxlength="8" required></div>' +
+    '<div class="field"><label>' + t('newPin2') + '</label><input class="inp" name="newPin2" type="password" inputmode="numeric" maxlength="8" required></div></div>',
+    function (f, close, err, btn) {
+      if (val(f, 'newPin') !== val(f, 'newPin2')) return err(t('pinMismatch'));
+      call('changePin', { oldPin: val(f, 'oldPin'), newPin: val(f, 'newPin') }, btn).then(function (r) {
+        if (!r.ok) return err(r.error);
+        close(); toast(t('saved')); state.user.mustChangePin = false; if (forced) go(state.view);
+      }).catch(function () { });
+    }, { noCancel: forced, extra: forced ? '<button type="button" class="btn" onclick="this.closest(\'.overlay\').remove();document.getElementById(\'lo\').click()">' + t('logout') + '</button>' : '' });
+}
+
+// ---------------------------------------------------------------- shared bits
+function statusPills(r) {
+  var h = '';
+  if (r.type === 'leave') return '<span class="pill b">' + t('leave') + '</span>';
+  if (!r.outTime && !r.missingOut) h += '<span class="pill g">● ' + t('open') + '</span> ';
+  if (Number(r.lateMin) > 0) h += '<span class="pill a">' + t('late') + ' ' + r.lateMin + t('min') + '</span> ';
+  else if (r.inTime) h += '<span class="pill">' + t('onTimeP') + '</span> ';
+  if (r.missingOut) h += '<span class="pill r">' + t('st_missing') + '</span> ';
+  if (/outside/.test(r.flags || '')) h += '<span class="pill r" title="' + esc(r.inDist ? r.inDist + ' m' : '') + '">' + t('outside') + (r.inDist ? ' ' + esc(r.inDist) + 'm' : '') + '</span> ';
+  if (/no_location/.test(r.flags || '')) h += '<span class="pill a">' + t('noLoc') + '</span> ';
+  if (r.source === 'manual') h += '<span class="pill">' + t('manual') + '</span> '; else if (r.editedBy) h += '<span class="pill">' + t('edited') + '</span> ';
+  return h;
+}
+function csvDownload(name, rows) {
+  var csv = rows.map(function (r) { return r.map(function (c) { c = String(c === null || c === undefined ? '' : c); if (/^[=+\-@]/.test(c)) c = "'" + c; return '"' + c.replace(/"/g, '""') + '"'; }).join(','); }).join('\r\n');
+  var blob = new Blob(['﻿' + csv], { type: 'text/csv;charset=utf-8' });
+  var a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = name; document.body.appendChild(a); a.click(); setTimeout(function () { URL.revokeObjectURL(a.href); a.remove(); }, 500);
+}
+function getPosition() {
+  return new Promise(function (resolve) {
+    if (!navigator.geolocation) return resolve(null);
+    var done = false;
+    var timer = setTimeout(function () { if (!done) { done = true; resolve(null); } }, 12000);
+    navigator.geolocation.getCurrentPosition(function (p) { if (done) return; done = true; clearTimeout(timer); resolve({ lat: p.coords.latitude, lng: p.coords.longitude, acc: p.coords.accuracy }); },
+      function () { if (done) return; done = true; clearTimeout(timer); resolve(null); }, { enableHighAccuracy: true, timeout: 11000, maximumAge: 30000 });
+  });
+}
+function loadLookups() {
+  if (state.user.role !== 'admin') return Promise.resolve();
+  return Promise.all([call('listEmployees'), call('listBranches')]).then(function (r) { state.cache.emps = r[0].data || []; state.cache.branches = r[1].data || []; });
+}
+function empOptions(sel, withAll) { return (withAll ? '<option value="">' + t('all') + '</option>' : '') + (state.cache.emps || []).map(function (e) { return '<option value="' + esc(e.id) + '"' + (e.id === sel ? ' selected' : '') + '>' + esc(e.code + ' — ' + e.name) + '</option>'; }).join(''); }
+function branchOptions(sel, first) { return '<option value="">' + first + '</option>' + (state.cache.branches || []).map(function (b) { return '<option value="' + esc(b.id) + '"' + (b.id === sel ? ' selected' : '') + '>' + esc(b.name) + '</option>'; }).join(''); }
+
+// ---------------------------------------------------------------- views: clock
+function vClock() {
+  call('me').then(function (res) {
+    if (!res.ok) return $('#view').innerHTML = '<div class="err">' + esc(res.error) + '</div>';
+    var d = res.data, s = d.settings, open = d.open;
+    state.settings = s;
+    var startedMin = open ? Date.now() : 0, base = d.todayMinutes;
+    $('#view').innerHTML = '<div class="card clock"><div class="date" id="cd"></div><div class="time" id="ct">--:--</div>' +
+      '<div>' + (open ? '<span class="pill g">● ' + t('inSince') + ' ' + esc(open.inTime) + '</span>' : '<span class="pill">' + t('notIn') + '</span>') +
+      (d.branch ? ' <span class="pill">' + esc(d.branch.name) + '</span>' : '') + '</div>' +
+      '<button class="big-btn ' + (open ? 'out' : 'in') + '" id="cb">' + (open ? t('checkOut') : t('checkIn')) + '<small>' + (open ? t('tapToCheckOut') : t('tapToCheckIn')) + '</small></button>' +
+      '<div class="field" style="max-width:340px;margin:0 auto 10px"><input class="inp" id="cn" maxlength="150" placeholder="' + t('note') + '"></div>' +
+      '<div class="loc" id="cl"></div>' +
+      '<div class="sessions"><div class="li"><span class="muted">' + t('workedToday') + '</span><b id="cw">' + hm(base) + '</b></div>' +
+      d.todayRecords.filter(function (r) { return r.type !== 'leave'; }).map(function (r) { return '<div class="li"><span>' + esc(r.inTime) + ' → ' + (r.outTime ? esc(r.outTime) : '…') + '</span><span>' + statusPills(r) + '</span></div>'; }).join('') +
+      '</div></div>';
+    function tick() {
+      var p = tzParts(new Date(), s.timezone);
+      $('#ct').textContent = p.hour + ':' + p.minute;
+      $('#cd').textContent = fmtDate(p.year + '-' + p.month + '-' + p.day, { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
+      if (open) $('#cw').textContent = hm(base + (Date.now() - startedMin) / 60000);
+    }
+    tick(); timers.push(setInterval(tick, 1000 * 15));
+    $('#cb').onclick = function () {
+      var btn = this; btn.disabled = true;
+      $('#cl').innerHTML = '<span class="spin" style="border-color:#ccd;border-top-color:var(--p)"></span> ' + t('locating');
+      getPosition().then(function (pos) {
+        $('#cl').textContent = pos ? '📍 ' + t('locOk') + ' (±' + Math.round(pos.acc) + ' m)' : '📍 ' + t('locNo');
+        var payload = Object.assign({ note: $('#cn').value }, pos || {});
+        return call(open ? 'checkOut' : 'checkIn', payload, btn);
+      }).then(function (r) {
+        if (!r.ok) { btn.disabled = false; toast(r.error, true); return; }
+        if (open) toast(t('checkedOut') + ' ' + hm(r.data.minutes));
+        else toast(t('checkedIn') + ' ' + r.data.record.inTime + (r.data.late ? ' — ' + t('lateBy') + ' ' + r.data.record.lateMin + ' ' + t('min') : ''), r.data.late);
+        vClock();
+      }).catch(function () { btn.disabled = false; });
+    };
+  }).catch(function () { });
+}
+
+// ---------------------------------------------------------------- views: employee history
+function vHistory() {
+  var p = tzParts(new Date(), state.settings.timezone), month = state.cache.hMonth || (p.year + '-' + p.month);
+  var first = month + '-01', last = WardiyaCore.addDays(WardiyaCore.addDays(first, 32).slice(0, 7) + '-01', -1);
+  call('myRecords', { from: first, to: last }).then(function (res) {
+    var list = res.data || [], mins = 0, late = 0, days = {};
+    list.forEach(function (r) { mins += r.minutes; if (Number(r.lateMin) > 0) late++; if (r.type !== 'leave') days[r.date] = 1; });
+    $('#view').innerHTML = '<div class="toolbar"><div class="field"><label>' + t('month') + '</label><input class="inp" type="month" id="hm" value="' + month + '"></div></div>' +
+      '<div class="kpis"><div class="card kpi"><div class="l">' + t('daysPresent') + '</div><div class="v">' + Object.keys(days).length + '</div></div><div class="card kpi"><div class="l">' + t('hours') + '</div><div class="v">' + hm(mins) + '</div></div><div class="card kpi"><div class="l">' + t('lateDays') + '</div><div class="v">' + late + '</div></div></div>' +
+      '<div class="card tbl-wrap"><table><thead><tr><th>' + t('date') + '</th><th>' + t('in') + '</th><th>' + t('out') + '</th><th class="num">' + t('hours') + '</th><th>' + t('status') + '</th></tr></thead><tbody>' +
+      (list.length ? list.map(function (r) { return '<tr><td>' + fmtDate(r.date) + '</td><td>' + esc(r.inTime || '—') + '</td><td>' + esc(r.outTime || '—') + '</td><td class="num">' + (r.minutes ? hm(r.minutes) : '—') + '</td><td>' + statusPills(r) + '</td></tr>'; }).join('') : '<tr><td colspan="5" class="empty">—</td></tr>') +
+      '</tbody></table></div>';
+    $('#hm').onchange = function () { state.cache.hMonth = this.value; vHistory(); };
+  }).catch(function () { });
+}
+
+// ---------------------------------------------------------------- views: dashboard
+function vDashboard() {
+  call('dashboard').then(function (res) {
+    if (!res.ok) return $('#view').innerHTML = '<div class="err">' + esc(res.error) + '</div>';
+    var d = res.data, k = d.kpi, max = Math.max(1, k.activeEmployees);
+    function card(l, v, s, color) { return '<div class="card kpi"><div class="l">' + l + '</div><div class="v"' + (color ? ' style="color:' + color + '"' : '') + '>' + v + '</div>' + (s ? '<div class="s">' + s + '</div>' : '') + '</div>'; }
+    $('#view').innerHTML =
+      '<p class="muted" style="margin:-6px 0 16px">' + fmtDate(d.date, { weekday: 'long', day: 'numeric', month: 'long' }) + ' · ' + esc(d.time) + (d.isWorkday ? '' : ' · ' + t('nonWorkday')) + '</p>' +
+      '<div class="kpis">' + card(t('present'), k.present + '<span class="muted" style="font-size:16px;font-weight:600"> / ' + k.activeEmployees + '</span>', k.inNow + ' ' + t('inNow').toLowerCase()) +
+      card(t('late'), k.late, '', k.late ? 'var(--amb)' : '') + card(t('absent'), k.absent, k.onLeave ? k.onLeave + ' ' + t('onLeave').toLowerCase() : '', k.absent ? 'var(--red)' : '') +
+      card(t('onTime30'), k.onTimeRate30 === null ? '—' : k.onTimeRate30 + '%') +
+      card(t('missingOut'), k.missingCheckouts, k.missingCheckouts ? '<a href="#" id="gomiss">' + t('view') + ' →</a>' : '', k.missingCheckouts ? 'var(--red)' : '') + '</div>' +
+      '<div class="grid2"><div class="card sec"><h3>' + t('last14') + '<span class="legend"><span><i style="background:var(--p)"></i>' + t('onTime') + '</span><span><i style="background:var(--acc)"></i>' + t('late') + '</span></span></h3><div class="bars">' +
+      d.trend.map(function (x) {
+        var onT = x.present - x.late;
+        return '<div class="bar' + (x.workday ? '' : ' off') + '" title="' + esc(x.date + ': ' + x.present + ' present, ' + x.late + ' late') + '"><small>' + (x.present || '') + '</small><div class="stack" style="height:130px;justify-content:flex-start"><i style="height:' + (onT / max * 100) + '%"></i><i class="late" style="height:' + (x.late / max * 100) + '%"></i></div><small>' + esc(fmtDate(x.date, { weekday: 'narrow' })) + '<br>' + Number(x.date.slice(8)) + '</small></div>';
+      }).join('') + '</div></div>' +
+      '<div class="card sec"><h3>' + t('notCheckedIn') + ' <span class="pill' + (d.notCheckedIn.length ? ' r' : ' g') + '">' + d.notCheckedIn.length + '</span></h3><div class="list">' +
+      (d.isWorkday ? (d.notCheckedIn.length ? d.notCheckedIn.slice(0, 12).map(function (e) { return '<div class="li"><div><div class="n">' + esc(e.name) + '</div><div class="m">' + esc(e.code) + '</div></div></div>'; }).join('') : '<div class="empty">' + t('allIn') + '</div>') : '<div class="empty">' + t('nonWorkday') + '</div>') +
+      '</div></div></div>' +
+      '<div class="card sec" style="margin-top:16px"><h3>' + t('recent') + '</h3><div class="list">' +
+      (d.recent.length ? d.recent.map(function (r) { return '<div class="li"><div><div class="n">' + esc(r.empName) + ' <span class="muted small">' + esc(r.empCode) + '</span></div><div class="m">' + esc(r.branchName) + ' · ' + esc(r.inTime) + (r.outTime ? ' → ' + esc(r.outTime) : '') + '</div></div><div>' + statusPills(r) + '</div></div>'; }).join('') : '<div class="empty">' + t('noActivity') + '</div>') +
+      '</div></div>';
+    if ($('#gomiss')) $('#gomiss').onclick = function (e) { e.preventDefault(); state.cache.attFilter = { status: 'missing' }; go('attendance'); };
+    timers.push(setInterval(function () { if (state.view === 'dashboard' && !document.querySelector('.overlay')) vDashboard(); }, 60000));
+  }).catch(function () { });
+}
+
+// ---------------------------------------------------------------- views: attendance log
+function vAttendance() {
+  var p = tzParts(new Date(), state.settings.timezone), today = p.year + '-' + p.month + '-' + p.day;
+  var f = Object.assign({ from: WardiyaCore.addDays(today, -6), to: today, empId: '', branchId: '', status: '' }, state.cache.attFilter || {});
+  if (f.status === 'missing' && !state.cache.attFilter.from) f.from = WardiyaCore.addDays(today, -30);
+  state.cache.attFilter = f;
+  loadLookups().then(function () { return call('listRecords', f); }).then(function (res) {
+    if (!res.ok) return $('#view').innerHTML = '<div class="err">' + esc(res.error) + '</div>';
+    var list = res.data.records, mins = 0; list.forEach(function (r) { mins += r.minutes; });
+    var sts = ['late', 'missing', 'flagged', 'leave', 'manual'];
+    $('#view').innerHTML = '<div class="toolbar">' +
+      '<div class="field"><label>' + t('from') + '</label><input class="inp" type="date" id="ff" value="' + esc(res.data.from) + '"></div>' +
+      '<div class="field"><label>' + t('to') + '</label><input class="inp" type="date" id="ft" value="' + esc(res.data.to) + '"></div>' +
+      '<div class="field"><label>' + t('employee') + '</label><select class="inp" id="fe">' + empOptions(f.empId, true) + '</select></div>' +
+      '<div class="field"><label>' + t('branch') + '</label><select class="inp" id="fb">' + branchOptions(f.branchId, t('all')) + '</select></div>' +
+      '<div class="field"><label>' + t('status') + '</label><select class="inp" id="fs"><option value="">' + t('all') + '</option>' + sts.map(function (s) { return '<option value="' + s + '"' + (f.status === s ? ' selected' : '') + '>' + t('st_' + s) + '</option>'; }).join('') + '</select></div>' +
+      '<div style="flex:1"></div><button class="btn" id="fx">' + t('exportCsv') + '</button><button class="btn pri" id="fa">+ ' + t('addEntry') + '</button></div>' +
+      '<p class="small muted" style="margin:0 0 10px">' + res.data.total + ' ' + t('records') + ' · ' + t('total') + ' ' + hm(mins) + '</p>' +
+      '<div class="card tbl-wrap"><table><thead><tr><th>' + t('date') + '</th><th>' + t('employee') + '</th><th class="hide-m">' + t('branch') + '</th><th>' + t('in') + '</th><th>' + t('out') + '</th><th class="num">' + t('hours') + '</th><th>' + t('status') + '</th><th></th></tr></thead><tbody>' +
+      (list.length ? list.map(function (r) {
+        return '<tr><td style="white-space:nowrap">' + fmtDate(r.date) + '</td><td><b>' + esc(r.empName) + '</b><div class="small muted">' + esc(r.empCode) + (r.note ? ' · ' + esc(r.note) : '') + '</div></td><td class="hide-m">' + esc(r.branchName) + '</td><td>' + esc(r.inTime || '—') + '</td><td>' + esc(r.outTime || '—') + '</td><td class="num">' + (r.minutes ? hm(r.minutes) : '—') + '</td><td>' + statusPills(r) + '</td><td style="white-space:nowrap"><button class="btn sm" data-edit="' + esc(r.id) + '">' + t('edit') + '</button></td></tr>';
+      }).join('') : '<tr><td colspan="8" class="empty">—</td></tr>') + '</tbody></table></div>';
+    function refilter() { state.cache.attFilter = { from: $('#ff').value, to: $('#ft').value, empId: $('#fe').value, branchId: $('#fb').value, status: $('#fs').value }; vAttendance(); }
+    ['#ff', '#ft', '#fe', '#fb', '#fs'].forEach(function (s) { $(s).onchange = refilter; });
+    $('#fa').onclick = function () { recordModal(null); };
+    $$('[data-edit]').forEach(function (b) { b.onclick = function () { recordModal(list.filter(function (r) { return r.id === b.getAttribute('data-edit'); })[0]); }; });
+    $('#fx').onclick = function () {
+      csvDownload('attendance_' + res.data.from + '_' + res.data.to + '.csv', [['Date', 'Code', 'Employee', 'Branch', 'Type', 'In', 'Out', 'Hours', 'Late (min)', 'Flags', 'Distance (m)', 'Note', 'Source', 'Edited by']].concat(list.map(function (r) {
+        return [r.date, r.empCode, r.empName, r.branchName, r.type, r.inTime, r.outTime, (r.minutes / 60).toFixed(2), r.lateMin, (r.flags || '') + (r.missingOut ? ' missing_out' : ''), r.inDist, r.note, r.source, r.editedBy];
+      })));
+    };
+  }).catch(function () { });
+}
+function recordModal(r) {
+  var p = tzParts(new Date(), state.settings.timezone), today = p.year + '-' + p.month + '-' + p.day;
+  var isNew = !r; r = r || { date: today, type: 'work', inTime: state.settings.workStart, outTime: state.settings.workEnd, note: '' };
+  var m = modal(isNew ? t('newEntry') : t('editEntry') + ' — ' + r.empName,
+    (isNew ? '<div class="field"><label>' + t('employee') + '</label><select class="inp" name="empId" required>' + empOptions('', false) + '</select></div>' : '') +
+    '<div class="row"><div class="field"><label>' + t('date') + '</label><input class="inp" type="date" name="date" value="' + esc(r.date) + '" required></div>' +
+    '<div class="field"><label>' + t('type') + '</label><select class="inp" name="type"><option value="work"' + (r.type !== 'leave' ? ' selected' : '') + '>' + t('work') + '</option><option value="leave"' + (r.type === 'leave' ? ' selected' : '') + '>' + t('leave') + '</option></select></div></div>' +
+    '<div class="row times"><div class="field"><label>' + t('in') + '</label><input class="inp" type="time" name="inTime" value="' + esc(r.inTime) + '"></div><div class="field"><label>' + t('out') + '</label><input class="inp" type="time" name="outTime" value="' + esc(r.outTime) + '"></div></div>' +
+    '<div class="field"><label>' + t('note') + '</label><input class="inp" name="note" maxlength="150" value="' + esc(r.note) + '"></div>' +
+    '<div class="field"><label>' + t('reason') + '</label><input class="inp" name="reason" maxlength="200" required></div>',
+    function (f, close, err, btn) {
+      var payload = { id: isNew ? '' : r.id, empId: val(f, 'empId'), date: val(f, 'date'), type: val(f, 'type'), inTime: val(f, 'inTime'), outTime: val(f, 'outTime'), note: val(f, 'note'), reason: val(f, 'reason') };
+      call('saveRecord', payload, btn).then(function (res) { if (!res.ok) return err(res.error); close(); toast(t('saved')); vAttendance(); }).catch(function () { });
+    }, {
+      extra: isNew ? '' : '<button type="button" class="btn dan" id="mdel" style="margin-inline-end:auto">' + t('del') + '</button>',
+      onOpen: function (f, wrap) {
+        function sync() { $('.times', wrap).classList.toggle('hidden', f.elements.type.value === 'leave'); }
+        f.elements.type.onchange = sync; sync();
+        var d = $('#mdel', wrap);
+        if (d) d.onclick = function () {
+          var reason = val(f, 'reason'); if (!reason) { f.elements.reason.focus(); var e = $('#merr', wrap); e.textContent = t('reason'); e.classList.remove('hidden'); return; }
+          if (!confirm(t('confirmDel'))) return;
+          call('deleteRecord', { id: r.id, reason: reason }, d).then(function (res) { if (!res.ok) { var e = $('#merr', wrap); e.textContent = res.error; e.classList.remove('hidden'); return; } wrap.remove(); toast(t('saved')); vAttendance(); }).catch(function () { });
+        };
+      }
+    });
+  return m;
+}
+
+// ---------------------------------------------------------------- views: employees
+function vEmployees() {
+  loadLookups().then(function () {
+    var list = state.cache.emps, brs = {}; state.cache.branches.forEach(function (b) { brs[b.id] = b.name; });
+    $('#view').innerHTML = '<div class="toolbar"><div class="field" style="flex:1;max-width:320px"><label>&nbsp;</label><input class="inp" id="es" placeholder="🔍 ' + t('name') + ' / ' + t('code') + '"></div><div style="flex:1"></div><button class="btn" id="ei">' + t('importEmp') + '</button><button class="btn pri" id="ea">+ ' + t('addEmp') + '</button></div>' +
+      '<div class="card tbl-wrap"><table><thead><tr><th>' + t('code') + '</th><th>' + t('name') + '</th><th class="hide-m">' + t('dept') + '</th><th class="hide-m">' + t('branch') + '</th><th>' + t('role') + '</th><th>' + t('status') + '</th><th></th></tr></thead><tbody id="eb">' +
+      list.map(function (e) {
+        return '<tr data-q="' + esc((e.code + ' ' + e.name + ' ' + e.department).toLowerCase()) + '"><td><b>' + esc(e.code) + '</b></td><td>' + esc(e.name) + '<div class="small muted">' + esc(e.email || e.phone || '') + '</div></td><td class="hide-m">' + esc(e.department) + '</td><td class="hide-m">' + esc(brs[e.branchId] || '—') + '</td><td>' + (e.role === 'admin' ? '<span class="pill b">' + t('admin') + '</span>' : t('emp')) + '</td><td>' + (e.active ? '<span class="pill g">' + t('active') + '</span>' : '<span class="pill">' + t('inactive') + '</span>') + '</td>' +
+          '<td style="white-space:nowrap;text-align:end"><button class="btn sm" data-ee="' + esc(e.id) + '">' + t('edit') + '</button> ' + (e.id !== state.user.id ? '<button class="btn sm' + (e.active ? ' dan' : '') + '" data-ea="' + esc(e.id) + '" data-on="' + (e.active ? '0' : '1') + '">' + (e.active ? t('deactivate') : t('activate')) + '</button>' : '') + '</td></tr>';
+      }).join('') + '</tbody></table></div>';
+    $('#es').oninput = function () { var q = this.value.toLowerCase(); $$('#eb tr').forEach(function (tr) { tr.classList.toggle('hidden', tr.getAttribute('data-q').indexOf(q) < 0); }); };
+    $('#ea').onclick = function () { empModal(null); };
+    $('#ei').onclick = importModal;
+    $$('[data-ee]').forEach(function (b) { b.onclick = function () { empModal(list.filter(function (e) { return e.id === b.getAttribute('data-ee'); })[0]); }; });
+    $$('[data-ea]').forEach(function (b) { b.onclick = function () { call('setEmployeeActive', { id: b.getAttribute('data-ea'), active: b.getAttribute('data-on') === '1' }, b).then(function (r) { if (!r.ok) return toast(r.error, true); vEmployees(); }).catch(function () { }); }; });
+  }).catch(function () { });
+}
+function empModal(e) {
+  var isNew = !e; e = e || { code: '', name: '', department: '', branchId: '', role: 'employee', email: '', phone: '' };
+  modal(isNew ? t('addEmp') : t('edit') + ' — ' + e.name,
+    '<div class="row"><div class="field"><label>' + t('code') + '</label><input class="inp" name="code" value="' + esc(e.code) + '" maxlength="20" required placeholder="E013"></div><div class="field"><label>' + t('name') + '</label><input class="inp" name="name" value="' + esc(e.name) + '" maxlength="80" required></div></div>' +
+    '<div class="row"><div class="field"><label>' + t('dept') + '</label><input class="inp" name="department" value="' + esc(e.department) + '" maxlength="60"></div><div class="field"><label>' + t('branch') + '</label><select class="inp" name="branchId">' + branchOptions(e.branchId, t('noBranch')) + '</select></div></div>' +
+    '<div class="row"><div class="field"><label>' + t('email') + '</label><input class="inp" name="email" type="email" value="' + esc(e.email) + '"></div><div class="field"><label>' + t('phone') + '</label><input class="inp" name="phone" value="' + esc(e.phone) + '"></div></div>' +
+    '<div class="row"><div class="field"><label>' + t('role') + '</label><select class="inp" name="role"><option value="employee">' + t('emp') + '</option><option value="admin"' + (e.role === 'admin' ? ' selected' : '') + '>' + t('admin') + '</option></select></div>' +
+    '<div class="field"><label>' + t('startPin') + '</label><input class="inp" name="pin" inputmode="numeric" maxlength="8"' + (isNew ? ' required' : '') + '>' + (isNew ? '' : '<span class="hint">' + t('resetPinHint') + '</span>') + '</div></div>',
+    function (f, close, err, btn) {
+      var p = { id: isNew ? '' : e.id }; ['code', 'name', 'department', 'branchId', 'email', 'phone', 'role', 'pin'].forEach(function (k) { p[k] = val(f, k); });
+      call('saveEmployee', p, btn).then(function (r) { if (!r.ok) return err(r.error); close(); toast(t('saved')); vEmployees(); }).catch(function () { });
+    });
+}
+function importModal() {
+  modal(t('importEmp'), '<p class="hint" style="margin-top:-4px">' + t('importHelp') + '</p><textarea class="inp" name="csv" rows="8" style="font-family:ui-monospace,monospace;font-size:13px" placeholder="E013,Ali Hassan,Sales,Downtown Clinic,4821\nE014,Mary Jones,Nursing,,5937,mary@example.com"></textarea><div id="ir"></div>',
+    function (f, close, err, btn) {
+      call('importEmployees', { csv: f.elements.csv.value }, btn).then(function (r) {
+        if (!r.ok) return err(r.error);
+        $('#ir').innerHTML = '<p><b>+' + r.data.added + '</b></p>' + (r.data.errors.length ? '<div class="err" style="white-space:pre-line">' + esc(r.data.errors.join('\n')) + '</div>' : '');
+        if (!r.data.errors.length) { close(); toast('+' + r.data.added); }
+        vEmployees();
+      }).catch(function () { });
+    });
+}
+
+// ---------------------------------------------------------------- views: branches
+function vBranches() {
+  loadLookups().then(function () {
+    var counts = {}; state.cache.emps.forEach(function (e) { if (e.active) counts[e.branchId] = (counts[e.branchId] || 0) + 1; });
+    $('#view').innerHTML = '<div class="toolbar"><div style="flex:1"></div><button class="btn pri" id="ba">+ ' + t('addBranch') + '</button></div><div class="branch-cards">' +
+      (state.cache.branches.length ? state.cache.branches.map(function (b) {
+        var fenced = b.lat !== '' && b.lat !== null && Number(b.radius) > 0;
+        return '<div class="card sec"><h3>' + esc(b.name) + '<span class="pill">' + (counts[b.id] || 0) + ' 👤</span></h3><p class="muted small" style="margin:-6px 0 12px">' + esc(b.address || '') + '</p>' +
+          '<p style="margin:0 0 14px">' + (fenced ? '<span class="pill g">' + t('geofence') + ': ' + esc(b.radius) + ' m</span> <a class="small" target="_blank" rel="noopener" href="https://www.openstreetmap.org/?mlat=' + encodeURIComponent(b.lat) + '&mlon=' + encodeURIComponent(b.lng) + '#map=17/' + encodeURIComponent(b.lat) + '/' + encodeURIComponent(b.lng) + '">' + t('openMap') + ' ↗</a>' : '<span class="pill">' + t('noFence') + '</span>') + '</p>' +
+          '<div style="display:flex;gap:8px"><button class="btn sm" data-be="' + esc(b.id) + '">' + t('edit') + '</button><button class="btn sm dan" data-bd="' + esc(b.id) + '">' + t('del') + '</button></div></div>';
+      }).join('') : '<div class="empty card">—</div>') + '</div>';
+    $('#ba').onclick = function () { branchModal(null); };
+    $$('[data-be]').forEach(function (b) { b.onclick = function () { branchModal(state.cache.branches.filter(function (x) { return x.id === b.getAttribute('data-be'); })[0]); }; });
+    $$('[data-bd]').forEach(function (b) { b.onclick = function () { if (!confirm(t('del') + '?')) return; call('deleteBranch', { id: b.getAttribute('data-bd') }, b).then(function (r) { if (!r.ok) return toast(r.error, true); toast(t('saved')); vBranches(); }).catch(function () { }); }; });
+  }).catch(function () { });
+}
+function branchModal(b) {
+  var isNew = !b; b = b || { name: '', address: '', lat: '', lng: '', radius: 150 };
+  modal(isNew ? t('addBranch') : t('edit') + ' — ' + b.name,
+    '<div class="field"><label>' + t('name') + '</label><input class="inp" name="name" value="' + esc(b.name) + '" maxlength="60" required></div>' +
+    '<div class="field"><label>' + t('address') + '</label><input class="inp" name="address" value="' + esc(b.address) + '" maxlength="150"></div>' +
+    '<div class="row"><div class="field"><label>' + t('lat') + '</label><input class="inp" name="lat" inputmode="decimal" value="' + esc(b.lat) + '"></div><div class="field"><label>' + t('lng') + '</label><input class="inp" name="lng" inputmode="decimal" value="' + esc(b.lng) + '"></div></div>' +
+    '<div class="field"><label>' + t('radius') + '</label><input class="inp" name="radius" type="number" min="20" max="50000" value="' + esc(b.radius || 150) + '"><span class="hint">' + t('noFence') + ': ' + t('lat') + ' / ' + t('lng') + ' = ∅</span></div>' +
+    '<button type="button" class="btn sm" id="myl">📍 ' + t('useMyLoc') + '</button><div style="height:12px"></div>',
+    function (f, close, err, btn) {
+      var p = { id: isNew ? '' : b.id, name: val(f, 'name'), address: val(f, 'address'), lat: val(f, 'lat'), lng: val(f, 'lng'), radius: val(f, 'radius') };
+      call('saveBranch', p, btn).then(function (r) { if (!r.ok) return err(r.error); close(); toast(t('saved')); vBranches(); }).catch(function () { });
+    }, {
+      onOpen: function (f, wrap) {
+        $('#myl', wrap).onclick = function () {
+          var btn = this; btn.disabled = true; btn.textContent = t('locating');
+          getPosition().then(function (pos) {
+            btn.disabled = false; btn.textContent = '📍 ' + t('useMyLoc');
+            if (!pos) return toast(t('locNo'), true);
+            f.elements.lat.value = pos.lat.toFixed(6); f.elements.lng.value = pos.lng.toFixed(6);
+            if (Number(f.elements.radius.value) < Math.round(pos.acc) + 50) f.elements.radius.value = Math.min(50000, Math.max(100, Math.round(pos.acc) + 50));
+          });
+        };
+      }
+    });
+}
+
+// ---------------------------------------------------------------- views: reports
+function vReports() {
+  var p = tzParts(new Date(), state.settings.timezone), month = state.cache.rMonth || (p.year + '-' + p.month);
+  call('monthlyReport', { month: month }).then(function (res) {
+    if (!res.ok) return $('#view').innerHTML = '<div class="err">' + esc(res.error) + '</div>';
+    var d = res.data, rows = d.rows, tot = { hours: 0, late: 0, absent: 0, ot: 0 };
+    rows.forEach(function (r) { tot.hours += r.hours; tot.late += r.lateDays; tot.absent += r.absent; tot.ot += r.overtimeHours; });
+    function rateCell(r) { if (r === null) return '—'; var c = r >= 95 ? 'g' : r >= 85 ? 'a' : 'r'; return '<span class="pill ' + c + '">' + r + '%</span>'; }
+    $('#view').innerHTML = '<div class="toolbar"><div class="field"><label>' + t('month') + '</label><input class="inp" type="month" id="rm" value="' + esc(d.month) + '"></div><div style="flex:1"></div><button class="btn" id="rp">' + t('print') + '</button><button class="btn pri" id="rx">' + t('exportCsv') + '</button></div>' +
+      '<h2 style="margin:0 0 4px;font-size:18px">' + esc(state.settings.companyName) + ' — ' + esc(fmtDate(d.month + '-01', { month: 'long', year: 'numeric' })) + '</h2><p class="muted small" style="margin:0 0 14px">' + d.workingDays + ' ' + t('workingDays').toLowerCase() + ' (' + esc(d.from) + ' → ' + esc(d.countedUntil) + ')</p>' +
+      '<div class="kpis"><div class="card kpi"><div class="l">' + t('hours') + '</div><div class="v">' + tot.hours.toFixed(1) + '</div></div><div class="card kpi"><div class="l">' + t('overtime') + '</div><div class="v">' + tot.ot.toFixed(1) + '</div></div><div class="card kpi"><div class="l">' + t('lateDays') + '</div><div class="v">' + tot.late + '</div></div><div class="card kpi"><div class="l">' + t('daysAbsent') + '</div><div class="v">' + tot.absent + '</div></div></div>' +
+      '<div class="card tbl-wrap"><table><thead><tr><th>' + t('employee') + '</th><th class="hide-m">' + t('dept') + '</th><th class="num">' + t('daysPresent') + '</th><th class="num">' + t('daysAbsent') + '</th><th class="num">' + t('leave') + '</th><th class="num">' + t('lateDays') + '</th><th class="num hide-m">' + t('lateMins') + '</th><th class="num">' + t('hours') + '</th><th class="num hide-m">' + t('overtime') + '</th><th class="num hide-m">' + t('avgIn') + '</th><th class="num">' + t('rate') + '</th></tr></thead><tbody>' +
+      (rows.length ? rows.map(function (r) {
+        return '<tr><td><b>' + esc(r.name) + '</b><div class="small muted">' + esc(r.code) + (r.missingCheckouts ? ' · <span style="color:var(--red)">' + r.missingCheckouts + ' ' + t('st_missing').toLowerCase() + '</span>' : '') + '</div></td><td class="hide-m">' + esc(r.department) + '</td><td class="num">' + r.present + '</td><td class="num">' + r.absent + '</td><td class="num">' + r.leave + '</td><td class="num">' + r.lateDays + '</td><td class="num hide-m">' + r.lateMinutes + '</td><td class="num"><b>' + r.hours.toFixed(1) + '</b></td><td class="num hide-m">' + r.overtimeHours.toFixed(1) + '</td><td class="num hide-m">' + esc(r.avgCheckIn || '—') + '</td><td class="num">' + rateCell(r.attendanceRate) + '</td></tr>';
+      }).join('') : '<tr><td colspan="11" class="empty">—</td></tr>') + '</tbody></table></div>';
+    $('#rm').onchange = function () { state.cache.rMonth = this.value; vReports(); };
+    $('#rp').onclick = function () { window.print(); };
+    $('#rx').onclick = function () {
+      csvDownload('monthly_report_' + d.month + '.csv', [['Month', 'Code', 'Employee', 'Department', 'Branch', 'Working days', 'Present', 'Absent', 'Leave', 'Late days', 'Late minutes', 'Hours', 'Overtime hours', 'Avg check-in', 'Missing check-outs', 'Attendance %']].concat(rows.map(function (r) {
+        return [d.month, r.code, r.name, r.department, r.branch, r.workingDays, r.present, r.absent, r.leave, r.lateDays, r.lateMinutes, r.hours, r.overtimeHours, r.avgCheckIn, r.missingCheckouts, r.attendanceRate];
+      })));
+    };
+  }).catch(function () { });
+}
+
+// ---------------------------------------------------------------- views: settings
+function vSettings() {
+  call('getSettings').then(function (res) {
+    var s = res.data, tzs = [];
+    try { tzs = Intl.supportedValuesOf('timeZone'); } catch (e) { tzs = ['Asia/Dubai', 'Asia/Riyadh', 'Asia/Qatar', 'Asia/Kuwait', 'Asia/Bahrain', 'Asia/Muscat', 'Africa/Tripoli', 'Africa/Cairo', 'Europe/London', 'America/New_York', 'America/Chicago', 'America/Los_Angeles', 'UTC']; }
+    if (tzs.indexOf(s.timezone) < 0) tzs.unshift(s.timezone);
+    $('#view').innerHTML = '<form class="card sec" id="sf" style="max-width:720px">' +
+      '<div class="field"><label>' + t('company') + '</label><input class="inp" name="companyName" maxlength="80" value="' + esc(s.companyName) + '" required></div>' +
+      '<div class="row"><div class="field"><label>' + t('tz') + '</label><select class="inp" name="timezone">' + tzs.map(function (z) { return '<option' + (z === s.timezone ? ' selected' : '') + '>' + esc(z) + '</option>'; }).join('') + '</select></div>' +
+      '<div class="field"><label>' + t('grace') + '</label><input class="inp" type="number" min="0" max="180" name="graceMinutes" value="' + esc(s.graceMinutes) + '"></div></div>' +
+      '<div class="row"><div class="field"><label>' + t('workStart') + '</label><input class="inp" type="time" name="workStart" value="' + esc(s.workStart) + '"></div><div class="field"><label>' + t('workEnd') + '</label><input class="inp" type="time" name="workEnd" value="' + esc(s.workEnd) + '"></div></div>' +
+      '<div class="field"><label>' + t('workDaysL') + '</label><div class="days">' + DAYKEYS.map(function (k, i) { return '<label><input type="checkbox" name="wd" value="' + i + '"' + (s.workDays.indexOf(i) >= 0 ? ' checked' : '') + '>' + t(k) + '</label>'; }).join('') + '</div></div>' +
+      '<div class="field"><label>' + t('gfMode') + '</label><select class="inp" name="geofenceMode">' + ['off', 'flag', 'block'].map(function (m) { return '<option value="' + m + '"' + (s.geofenceMode === m ? ' selected' : '') + '>' + t('gf' + m.charAt(0).toUpperCase() + m.slice(1)) + '</option>'; }).join('') + '</select></div>' +
+      '<div class="err hidden" id="serr"></div><button class="btn pri" id="ss">' + t('save') + '</button></form>';
+    $('#sf').onsubmit = function (e) {
+      e.preventDefault(); var f = this;
+      var p = { companyName: val(f, 'companyName'), timezone: val(f, 'timezone'), graceMinutes: val(f, 'graceMinutes'), workStart: val(f, 'workStart'), workEnd: val(f, 'workEnd'), geofenceMode: val(f, 'geofenceMode'),
+        workDays: $$('[name=wd]:checked', f).map(function (c) { return Number(c.value); }) };
+      call('saveSettings', p, $('#ss')).then(function (r) {
+        if (!r.ok) { $('#serr').textContent = r.error; $('#serr').classList.remove('hidden'); return; }
+        $('#serr').classList.add('hidden'); state.settings = r.data; toast(t('saved')); $('.side-foot').firstChild.textContent = r.data.companyName;
+      }).catch(function () { });
+    };
+  }).catch(function () { });
+}
+
+// ---------------------------------------------------------------- views: audit
+function vAudit() {
+  call('listAudit').then(function (res) {
+    var list = res.data || [];
+    $('#view').innerHTML = '<div class="card tbl-wrap"><table><thead><tr><th>' + t('when') + '</th><th>' + t('who') + '</th><th>' + t('action') + '</th><th>' + t('details') + '</th></tr></thead><tbody>' +
+      (list.length ? list.map(function (a) { var d = new Date(a.ts); return '<tr><td style="white-space:nowrap" class="small">' + esc(isNaN(d) ? a.ts : d.toLocaleString(lang === 'ar' ? 'ar-u-nu-latn' : 'en-GB', { timeZone: state.settings.timezone, dateStyle: 'medium', timeStyle: 'short' })) + '</td><td><b>' + esc(a.actor) + '</b></td><td><span class="pill">' + esc(String(a.action).replace(/_/g, ' ')) + '</span></td><td class="small">' + esc(a.detail) + '</td></tr>'; }).join('') : '<tr><td colspan="4" class="empty">—</td></tr>') +
+      '</tbody></table></div>';
+  }).catch(function () { });
+}
+
+// ---------------------------------------------------------------- boot
+function boot() {
+  if (!token) return renderLogin();
+  api('me').then(function (res) {
+    if (!res.ok) { token = null; store.del(TOKEN_KEY); return renderLogin(); }
+    state.user = res.data.user; state.settings = res.data.settings;
+    renderShell(); go(views()[0]);
+    if (state.user.mustChangePin) pinModal(true);
+  });
+}
+boot();
+})();
+</script>
+</body>
+</html>
