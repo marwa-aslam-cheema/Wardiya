@@ -60,10 +60,11 @@ On your GitHub repository:
    };
    ```
    Commit.
+   > **Paste only the code.** Do not include the ```` ```js ```` and ```` ``` ```` lines from this guide: they break the file. If `config.js` is missing or broken, the client page shows **"Setup incomplete"** instead of the app, so no data is lost. Working example: `docs/c/egate/config.js`.
 2. Open `docs/app/index.html` on GitHub → **Raw** → copy everything. Then **Add file → Create new file** named `docs/c/acme/index.html`, paste, and commit.
    *(Or download `docs/app/index.html` and upload it into `docs/c/acme/`.)*
 3. (Optional) Upload the client's logo as `docs/c/acme/logo.png` and set `logoUrl: 'logo.png'`.
-4. After about a minute the client's app is live at **`https://USERNAME.github.io/wardiya/c/acme/`**.
+4. After about a minute the client's app is live at **`https://USERNAME.github.io/Wardiya/c/acme/`** (the repository name is case-sensitive in the link).
 
 > Live mode is automatic: when `config.js` has an `apiUrl`, the demo banner and demo logins disappear and all data goes to the client's Sheet.
 
@@ -90,6 +91,7 @@ Open the client link → sign in with `ADMIN` + the temporary PIN → choose a n
 1. Paste the new `Core.gs` / `Code.gs` into their Apps Script project and save.
 2. **Deploy → Manage deployments → ✏️ Edit → Version: New version → Deploy.** The URL stays the same.
 3. Replace `docs/c/<client>/index.html` with the new `docs/app/index.html`. Leave `config.js` alone.
+4. Only if `backend/Core.gs` or `backend/Code.gs` changed do you need steps 1–2. A front-end-only update (like the 'Setup incomplete' check) needs only step 3.
 
 ## Troubleshooting
 

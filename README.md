@@ -2,8 +2,16 @@
 
 Employees check in and out from their phone, with GPS geofencing, late and overtime rules, a live admin dashboard and payroll-ready monthly reports. Each client's data lives in **their own Google Sheet**. Hosting costs nothing (GitHub Pages + Google Apps Script).
 
-- **Landing page:** `docs/index.html` → `https://YOUR-USERNAME.github.io/wardiya/`
-- **Live demo:** `docs/app/` → `https://YOUR-USERNAME.github.io/wardiya/app/` (demo logins: `ADMIN` / `1234`, `E001` / `1111`)
+## Your live links
+
+| What | Link |
+|---|---|
+| Landing page | https://marwa-aslam-cheema.github.io/Wardiya/ |
+| Sales demo (sample data) | https://marwa-aslam-cheema.github.io/Wardiya/app/ (demo logins: `ADMIN` / `1234`, `E001` / `1111`) |
+| EGATE Beloun (live, real data) | https://marwa-aslam-cheema.github.io/Wardiya/c/egate/ |
+| EGATE Google Sheet | https://docs.google.com/spreadsheets/d/1RZDIgn9AFRks7f8-ch_JMpXeLjshOZWrgHIpaHkmYf8/edit |
+
+Still to do: replace `YOUR_EMAIL@gmail.com` and `YOUR_WHATSAPP_NUMBER` in `docs/index.html`.
 
 ## Folder structure
 
@@ -13,7 +21,7 @@ wardiya/
 │   ├── index.html           ← landing page (edit your email + WhatsApp here)
 │   ├── assets/              ← logo + screenshots
 │   ├── app/index.html       ← the app (demo mode when there is no config.js)
-│   └── c/<client>/          ← one folder per paying client (index.html + config.js)
+│   └── c/<client>/          ← one folder per client (index.html + config.js), e.g. c/egate/
 ├── backend/                 ← paste these into the client's Google Apps Script project
 │   ├── Core.gs              ← business logic (generated from src/core.js)
 │   ├── Code.gs              ← Google Sheets storage + web API + setup tools
@@ -82,4 +90,5 @@ node build.js            # rebuild docs/app/index.html and backend/Core.gs from 
 node test/gas-test.js    # backend tests in a simulated Apps Script runtime
 node test/ui-test.js     # browser tests of the demo (needs Playwright + Chrome)
 node test/live-test.js   # browser tests of live mode against a simulated API
+node test/client-test.js # client pages under docs/c/ (EGATE page + missing-config safety check)
 ```

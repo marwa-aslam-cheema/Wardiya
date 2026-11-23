@@ -779,6 +779,12 @@ var CONFIG = Object.assign({ apiUrl: '', appName: 'Wardiya', brandColor: '', log
 if (/^#[0-9a-fA-F]{6}$/.test(CONFIG.brandColor)) { document.documentElement.style.setProperty('--p', CONFIG.brandColor); document.documentElement.style.setProperty('--p2', CONFIG.brandColor); }
 document.title = CONFIG.appName + ' Attendance';
 var MODE = CONFIG.apiUrl ? 'live' : 'demo';
+// A client page lives under /c/<name>/. If its config.js is missing, broken or still has the placeholder,
+// never fall back to demo mode (data would stay in the browser only): show a setup error instead.
+var IS_CLIENT_PAGE = /\/c\/[^\/]+\/?(index\.html)?$/.test(location.pathname);
+var CONFIG_ERROR = '';
+if (CONFIG.apiUrl && !/^https:\/\/script\.google(usercontent)?\.com\/.+/.test(CONFIG.apiUrl)) CONFIG_ERROR = 'apiUrl in config.js is not a Google Apps Script web app URL (it must start with https://script.google.com/macros/s/ and end with /exec).';
+else if (IS_CLIENT_PAGE && !CONFIG.apiUrl) CONFIG_ERROR = 'config.js is missing or could not be read. Check that it contains only JavaScript (no ``` lines) and that apiUrl is set.';
 var LS_KEY = 'wardiya_demo_v1', TOKEN_KEY = 'wardiya_token_' + MODE, LANG_KEY = 'wardiya_lang';
 
 // ---------------------------------------------------------------- safe storage
@@ -1391,6 +1397,10 @@ function vAudit() {
 
 // ---------------------------------------------------------------- boot
 function boot() {
+  if (CONFIG_ERROR) {
+    $('#app').innerHTML = '<div style="max-width:560px;margin:80px auto;padding:24px" class="card"><h2 style="margin-top:0">Setup incomplete</h2><p>' + esc(CONFIG_ERROR) + '</p><p class="muted small">This message is shown instead of the app so that no attendance data is lost. See guides/CLIENT_INSTALL.md, step 5.</p></div>';
+    return;
+  }
   if (!token) return renderLogin();
   api('me').then(function (res) {
     if (!res.ok) { token = null; store.del(TOKEN_KEY); return renderLogin(); }
