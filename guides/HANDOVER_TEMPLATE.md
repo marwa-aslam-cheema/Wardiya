@@ -1,7 +1,7 @@
 # Wardiya Attendance — Client Handover
 
 **Client:** [Company name]
-**Prepared by:** [Your name], Wardiya · [email] · [WhatsApp]
+**Prepared by:** Marwa Aslam, Wardiya · marwa.aslam911@gmail.com · WhatsApp +218 92 210 5197
 **Handover date:** [date]  **Package:** [Starter / Professional / Premium]  **Support until:** [date]
 
 ---
@@ -59,7 +59,7 @@ The system runs on Google's free Apps Script service, which is designed for team
 | | |
 |---|---|
 | Included support until | [date] |
-| How to reach us | WhatsApp [number] · Email [address] |
+| How to reach us | WhatsApp +218 92 210 5197 · Email marwa.aslam911@gmail.com |
 | Response time | Within 1 business day |
 | Care plan (optional) | $19/month: fixes, updates, small changes, priority WhatsApp support |
 
