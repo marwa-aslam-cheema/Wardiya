@@ -149,7 +149,26 @@ var IS_CLIENT_PAGE = /\/c\/[^\/]+\/?(index\.html)?$/.test(location.pathname);
 var CONFIG_ERROR = '';
 if (CONFIG.apiUrl && !/^https:\/\/script\.google(usercontent)?\.com\/.+/.test(CONFIG.apiUrl)) CONFIG_ERROR = 'apiUrl in config.js is not a Google Apps Script web app URL (it must start with https://script.google.com/macros/s/ and end with /exec).';
 else if (IS_CLIENT_PAGE && !CONFIG.apiUrl) CONFIG_ERROR = 'config.js is missing or could not be read. Check that it contains only JavaScript (no ``` lines) and that apiUrl is set.';
-var LS_KEY = 'wardiya_demo_v1', TOKEN_KEY = 'wardiya_token_' + MODE, LANG_KEY = 'wardiya_lang';
+// Personalised demo: /app/?co=Company+Name&color=1a5fb4&type=security&city=Doha&logo=https://...
+// Only in demo mode. Each company gets its own sample dataset (separate storage key), branded with its name.
+var PD = null;
+(function () {
+  if (MODE !== 'demo') return;
+  var q; try { q = new URLSearchParams(location.search); } catch (e) { return; }
+  var co = String(q.get('co') || '').replace(/[\u0000-\u001f<>]/g, '').trim().slice(0, 60);
+  if (!co) return;
+  var col = String(q.get('color') || '').replace(/^#/, '');
+  var type = String(q.get('type') || '').toLowerCase();
+  PD = {
+    co: co,
+    color: /^[0-9a-fA-F]{6}$/.test(col) ? '#' + col.toLowerCase() : '',
+    type: { security: 1, cleaning: 1, manpower: 1, field: 1, crews: 1, clinic: 1 }[type] ? (type === 'crews' ? 'field' : type) : 'clinic',
+    city: String(q.get('city') || '').replace(/[\u0000-\u001f<>]/g, '').trim().slice(0, 40),
+    logo: /^https:\/\/\S+$/.test(q.get('logo') || '') ? q.get('logo') : '',
+    slug: co.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '').slice(0, 40) || 'company'
+  };
+})();
+var LS_KEY = PD ? 'wardiya_demo_pd_' + PD.slug : 'wardiya_demo_v1', TOKEN_KEY = 'wardiya_token_' + MODE + (PD ? '_' + PD.slug : ''), LANG_KEY = 'wardiya_lang';
 
 // ---------------------------------------------------------------- safe storage
 var mem = {};
@@ -261,6 +280,14 @@ function buildLocal() {
   if (!db || !db.employees) { db = seedDemo(env); persist(); }
   return WardiyaCore.createApp(env);
 }
+var PD_PRESETS = {
+  clinic: { sites: ['Downtown Clinic', 'Marina Clinic'], depts: ['Reception', 'Nursing', 'Radiology', 'Nursing', 'Pharmacy', 'Reception', 'Lab', 'Nursing', 'Admin', 'Dental', 'Facilities', 'Accounts'] },
+  security: { sites: ['Tower A – Main gate', 'Mall site – Night shift'], depts: ['Guard', 'Guard', 'Supervisor', 'Guard', 'Guard', 'Control room', 'Guard', 'Guard', 'Supervisor', 'Guard', 'Patrol', 'Guard'] },
+  cleaning: { sites: ['Client site – Office tower', 'Client site – Hospital'], depts: ['Cleaner', 'Cleaner', 'Supervisor', 'Cleaner', 'Deep cleaning', 'Cleaner', 'Cleaner', 'Housekeeping', 'Supervisor', 'Cleaner', 'Deep cleaning', 'Cleaner'] },
+  manpower: { sites: ['Project site A', 'Client warehouse'], depts: ['Labour', 'Labour', 'Foreman', 'Driver', 'Labour', 'Helper', 'Labour', 'Driver', 'Supervisor', 'Labour', 'Helper', 'Labour'] },
+  field: { sites: ['Job site – North', 'Main yard'], depts: ['Crew A', 'Crew A', 'Crew lead', 'Crew B', 'Crew B', 'Crew A', 'Crew B', 'Crew B', 'Crew lead', 'Crew A', 'Driver', 'Crew B'] }
+};
+var CITY_LL = { dubai: [25.2048, 55.2708], sharjah: [25.3463, 55.4209], 'abu dhabi': [24.4539, 54.3773], ajman: [25.4052, 55.5136], doha: [25.2854, 51.531], manama: [26.2235, 50.5876], muscat: [23.588, 58.3829], riyadh: [24.7136, 46.6753], jeddah: [21.4858, 39.1925], dammam: [26.4207, 50.0888], kuwait: [29.3759, 47.9774], birmingham: [52.4862, -1.8904], manchester: [53.4808, -2.2426], london: [51.5072, -0.1276], phoenix: [33.4484, -112.074], dallas: [32.7767, -96.797], houston: [29.7604, -95.3698], tripoli: [32.8872, 13.1913], benghazi: [32.1167, 20.0667] };
 function seedDemo(env) {
   var seed = 20261123; function rnd() { seed = (seed * 1664525 + 1013904223) % 4294967296; return seed / 4294967296; }
   var tz = 'UTC'; try { tz = Intl.DateTimeFormat().resolvedOptions().timeZone || 'UTC'; } catch (e) { }
@@ -268,8 +295,18 @@ function seedDemo(env) {
   var workDays = gulfSunThu ? [0, 1, 2, 3, 4] : [1, 2, 3, 4, 5];
   var db = { employees: [], branches: [], records: [], audit: [], sessions: {}, counters: {},
     settings: { companyName: 'Al Noor Medical Centre (Demo)', timezone: tz, workStart: '09:00', workEnd: '17:00', graceMinutes: 10, workDays: workDays, geofenceMode: 'flag' } };
-  var b1 = { id: newId(), name: 'Downtown Clinic', address: 'Sheikh Zayed Rd, Dubai (sample)', lat: 25.2048, lng: 55.2708, radius: 200 };
-  var b2 = { id: newId(), name: 'Marina Clinic', address: 'Dubai Marina (sample, no geofence)', lat: '', lng: '', radius: '' };
+  var PRESET = PD ? PD_PRESETS[PD.type] : PD_PRESETS.clinic;
+  var city = PD && PD.city ? PD.city : 'Dubai';
+  var ll = CITY_LL[city.toLowerCase()] || (PD && PD.city ? ['', ''] : CITY_LL.dubai);
+  if (PD) {
+    db.settings.companyName = PD.co;
+    db.settings.appName = PD.co;
+    if (PD.color) db.settings.brandColor = PD.color;
+    if (PD.logo) db.settings.logoUrl = PD.logo;
+    db.settings.welcomeMessage = 'Demo prepared for ' + PD.co + ' by Wardiya. Sample staff and sites; nothing here is real data.';
+  }
+  var b1 = { id: newId(), name: PRESET.sites[0], address: city + ' (sample)', lat: ll[0], lng: ll[1], radius: ll[0] === '' ? '' : 200 };
+  var b2 = { id: newId(), name: PRESET.sites[1], address: city + ' (sample, no geofence)', lat: '', lng: '', radius: '' };
   db.branches.push(b1, b2);
   function emp(code, name, dept, br, role, pin) {
     var salt = newToken().slice(0, 16);
@@ -277,9 +314,8 @@ function seedDemo(env) {
     db.employees.push(e); return e;
   }
   emp('ADMIN', 'Layla Haddad', 'Management', null, 'admin', '1234');
-  var people = [['E001', 'Omar Khalil', 'Reception', b2], ['E002', 'Sara Mansour', 'Nursing', b1], ['E003', 'James Carter', 'Radiology', b1], ['E004', 'Fatima Al Zahra', 'Nursing', b1],
-    ['E005', 'Rahul Menon', 'Pharmacy', b1], ['E006', 'Aisha Noor', 'Reception', b1], ['E007', 'Daniel Okafor', 'Lab', b2], ['E008', 'Mariam Saeed', 'Nursing', b2],
-    ['E009', 'Yousef Haddad', 'Admin', b1], ['E010', 'Grace Lim', 'Dental', b2], ['E011', 'Hassan Ali', 'Facilities', b1], ['E012', 'Nadia Farouk', 'Accounts', b1]];
+  var NAMES = ['Omar Khalil', 'Sara Mansour', 'James Carter', 'Fatima Al Zahra', 'Rahul Menon', 'Aisha Noor', 'Daniel Okafor', 'Mariam Saeed', 'Yousef Haddad', 'Grace Lim', 'Hassan Ali', 'Nadia Farouk'];
+  var people = NAMES.map(function (n, i) { return ['E' + ('00' + (i + 1)).slice(-3), n, PRESET.depts[i], [1, 0, 0, 0, 0, 0, 1, 1, 0, 1, 0, 0][i] ? b2 : b1]; });
   var list = people.map(function (p) { return emp(p[0], p[1], p[2], p[3]); });
   var now = new Date(), today = env.tzDate(now, tz), nowT = env.tzTime(now, tz), nowMin = Number(nowT.slice(0, 2)) * 60 + Number(nowT.slice(3));
   function t2(m) { m = Math.max(0, Math.min(1439, Math.round(m))); return ('0' + Math.floor(m / 60)).slice(-2) + ':' + ('0' + (m % 60)).slice(-2); }
@@ -347,7 +383,7 @@ var ICONS = {
 };
 function icon(k) { return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">' + (ICONS[k] || '') + '</svg>'; }
 var DEFAULT_LOGO = '<svg width="32" height="32" viewBox="0 0 64 64"><rect width="64" height="64" rx="16" style="fill:var(--p)"/><circle cx="32" cy="32" r="17" fill="none" stroke="#fff" stroke-width="5"/><path d="M24 32l6 6 11-12" fill="none" style="stroke:var(--acc)" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/></svg>';
-var BRAND_KEY = 'wardiya_brand_' + MODE;
+var BRAND_KEY = 'wardiya_brand_' + MODE + (PD ? '_' + PD.slug : '');
 var brand = { appName: CONFIG.appName, brandColor: CONFIG.brandColor, accentColor: '', logoUrl: CONFIG.logoUrl, welcomeMessage: '', companyName: '' };
 try { Object.assign(brand, JSON.parse(store.get(BRAND_KEY) || '{}')); } catch (e) { }
 var LOGO = DEFAULT_LOGO;
@@ -388,7 +424,7 @@ function renderLogin(errMsg) {
     '<div class="field"><label for="lc">' + t('code') + '</label><input class="inp" id="lc" autocapitalize="characters" required maxlength="20" placeholder="E001"></div>' +
     '<div class="field"><label for="lp">' + t('pin') + '</label><input class="inp" id="lp" type="password" inputmode="numeric" required maxlength="8" placeholder="••••"></div>' +
     '<button class="btn pri" style="width:100%;padding:12px" id="lb">' + t('signIn') + '</button>' +
-    (MODE === 'demo' ? '<div class="demo-cards"><button type="button" class="demo-card" data-demo="ADMIN|1234"><b>' + t('tryAdmin') + '</b><span>ADMIN · 1234</span></button><button type="button" class="demo-card" data-demo="E001|1111"><b>' + t('tryEmp') + '</b><span>E001 · 1111</span></button></div><p class="hint">' + t('demoMode') + '</p>' : '') +
+    (MODE === 'demo' ? '<div class="demo-cards"><button type="button" class="demo-card" data-demo="ADMIN|1234"><b>' + t('tryAdmin') + '</b><span>ADMIN · 1234</span></button><button type="button" class="demo-card" data-demo="E001|1111"><b>' + t('tryEmp') + '</b><span>E001 · 1111</span></button></div><p class="hint">' + (PD ? 'Personal demo for ' + esc(PD.co) + ' · ' : '') + t('demoMode') + '</p>' : '') +
     '</form></div></div>';
   $('#lf').onsubmit = function (e) { e.preventDefault(); doLogin($('#lc').value, $('#lp').value, $('#lb')); };
   $$('[data-demo]').forEach(function (b) { b.onclick = function () { var p = b.getAttribute('data-demo').split('|'); $('#lc').value = p[0]; $('#lp').value = p[1]; doLogin(p[0], p[1], $('#lb')); }; });
