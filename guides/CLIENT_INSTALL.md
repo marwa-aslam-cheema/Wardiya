@@ -1,4 +1,21 @@
-# Installing Wardiya for a paying client (about 45 minutes)
+# Installing Wardiya for a paying client
+
+## Fast way: copy the Wardiya Template (about 10 minutes)
+
+Your Google Drive has a sheet called **Wardiya Template** with a **Start Here** tab and a **Company Settings** tab.
+
+**One time only:** open the template → Extensions → Apps Script and paste the three files from `backend/` (steps 2.3–2.4 below). Don't run setup in the template.
+
+**For each client:**
+1. Template → **File → Make a copy** → name it "<Client> – Attendance". The script comes with the copy.
+2. Fill in the yellow cells on **Company Settings**: company name, app name, logo link, colours, main location (latitude, longitude, radius), location rule, working days, duty hours, late and early rules, and messages.
+3. Extensions → Apps Script → choose **setup** → **Run**. It creates the tabs, the branch from your main location and the admin account. Note the temporary PIN.
+4. **Deploy → New deployment → Web app** (Execute as: Me, Who has access: Anyone), then copy the URL.
+5. Create `docs/c/<client>/` on GitHub (step 5 below).
+
+Everything in **Company Settings** can be changed any time, in the sheet or on the app's Settings page; they stay in sync. After changing the main location in the sheet, use **Wardiya menu → Apply main location**.
+
+## Full manual setup (about 45 minutes)
 
 The system runs **inside a Google account that the client owns**, so the data is theirs and costs nothing to host.
 
@@ -53,17 +70,14 @@ On your GitHub repository:
 1. **Add file → Create new file**. Name: `docs/c/acme/config.js` (replace `acme` with a short client name, lowercase, no spaces). Content:
    ```js
    window.WARDIYA_CONFIG = {
-     apiUrl: 'PASTE_THE_WEB_APP_URL_HERE',
-     appName: 'Acme Attendance',   // shown in the header
-     brandColor: '#0E7C66',        // client's colour (6-digit hex), optional
-     logoUrl: ''                   // optional: 'logo.png' uploaded to the same folder, or an https:// link
+     apiUrl: 'PASTE_THE_WEB_APP_URL_HERE'
    };
    ```
    Commit.
    > **Paste only the code.** Do not include the ```` ```js ```` and ```` ``` ```` lines from this guide: they break the file. If `config.js` is missing or broken, the client page shows **"Setup incomplete"** instead of the app, so no data is lost. Working example: `docs/c/egate/config.js`.
 2. Open `docs/app/index.html` on GitHub → **Raw** → copy everything. Then **Add file → Create new file** named `docs/c/acme/index.html`, paste, and commit.
    *(Or download `docs/app/index.html` and upload it into `docs/c/acme/`.)*
-3. (Optional) Upload the client's logo as `docs/c/acme/logo.png` and set `logoUrl: 'logo.png'`.
+3. Name, colours, logo and messages come from the client's **Company Settings** tab, so `config.js` only needs `apiUrl`.
 4. After about a minute the client's app is live at **`https://USERNAME.github.io/Wardiya/c/acme/`** (the repository name is case-sensitive in the link).
 
 > Live mode is automatic: when `config.js` has an `apiUrl`, the demo banner and demo logins disappear and all data goes to the client's Sheet.

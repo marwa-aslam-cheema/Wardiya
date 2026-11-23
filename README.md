@@ -10,6 +10,7 @@ Employees check in and out from their phone, with GPS geofencing, late and overt
 | Sales demo (sample data) | https://marwa-aslam-cheema.github.io/Wardiya/app/ (demo logins: `ADMIN` / `1234`, `E001` / `1111`) |
 | EGATE Beloun (live, real data) | https://marwa-aslam-cheema.github.io/Wardiya/c/egate/ |
 | EGATE Google Sheet | https://docs.google.com/spreadsheets/d/1RZDIgn9AFRks7f8-ch_JMpXeLjshOZWrgHIpaHkmYf8/edit |
+| Wardiya Template (copy for each client) | https://docs.google.com/spreadsheets/d/1CKiMFoyFKkbtlWjaklIbb7CKw4lpkbAjBC3zoFc4s5A/edit |
 
 Contact on the landing page: marwa.aslam911@gmail.com · WhatsApp +218 92 210 5197.
 
@@ -59,7 +60,8 @@ The same `core.js` logic runs in both modes, so the demo behaves exactly like th
 - Branches with a map link and a "use my current location" button
 - Monthly report per employee: present, absent, leave, late days and minutes, hours, overtime, average check-in, attendance %, plus CSV export and print
 - English / Arabic with full right-to-left layout
-- Per-client branding: app name, colour and logo through `config.js`
+- **Company Settings tab** in each client's Google Sheet: company and app name, logo (Google Drive link), main and accent colours, main location and radius, location rule, working days (checkboxes), duty hours, late-after and early-leave minutes, earliest check-in, and custom messages (welcome, on time, late, check-out, early check-out). Editable in the sheet or the app's Settings page.
+- Early-leave tracking (pill, filter, monthly report columns) and an optional earliest check-in time
 
 ## Security
 

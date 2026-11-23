@@ -6,7 +6,7 @@
 var WardiyaCore = (function () {
   'use strict';
 
-  var VERSION = '1.0.0';
+  var VERSION = '1.1.0';
   var SESSION_TTL_SEC = 12 * 3600;
   var MAX_FAILS = 5;
   var LOCK_SEC = 15 * 60;
@@ -70,6 +70,12 @@ var WardiyaCore = (function () {
   function bool(v) { return v === true || v === 'true' || v === 1 || v === '1' || v === 'TRUE'; }
   function pad(n) { return (n < 10 ? '0' : '') + n; }
   function isTime(s) { return /^([01]\d|2[0-3]):[0-5]\d$/.test(s); }
+  // Accepts "9:00", "09:00", "09:00:00" (as typed in a sheet) and returns "09:00", or '' if not a time.
+  function normTime(v) {
+    var m = /^\s*(\d{1,2}):(\d{2})(?::\d{2})?\s*$/.exec(String(v === null || v === undefined ? '' : v));
+    if (!m || Number(m[1]) > 23 || Number(m[2]) > 59) return '';
+    return pad(Number(m[1])) + ':' + m[2];
+  }
   function isDate(s) {
     if (!/^\d{4}-\d{2}-\d{2}$/.test(s)) return false;
     var p = s.split('-').map(Number), d = new Date(Date.UTC(p[0], p[1] - 1, p[2]));
@@ -100,8 +106,19 @@ var WardiyaCore = (function () {
     graceMinutes: 10,
     workDays: [1, 2, 3, 4, 5],
     geofenceMode: 'flag', // off | flag | block
-    currencyNote: ''
+    earlyLeaveMinutes: 0,       // leaving more than this many minutes before work end counts as "left early"
+    earliestCheckInMinutes: 0,  // 0 = check-in allowed any time; e.g. 60 = opens 1 hour before work start
+    appName: 'Wardiya',
+    brandColor: '#0E7C66',
+    accentColor: '#F4A63A',
+    logoUrl: '',
+    welcomeMessage: '',
+    checkInMessage: '',
+    lateMessage: '',
+    checkOutMessage: '',
+    earlyLeaveMessage: ''
   };
+  var SETTING_KEYS = Object.keys(DEFAULT_SETTINGS);
 
   function recordMinutes(r) {
     if (r.type === 'leave' || !r.inTime || !r.outTime) return 0;
@@ -128,6 +145,13 @@ var WardiyaCore = (function () {
       for (var k in DEFAULT_SETTINGS) out[k] = (s[k] === undefined || s[k] === null || s[k] === '') ? DEFAULT_SETTINGS[k] : s[k];
       if (typeof out.workDays === 'string') out.workDays = out.workDays.split(',').filter(function (x) { return x !== ''; }).map(Number);
       out.graceMinutes = Number(out.graceMinutes) || 0;
+      out.earlyLeaveMinutes = Number(out.earlyLeaveMinutes) || 0;
+      out.earliestCheckInMinutes = Number(out.earliestCheckInMinutes) || 0;
+      out.workStart = normTime(out.workStart) || DEFAULT_SETTINGS.workStart;
+      out.workEnd = normTime(out.workEnd) || DEFAULT_SETTINGS.workEnd;
+      if (!/^#[0-9a-fA-F]{6}$/.test(String(out.brandColor))) out.brandColor = DEFAULT_SETTINGS.brandColor;
+      if (!/^#[0-9a-fA-F]{6}$/.test(String(out.accentColor))) out.accentColor = DEFAULT_SETTINGS.accentColor;
+      if (!/^https:\/\//.test(String(out.logoUrl))) out.logoUrl = '';
       return out;
     }
     function nowParts() {
@@ -171,8 +195,14 @@ var WardiyaCore = (function () {
       return emp;
     }
     function publicSettings() {
+      var s = settings(), out = {};
+      SETTING_KEYS.forEach(function (k) { out[k] = s[k]; });
+      return out;
+    }
+    // Shown before sign-in: branding and the welcome message only.
+    function brandInfo() {
       var s = settings();
-      return { companyName: s.companyName, timezone: s.timezone, workStart: s.workStart, workEnd: s.workEnd, graceMinutes: s.graceMinutes, workDays: s.workDays, geofenceMode: s.geofenceMode };
+      return { companyName: s.companyName, appName: s.appName, brandColor: s.brandColor, accentColor: s.accentColor, logoUrl: s.logoUrl, welcomeMessage: s.welcomeMessage, version: VERSION };
     }
 
     function validPin(pin) { return /^\d{4,8}$/.test(pin); }
@@ -221,10 +251,21 @@ var WardiyaCore = (function () {
       }
       return res;
     }
+    function earlyMinutes(date, inTime, outTime) {
+      var s = settings();
+      if (!outTime || !inTime || s.workDays.indexOf(weekday(date)) < 0) return 0;
+      if (toMin(outTime) < toMin(inTime)) return 0; // overnight shift
+      var early = toMin(s.workEnd) - toMin(outTime);
+      return early > s.earlyLeaveMinutes ? early : 0;
+    }
     function checkIn(user, p) {
       return env.lock(function () {
         if (openRecord(user.id)) fail('ALREADY_IN', 'You are already checked in. Check out first.');
-        var s = settings(), n = nowParts(), loc = checkLocation(user, p, s);
+        var s = settings(), n = nowParts();
+        if (s.earliestCheckInMinutes > 0 && s.workDays.indexOf(weekday(n.date)) >= 0 && toMin(n.time) < toMin(s.workStart) - s.earliestCheckInMinutes) {
+          fail('TOO_EARLY', 'Check-in opens at ' + fromMin(toMin(s.workStart) - s.earliestCheckInMinutes) + '.');
+        }
+        var loc = checkLocation(user, p, s);
         var firstToday = !records().some(function (r) { return r.empId === user.id && r.date === n.date && r.type !== 'leave'; });
         var lateBy = 0;
         if (firstToday && s.workDays.indexOf(weekday(n.date)) >= 0) {
@@ -236,7 +277,7 @@ var WardiyaCore = (function () {
           inTime: n.time, outTime: '', inAt: n.iso, outAt: '',
           inLat: loc.lat, inLng: loc.lng, inAcc: loc.acc, inDist: loc.dist,
           outLat: '', outLng: '', outDist: '',
-          lateMin: lateBy, flags: loc.flag ? 'in_' + loc.flag : '', note: safeCell(p.note), source: 'app', editedBy: '', editedAt: ''
+          lateMin: lateBy, flags: loc.flag ? 'in_' + loc.flag : '', note: safeCell(p.note), source: 'app', editedBy: '', editedAt: '', earlyMin: 0
         };
         S.insert('records', rec);
         return { record: rec, late: lateBy > 0 };
@@ -249,11 +290,11 @@ var WardiyaCore = (function () {
         var s = settings(), n = nowParts(), loc = checkLocation(user, p, s);
         var flags = r.flags ? String(r.flags).split(',') : [];
         if (loc.flag) flags.push('out_' + loc.flag);
-        var patch = { outTime: n.time, outAt: n.iso, outLat: loc.lat, outLng: loc.lng, outDist: loc.dist, flags: flags.join(',') };
+        var patch = { outTime: n.time, outAt: n.iso, outLat: loc.lat, outLng: loc.lng, outDist: loc.dist, flags: flags.join(','), earlyMin: earlyMinutes(r.date, r.inTime, n.time) };
         if (p.note) patch.note = safeCell((r.note ? r.note + ' | ' : '') + p.note);
         S.update('records', r.id, patch);
         var merged = {}; for (var k in r) merged[k] = r[k]; for (k in patch) merged[k] = patch[k];
-        return { record: merged, minutes: recordMinutes(merged) };
+        return { record: merged, minutes: recordMinutes(merged), early: merged.earlyMin > 0 };
       });
     }
     function myStatus(user) {
@@ -304,6 +345,7 @@ var WardiyaCore = (function () {
       if (st === 'missing') out = out.filter(function (x) { return x.missingOut; });
       if (st === 'flagged') out = out.filter(function (x) { return !!x.flags; });
       if (st === 'leave') out = out.filter(function (x) { return x.type === 'leave'; });
+      if (st === 'early') out = out.filter(function (x) { return Number(x.earlyMin) > 0; });
       if (st === 'manual') out = out.filter(function (x) { return x.source !== 'app'; });
       return { from: r.from, to: r.to, records: out.slice(0, 3000), total: out.length };
     }
@@ -332,7 +374,7 @@ var WardiyaCore = (function () {
           var cur = null; records().forEach(function (r) { if (r.id === id) cur = r; });
           if (!cur) fail('NOT_FOUND', 'Record not found.');
           var patch = { date: date, type: type, inTime: inTime, outTime: outTime, note: note, editedBy: admin.code, editedAt: stamp,
-            lateMin: type === 'work' ? computeLate(cur.empId, date, inTime, id) : 0 };
+            lateMin: type === 'work' ? computeLate(cur.empId, date, inTime, id) : 0, earlyMin: type === 'work' ? earlyMinutes(date, inTime, outTime) : 0 };
           if (outTime && !cur.outAt) patch.outAt = stamp;
           S.update('records', id, patch);
           audit(admin, 'record_edited', (findEmp(cur.empId) || {}).code + ' ' + cur.date + ' ' + (cur.inTime || '-') + '→' + (cur.outTime || '-') + ' changed to ' + date + ' ' + (inTime || '-') + '→' + (outTime || '-') + ' (' + type + '). Reason: ' + reason);
@@ -343,7 +385,8 @@ var WardiyaCore = (function () {
         var rec = {
           id: env.newId(), empId: emp.id, branchId: emp.branchId || '', date: date, type: type, inTime: inTime, outTime: outTime,
           inAt: '', outAt: '', inLat: '', inLng: '', inAcc: '', inDist: '', outLat: '', outLng: '', outDist: '',
-          lateMin: type === 'work' ? computeLate(emp.id, date, inTime, '') : 0, flags: '', note: note, source: 'manual', editedBy: admin.code, editedAt: stamp
+          lateMin: type === 'work' ? computeLate(emp.id, date, inTime, '') : 0, flags: '', note: note, source: 'manual', editedBy: admin.code, editedAt: stamp,
+          earlyMin: type === 'work' ? earlyMinutes(date, inTime, outTime) : 0
         };
         S.insert('records', rec);
         audit(admin, 'record_added', emp.code + ' ' + date + ' ' + type + ' ' + (inTime || '') + (outTime ? '→' + outTime : '') + '. Reason: ' + reason);
@@ -456,22 +499,31 @@ var WardiyaCore = (function () {
       });
     }
     function saveSettings(admin, p) {
-      var s = settings();
-      var next = {
-        companyName: safeCell(clean(p.companyName, 80)) || s.companyName,
-        timezone: str(p.timezone) || s.timezone,
-        workStart: str(p.workStart), workEnd: str(p.workEnd),
-        graceMinutes: Math.round(num(p.graceMinutes)),
-        workDays: (Array.isArray(p.workDays) ? p.workDays : []).map(Number).filter(function (d) { return d >= 0 && d <= 6; }),
-        geofenceMode: ['off', 'flag', 'block'].indexOf(p.geofenceMode) >= 0 ? p.geofenceMode : s.geofenceMode
-      };
+      var s = settings(), next = {};
+      SETTING_KEYS.forEach(function (k) { next[k] = s[k]; });
+      function has(k) { return p[k] !== undefined && p[k] !== null; }
+      if (has('companyName')) next.companyName = safeCell(clean(p.companyName, 80)) || s.companyName;
+      if (has('appName')) next.appName = safeCell(clean(p.appName, 40)) || 'Wardiya';
+      if (has('timezone')) next.timezone = str(p.timezone);
+      if (has('workStart')) next.workStart = str(p.workStart);
+      if (has('workEnd')) next.workEnd = str(p.workEnd);
+      ['graceMinutes', 'earlyLeaveMinutes', 'earliestCheckInMinutes'].forEach(function (k) { if (has(k)) next[k] = str(p[k]) === '' ? 0 : Math.round(num(p[k])); });
+      if (has('workDays')) next.workDays = (Array.isArray(p.workDays) ? p.workDays : []).map(Number).filter(function (d) { return d >= 0 && d <= 6; });
+      if (has('geofenceMode')) next.geofenceMode = ['off', 'flag', 'block'].indexOf(p.geofenceMode) >= 0 ? p.geofenceMode : s.geofenceMode;
+      ['brandColor', 'accentColor'].forEach(function (k) { if (has(k)) next[k] = str(p[k]); });
+      if (has('logoUrl')) next.logoUrl = str(p.logoUrl);
+      ['welcomeMessage', 'checkInMessage', 'lateMessage', 'checkOutMessage', 'earlyLeaveMessage'].forEach(function (k) { if (has(k)) next[k] = safeCell(clean(p[k], 200)); });
       if (!env.validTz(next.timezone)) fail('VALIDATION', 'Unknown time zone.');
       if (!isTime(next.workStart) || !isTime(next.workEnd)) fail('VALIDATION', 'Work hours must be HH:MM.');
-      if (!(next.graceMinutes >= 0 && next.graceMinutes <= 180)) fail('VALIDATION', 'Grace period must be 0–180 minutes.');
+      if (!(next.graceMinutes >= 0 && next.graceMinutes <= 180)) fail('VALIDATION', 'Late grace period must be 0–180 minutes.');
+      if (!(next.earlyLeaveMinutes >= 0 && next.earlyLeaveMinutes <= 240)) fail('VALIDATION', 'Early-leave allowance must be 0–240 minutes.');
+      if (!(next.earliestCheckInMinutes >= 0 && next.earliestCheckInMinutes <= 720)) fail('VALIDATION', 'Earliest check-in must be 0–720 minutes before work starts (0 = any time).');
       if (!next.workDays.length) fail('VALIDATION', 'Choose at least one working day.');
+      if (!/^#[0-9a-fA-F]{6}$/.test(next.brandColor) || !/^#[0-9a-fA-F]{6}$/.test(next.accentColor)) fail('VALIDATION', 'Colours must be 6-digit hex codes like #0E7C66.');
+      if (next.logoUrl && !/^https:\/\/\S+$/.test(next.logoUrl)) fail('VALIDATION', 'Logo must be an https:// link (or leave it empty).');
       next.workDays.sort();
       S.saveSettings(next);
-      audit(admin, 'settings_saved', JSON.stringify(next).slice(0, 280));
+      audit(admin, 'settings_saved', 'Company settings updated');
       return publicSettings();
     }
 
@@ -536,11 +588,12 @@ var WardiyaCore = (function () {
       var brs = {}; branches().forEach(function (b) { brs[b.id] = b.name; });
       var rows = employees().filter(function (e) { var has = recs.some(function (r) { return r.empId === e.id; }); return has || (bool(e.active) && e.role !== 'admin'); }).map(function (e) {
         var mine = recs.filter(function (r) { return r.empId === e.id; });
-        var present = {}, leave = {}, late = {}, minsByDay = {}, firstIn = {}, missing = 0, lateMinutes = 0;
+        var present = {}, leave = {}, late = {}, early = {}, minsByDay = {}, firstIn = {}, missing = 0, lateMinutes = 0, earlyMinutes = 0;
         mine.forEach(function (r) {
           if (r.type === 'leave') { leave[r.date] = 1; return; }
           present[r.date] = 1;
           if (Number(r.lateMin) > 0) { late[r.date] = 1; lateMinutes += Number(r.lateMin); }
+          if (Number(r.earlyMin) > 0) { early[r.date] = 1; earlyMinutes += Number(r.earlyMin); }
           minsByDay[r.date] = (minsByDay[r.date] || 0) + recordMinutes(r);
           if (!firstIn[r.date] || r.inTime < firstIn[r.date]) firstIn[r.date] = r.inTime;
           if (!r.outTime && r.date < n.date) missing++;
@@ -553,7 +606,7 @@ var WardiyaCore = (function () {
         return {
           empId: e.id, code: e.code, name: e.name, department: e.department || '', branch: brs[e.branchId] || '',
           workingDays: workDays.length, present: Object.keys(present).length, absent: absent, leave: Object.keys(leave).length,
-          lateDays: Object.keys(late).length, lateMinutes: lateMinutes, hours: Math.round(total / 6) / 10,
+          lateDays: Object.keys(late).length, lateMinutes: lateMinutes, earlyLeaveDays: Object.keys(early).length, earlyLeaveMinutes: earlyMinutes, hours: Math.round(total / 6) / 10,
           overtimeHours: Math.round(overtime / 6) / 10, avgCheckIn: avgIn, missingCheckouts: missing,
           attendanceRate: workDays.length ? Math.round(Object.keys(present).filter(function (k) { return workDays.indexOf(k) >= 0; }).length / workDays.length * 100) : null
         };
@@ -569,7 +622,7 @@ var WardiyaCore = (function () {
       try {
         if (typeof action !== 'string') fail('VALIDATION', 'Missing action.');
         if (action === 'ping') return ok({ version: VERSION, time: env.now().toISOString() });
-        if (action === 'info') return ok({ companyName: settings().companyName, version: VERSION });
+        if (action === 'info') return ok(brandInfo());
         if (action === 'login') return ok(login(payload));
         var user = auth(token);
         if (bool(user.mustChangePin) && ['changePin', 'logout', 'me'].indexOf(action) < 0) fail('MUST_CHANGE_PIN', 'Please set a new PIN before continuing.');
@@ -624,12 +677,12 @@ var WardiyaCore = (function () {
   }
 
   return {
-    VERSION: VERSION, createApp: createApp, sha256: sha256, hashPin: hashPin, haversine: haversine,
+    VERSION: VERSION, SETTING_KEYS: SETTING_KEYS, createApp: createApp, sha256: sha256, hashPin: hashPin, haversine: haversine,
     addDays: addDays, weekday: weekday, recordMinutes: recordMinutes, DEFAULT_SETTINGS: DEFAULT_SETTINGS,
     TABLES: {
       employees: ['id', 'code', 'name', 'email', 'phone', 'department', 'branchId', 'role', 'active', 'mustChangePin', 'salt', 'pinHash', 'createdAt'],
       branches: ['id', 'name', 'address', 'lat', 'lng', 'radius'],
-      records: ['id', 'empId', 'branchId', 'date', 'type', 'inTime', 'outTime', 'inAt', 'outAt', 'inLat', 'inLng', 'inAcc', 'inDist', 'outLat', 'outLng', 'outDist', 'lateMin', 'flags', 'note', 'source', 'editedBy', 'editedAt'],
+      records: ['id', 'empId', 'branchId', 'date', 'type', 'inTime', 'outTime', 'inAt', 'outAt', 'inLat', 'inLng', 'inAcc', 'inDist', 'outLat', 'outLng', 'outDist', 'lateMin', 'flags', 'note', 'source', 'editedBy', 'editedAt', 'earlyMin'],
       audit: ['id', 'ts', 'actor', 'action', 'detail']
     }
   };
